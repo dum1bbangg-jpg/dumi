@@ -26,9 +26,10 @@
     .tab-btn:not(.active) { color: #8A7565; border-bottom: 2px solid transparent; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
+
+    /* VOD table */
     .vod-table { width: 100%; border-collapse: collapse; }
     .vod-drag-row { cursor: grab; transition: background .15s; }
-    .vod-drag-row:active { cursor: grabbing; }
     .vod-drag-row.dragging { opacity: .4; background: #FBE0EC; }
     .vod-drag-row.drag-over { border-top: 2px solid #CF7FA3; }
     .drag-handle { color: #bbb; font-size: 14px; cursor: grab; padding: 0 4px; user-select: none; }
@@ -40,11 +41,43 @@
     .input-field{width:100%;padding:10px 14px;border:1px solid rgba(176,122,143,.3);border-radius:10px;font-size:.875rem;color:#4A3A30;background:#fff;transition:border-color .2s;outline:none;font-family:'Noto Sans KR',sans-serif}
     .input-field:focus{border-color:#CF7FA3}
     select.input-field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238C8C8C' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
-    .color-option{width:28px;height:28px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .2s;flex-shrink:0}
-    .color-option:hover{transform:scale(1.1)}
-    .color-option.selected{border-color:#4A3A30;box-shadow:0 0 0 2px #fff,0 0 0 4px #4A3A30}
-    .toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:12px;font-size:.875rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.15);transform:translateY(100px);opacity:0;transition:all .3s;z-index:200}
-    .toast.show{transform:translateY(0);opacity:1}.toast.success{background:#48BB78;color:#fff}.toast.error{background:#EF4444;color:#fff}
+
+    /* 업보 (송민트 방식) */
+    .sc{background:#fff;border:1.5px solid #ECE1D0;border-radius:16px;padding:18px 20px;margin-bottom:16px}
+    .sc-title{font-size:14px;font-weight:700;color:#4A3A30;margin-bottom:12px}
+    .upbo-sub-nav{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+    .upbo-sub-btn{padding:7px 18px;border-radius:100px;border:1.5px solid #ECE1D0;background:#fff;font-size:13px;font-weight:600;color:#8A7565;cursor:pointer;font-family:inherit;transition:all .2s}
+    .upbo-sub-btn:hover{border-color:#CF7FA3;color:#B86A8F}
+    .upbo-sub-btn.active{background:#FBE0EC;border-color:#F1CFDF;color:#B86A8F}
+    .upbo-sub-page{display:none}
+    .upbo-sub-page.active{display:block}
+    .upbo-member-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px}
+    .upbo-member-btn{padding:10px 12px;border-radius:12px;border:1.5px solid #ECE1D0;background:#fff;font-family:inherit;cursor:pointer;text-align:left;transition:all .18s}
+    .upbo-member-btn:hover{border-color:#CF7FA3}
+    .upbo-member-btn.selected{border-color:#CF7FA3;background:#FBE0EC}
+    .upbo-member-btn .mc-nick{font-size:13px;font-weight:700;color:#4A3A30;margin-bottom:2px}
+    .upbo-member-btn .mc-id{font-size:11px;color:#8A7565}
+    .upbo-task-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+    .upbo-task-item{background:#FBF6EE;border:1px solid #ECE1D0;border-radius:12px;padding:12px}
+    .upbo-task-name{font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;color:#4A3A30}
+    .upbo-task-badge{font-size:9px;padding:2px 7px;border-radius:20px;font-weight:700}
+    .upbo-task-badge.normal{background:#FBE0EC;color:#B86A8F}
+    .upbo-task-badge.event{background:#FFF0F7;color:#C05688}
+    .upbo-qty-row{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+    .upbo-qbtn{width:26px;height:26px;border-radius:8px;border:1.5px solid #ECE1D0;background:#fff;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:#4A3A30}
+    .upbo-qbtn:hover{border-color:#CF7FA3;background:#FBE0EC}
+    .upbo-qval{font-size:16px;font-weight:800;min-width:28px;text-align:center;color:#4A3A30}
+    .btn-add{padding:9px 16px;background:#CF7FA3;color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
+    .btn-add:hover{background:#B86A8F}
+    .btn-edit{padding:4px 12px;background:#FBE0EC;color:#B86A8F;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
+    .btn-del{padding:4px 12px;background:none;color:#E07A7A;border:1px solid #F2C4C4;border-radius:8px;font-size:11px;cursor:pointer;font-family:inherit}
+    .form-field-label{font-size:11px;font-weight:600;color:#8A7565;margin-bottom:4px}
+    #tab-upbo input[type=text], #tab-upbo input[type=date], #tab-upbo select, #tab-upbo textarea{width:100%;padding:8px 12px;border:1.5px solid #ECE1D0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;color:#4A3A30;background:#fff}
+    #tab-upbo input:focus, #tab-upbo select:focus, #tab-upbo textarea:focus{border-color:#CF7FA3}
+
+    .toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:12px;font-size:.875rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.15);transform:translateY(100px);opacity:0;transition:all .3s;z-index:200;background:#4A3A30;color:#fff}
+    .toast.show{transform:translateY(0);opacity:1}
+    .toast.success{background:#48BB78}.toast.error{background:#EF4444}
   </style>
 </head>
 <body class="bg-bg min-h-screen font-sans">
@@ -97,7 +130,8 @@
     <div class="max-w-5xl mx-auto px-4 pt-4">
       <div class="flex gap-6 border-b border-point/40 overflow-x-auto">
         <button class="tab-btn active pb-3 text-sm whitespace-nowrap" data-tab="vod">🎬 VOD · 클립</button>
-        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="achievement">🏆 업보 관리</button>
+        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="upbo">⚡ 업보 관리</button>
+        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="inquiry">✉️ 문의 <span id="inq-badge" style="display:none;background:#EF4444;color:white;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:2px">NEW</span></button>
       </div>
     </div>
 
@@ -105,7 +139,6 @@
 
       <!-- ========== VOD · 클립 ========== -->
       <div id="tab-vod" class="tab-content active">
-
         <div class="bg-white rounded-2xl shadow-sm border border-point/30 p-6 mb-6">
           <h2 class="font-semibold text-txt mb-4">➕ 영상 추가</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -137,14 +170,8 @@
             </div>
           </div>
           <div class="flex gap-2">
-            <button onclick="previewVod()"
-              class="px-4 py-2 rounded-xl border border-accent text-accent text-sm font-medium hover:bg-thead transition-colors">
-              👁 미리보기
-            </button>
-            <button onclick="handleAddVod()"
-              class="px-6 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">
-              ➕ 추가
-            </button>
+            <button onclick="previewVod()" class="px-4 py-2 rounded-xl border border-accent text-accent text-sm font-medium hover:bg-thead transition-colors">👁 미리보기</button>
+            <button onclick="handleAddVod()" class="px-6 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">➕ 추가</button>
           </div>
           <p id="vodMsg" class="text-xs mt-2 hidden"></p>
         </div>
@@ -153,93 +180,95 @@
           <h2 class="font-semibold text-txt mb-4">🎬 등록된 영상</h2>
           <div class="overflow-x-auto">
             <table class="vod-table">
-              <thead>
-                <tr><th>#</th><th>종류</th><th>제목</th><th>VOD ID</th><th>등록일</th><th>관리</th></tr>
-              </thead>
-              <tbody id="vodTableBody">
-                <tr><td colspan="6" class="text-center py-8 text-sub text-sm">불러오는 중...</td></tr>
-              </tbody>
+              <thead><tr><th>#</th><th>종류</th><th>제목</th><th>VOD ID</th><th>등록일</th><th>관리</th></tr></thead>
+              <tbody id="vodTableBody"><tr><td colspan="6" class="text-center py-8 text-sub text-sm">불러오는 중...</td></tr></tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <!-- ========== 업보 관리 ========== -->
-      <div id="tab-achievement" class="tab-content">
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+      <!-- ========== 업보 관리 (송민트 방식) ========== -->
+      <div id="tab-upbo" class="tab-content">
+        <div class="upbo-sub-nav">
+          <button class="upbo-sub-btn active" onclick="switchUpboSub('assign')">📋 업보 부여</button>
+          <button class="upbo-sub-btn" onclick="switchUpboSub('members')">👥 시청자 관리</button>
+          <button class="upbo-sub-btn" onclick="switchUpboSub('types')">🏷️ 타입 관리</button>
+        </div>
 
-          <div class="lg:col-span-2 space-y-6">
-            <div class="bg-white rounded-2xl border border-point/30 p-6">
-              <h2 id="achFormTitle" class="text-base font-bold text-txt mb-4">업보 추가</h2>
-              <input type="hidden" id="achEditId">
-              <div class="space-y-3">
-                <div class="grid grid-cols-2 gap-3">
-                  <div>
-                    <label class="block text-xs text-sub mb-1 font-medium">연도 *</label>
-                    <input type="number" id="achYear" class="input-field" value="2026" min="2020" max="2099" placeholder="예: 2026">
-                  </div>
-                  <div>
-                    <label class="block text-xs text-sub mb-1 font-medium">날짜 *</label>
-                    <input type="text" id="achDate" class="input-field" placeholder="예: 6.1 또는 5.23-5.28">
-                  </div>
-                </div>
-                <div>
-                  <label class="block text-xs text-sub mb-1 font-medium">내용 *</label>
-                  <input type="text" id="achContent" class="input-field" placeholder="업보 내용">
-                </div>
-                <div>
-                  <label class="block text-xs text-sub mb-1 font-medium">카테고리</label>
-                  <select id="achCat" class="input-field">
-                    <option value="">-- 선택 --</option>
-                  </select>
-                </div>
-                <div class="flex gap-2">
-                  <button onclick="saveAchievement()" class="flex-1 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">저장</button>
-                  <button onclick="resetAchForm()" class="flex-1 py-2 rounded-xl border border-sub/30 text-sub text-sm hover:bg-gray-50 transition-colors">초기화</button>
-                  <button id="achDeleteBtn" onclick="deleteAchievement()" class="hidden py-2 px-4 rounded-xl border border-red-200 text-red-400 text-sm hover:bg-red-50 transition-colors">삭제</button>
-                </div>
+        <!-- ① 업보 부여 -->
+        <div class="upbo-sub-page active" id="upbo-assign">
+          <div class="sc">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+              <div class="sc-title" style="margin-bottom:0">👤 시청자 선택</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:12px;color:#8A7565">갱신일</span>
+                <input type="date" id="upboDateAssign" style="width:auto;padding:6px 10px;border:1.5px solid #ECE1D0;border-radius:8px;font-size:12px;font-family:inherit;outline:none">
+                <button onclick="saveUpboDate()" style="padding:6px 12px;background:#CF7FA3;color:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">저장</button>
               </div>
             </div>
-
-            <div class="bg-white rounded-2xl border border-point/30 p-6">
-              <h2 class="text-base font-bold text-txt mb-4">카테고리 관리</h2>
-              <div class="space-y-3 mb-4">
-                <div>
-                  <label class="block text-xs text-sub mb-1 font-medium">카테고리 이름</label>
-                  <input type="text" id="catName" class="input-field" placeholder="예: 노래">
-                </div>
-                <div>
-                  <label class="block text-xs text-sub mb-1 font-medium">색상</label>
-                  <div class="flex gap-2 flex-wrap" id="catColorPicker">
-                    <div class="color-option selected" style="background:#FF8FB0" data-color="#FF8FB0" onclick="selectCatColor(this)"></div>
-                    <div class="color-option" style="background:#CF7FA3" data-color="#CF7FA3" onclick="selectCatColor(this)"></div>
-                    <div class="color-option" style="background:#C49A72" data-color="#C49A72" onclick="selectCatColor(this)"></div>
-                    <div class="color-option" style="background:#E6B84A" data-color="#E6B84A" onclick="selectCatColor(this)"></div>
-                    <div class="color-option" style="background:#3BAD7A" data-color="#3BAD7A" onclick="selectCatColor(this)"></div>
-                    <div class="color-option" style="background:#4299E1" data-color="#4299E1" onclick="selectCatColor(this)"></div>
-                    <div class="color-option" style="background:#9F7AEA" data-color="#9F7AEA" onclick="selectCatColor(this)"></div>
-                    <div class="color-option" style="background:#ED8936" data-color="#ED8936" onclick="selectCatColor(this)"></div>
-                  </div>
-                </div>
-                <button onclick="addCategory()" class="w-full py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">➕ 카테고리 추가</button>
-              </div>
-              <div id="catList" class="space-y-2"></div>
-            </div>
+            <input type="text" id="assignSearch" placeholder="🔍 시청자 검색..." oninput="filterAssignGrid()" style="margin-bottom:12px">
+            <div class="upbo-member-grid" id="assignMemberGrid"></div>
           </div>
-
-          <div class="lg:col-span-3">
-            <div class="flex items-center justify-between mb-4">
-              <h2 class="text-base font-bold text-txt">등록된 업보</h2>
-              <div class="flex gap-2">
-                <select id="achFilterYear" class="input-field" style="width:auto;padding:6px 12px;font-size:.8125rem" onchange="loadAchievements()"><option value="all">전체</option></select>
-                <select id="achFilterCat" class="input-field" style="width:auto;padding:6px 12px;font-size:.8125rem" onchange="renderAchList()">
-                  <option value="all">전체 카테고리</option>
-                </select>
+          <div class="sc" id="assignTaskArea" style="display:none">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+              <div class="sc-title" style="margin-bottom:0" id="assignTitle">업보 부여</div>
+              <div style="display:flex;gap:8px">
+                <button onclick="clearAllTasks()" style="padding:6px 14px;background:#FCEDED;color:#E07A7A;border:1px solid #F2C4C4;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">전체 초기화</button>
+                <button onclick="saveTasks()" style="padding:6px 16px;background:#CF7FA3;color:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">💾 저장</button>
               </div>
             </div>
-            <div id="achList" class="space-y-2"></div>
+            <div class="upbo-task-grid" id="taskGrid"></div>
+            <div style="margin-top:14px">
+              <label class="form-field-label" style="display:block;margin-bottom:6px">📝 관리자 메모 (비공개)</label>
+              <textarea id="memberMemo" placeholder="이 시청자에 대한 메모" style="resize:vertical;min-height:72px"></textarea>
+              <div style="font-size:11px;color:#8A7565;margin-top:4px">저장 버튼 누를 때 함께 저장돼요</div>
+            </div>
           </div>
         </div>
+
+        <!-- ② 시청자 관리 -->
+        <div class="upbo-sub-page" id="upbo-members">
+          <div class="sc">
+            <div class="sc-title">👥 시청자 추가</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:flex-end">
+              <div><p class="form-field-label">닉네임</p><input type="text" id="memberNick" placeholder="닉네임"></div>
+              <div><p class="form-field-label">유저 ID (SOOP)</p><input type="text" id="memberUid" placeholder="SOOP ID (프사용)"></div>
+              <div><button onclick="addMember()" class="btn-add">추가</button></div>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-title">목록</div>
+            <input type="text" id="memberSearch" placeholder="🔍 검색..." oninput="filterMemberList()" style="margin-bottom:12px">
+            <div id="memberList"></div>
+          </div>
+        </div>
+
+        <!-- ③ 타입 관리 -->
+        <div class="upbo-sub-page" id="upbo-types">
+          <div class="sc">
+            <div class="sc-title">🏷️ 업보 타입 추가</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:flex-end">
+              <div><p class="form-field-label">타입명</p><input type="text" id="typeNm" placeholder="예: 단컷 방셀"></div>
+              <div><p class="form-field-label">카테고리</p>
+                <select id="typeCat"><option value="normal">일반</option><option value="event">이벤트</option></select>
+              </div>
+              <div><button onclick="addTaskType()" class="btn-add">추가</button></div>
+            </div>
+          </div>
+          <div class="sc">
+            <div class="sc-title">업보 타입 목록</div>
+            <div id="typeList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== 문의 ========== -->
+      <div id="tab-inquiry" class="tab-content">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+          <h3 class="text-base font-bold text-txt">업보 문의함 ✉️</h3>
+          <button onclick="markAllRead()" style="padding:7px 16px;background:#FBE0EC;border:1.5px solid #F1CFDF;color:#B86A8F;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">전체 읽음</button>
+        </div>
+        <div id="inq-list"><div style="text-align:center;padding:40px;color:#BBB">불러오는 중...</div></div>
       </div>
 
     </main>
@@ -251,29 +280,16 @@
       <h3 class="font-semibold text-txt mb-4">✏️ 영상 수정</h3>
       <div class="space-y-3">
         <input type="hidden" id="editVodId">
-        <div>
-          <label class="block text-sm text-txt mb-1">제목</label>
-          <input type="text" id="editVodTitle" class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm">
-        </div>
-        <div>
-          <label class="block text-sm text-txt mb-1">VOD ID</label>
-          <input type="text" id="editVodVodId" class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm">
-        </div>
-        <div>
-          <label class="block text-sm text-txt mb-1">종류</label>
-          <select id="editVodKind" class="input-field">
-            <option value="vod">VOD (다시보기)</option>
-            <option value="clip">클립</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm text-txt mb-1">순서</label>
-          <input type="number" id="editVodOrder" min="0" class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm">
-        </div>
-        <div>
-          <label class="block text-sm text-txt mb-1">썸네일 URL <span class="text-sub text-xs">(비우면 기본 배경)</span></label>
-          <input type="text" id="editVodThumbUrl" placeholder="https://videoimg.sooplive.com/..." class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm">
-        </div>
+        <div><label class="block text-sm text-txt mb-1">제목</label>
+          <input type="text" id="editVodTitle" class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm"></div>
+        <div><label class="block text-sm text-txt mb-1">VOD ID</label>
+          <input type="text" id="editVodVodId" class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm"></div>
+        <div><label class="block text-sm text-txt mb-1">종류</label>
+          <select id="editVodKind" class="input-field"><option value="vod">VOD (다시보기)</option><option value="clip">클립</option></select></div>
+        <div><label class="block text-sm text-txt mb-1">순서</label>
+          <input type="number" id="editVodOrder" min="0" class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm"></div>
+        <div><label class="block text-sm text-txt mb-1">썸네일 URL <span class="text-sub text-xs">(비우면 기본 배경)</span></label>
+          <input type="text" id="editVodThumbUrl" placeholder="https://videoimg.sooplive.com/..." class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm"></div>
         <div class="flex gap-2 pt-2">
           <button onclick="saveEditVod()" class="flex-1 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">저장</button>
           <button onclick="closeEditVodModal()" class="flex-1 py-2 rounded-xl border border-sub/30 text-sub text-sm hover:bg-gray-50 transition-colors">취소</button>
@@ -301,14 +317,11 @@
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('adminScreen').classList.remove('hidden');
         loadVodAdmin();
-        loadAchievements();
+        loadUpbo();
+        loadInqBadge();
       }
     }
-
-    async function handleLogout() {
-      await sb.auth.signOut();
-      location.reload();
-    }
+    async function handleLogout() { await sb.auth.signOut(); location.reload(); }
 
     // ── TABS ──
     document.addEventListener('DOMContentLoaded', () => {
@@ -318,14 +331,17 @@
           document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
           btn.classList.add('active');
           document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+          if (btn.dataset.tab === 'upbo') loadUpbo();
+          if (btn.dataset.tab === 'inquiry') loadInquiries();
         });
       });
     });
 
-    function showToast(msg, type='success') {
+    function showToast(msg, type) {
       const t = document.getElementById('toast');
-      t.textContent = msg; t.className = `toast ${type} show`;
-      setTimeout(() => t.classList.remove('show'), 3000);
+      t.textContent = msg;
+      t.className = 'toast show' + (type === 'error' ? ' error' : ' success');
+      setTimeout(() => t.classList.remove('show'), 2800);
     }
     function showMsg(id, text, type) {
       const el = document.getElementById(id);
@@ -335,138 +351,300 @@
       setTimeout(() => el.classList.add('hidden'), 3000);
     }
 
-    // ── ACHIEVEMENT (업보) ──
-    let achData = [];
-    let achCats = [];
-    let selectedCatColor = '#FF8FB0';
+    /* ════════════════ 업보 (송민트 방식) ════════════════ */
+    let taskTypes = [], allUpboMembers = [], selMemberId = null, memberTaskState = {};
 
-    function selectCatColor(el) {
-      document.querySelectorAll('#catColorPicker .color-option').forEach(o => o.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedCatColor = el.dataset.color;
+    function switchUpboSub(name) {
+      document.querySelectorAll('.upbo-sub-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.upbo-sub-page').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.upbo-sub-btn').forEach(b => {
+        if (b.textContent.includes(name==='assign'?'부여':name==='members'?'시청자':'타입')) b.classList.add('active');
+      });
+      document.getElementById('upbo-'+name).classList.add('active');
     }
 
-    async function loadAchievements() {
-      const yr = document.getElementById('achFilterYear').value;
-      const { data: cats } = await sb.from('achievement_categories').select('*').order('sort_order');
-      achCats = cats || [];
-      renderCatList();
-      renderCatSelects();
-      let q = sb.from('achievements').select('*, achievement_categories(name,color)').order('year', { ascending:false }).order('sort_order').order('date_label');
-      if (yr !== 'all') q = q.eq('year', parseInt(yr));
-      const { data } = await q;
-      achData = data || [];
-      const years = [...new Set(achData.map(a => a.year).filter(Boolean))].sort((a, b) => b - a);
-      const sel = document.getElementById('achFilterYear');
-      const cur = sel.value;
-      sel.innerHTML = '<option value="all">전체</option>' + years.map(y => `<option value="${y}">${y}년</option>`).join('');
-      sel.value = cur;
-      renderAchList();
+    async function loadUpbo() {
+      const [{ data: types }, { data: members }, { data: settings }] = await Promise.all([
+        sb.from('upbo_task_types').select('*').order('sort_order').order('created_at'),
+        sb.from('upbo_members').select('*').order('sort_order').order('created_at'),
+        sb.from('upbo_settings').select('*').eq('key','last_updated').maybeSingle()
+      ]);
+      taskTypes = types || [];
+      allUpboMembers = members || [];
+      if (settings?.value) document.getElementById('upboDateAssign').value = settings.value;
+      renderAssignGrid(allUpboMembers);
+      renderMemberList(allUpboMembers);
+      renderTypeList();
     }
 
-    function renderCatList() {
-      const el = document.getElementById('catList');
-      if (!achCats.length) { el.innerHTML = '<p class="text-xs text-sub text-center py-2">카테고리 없음</p>'; return; }
-      el.innerHTML = achCats.map(cat => `
-        <div class="flex items-center gap-2 p-2 rounded-lg border border-point/20">
-          <div class="w-4 h-4 rounded" style="background:${cat.color}"></div>
-          <span class="flex-1 text-sm">${cat.name}</span>
-          <button onclick="deleteCat('${cat.id}')" class="text-xs text-red-400 hover:text-red-600">삭제</button>
-        </div>`).join('');
+    async function saveUpboDate() {
+      const val = document.getElementById('upboDateAssign').value;
+      if (!val) return;
+      await sb.from('upbo_settings').upsert({ key:'last_updated', value:val }, { onConflict:'key' });
+      showToast('갱신일 저장됨 ✓');
     }
 
-    function renderCatSelects() {
-      ['achCat','achFilterCat'].forEach(id => {
-        const el = document.getElementById(id);
-        const cur = el.value;
-        const opts = id === 'achFilterCat' ? '<option value="all">전체 카테고리</option>' : '<option value="">-- 선택 --</option>';
-        el.innerHTML = opts + achCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
-        el.value = cur;
+    // ── 타입 관리 ──
+    function renderTypeList() {
+      const el = document.getElementById('typeList');
+      if (!taskTypes.length) { el.innerHTML = '<div style="color:#8A7565;font-size:13px">타입이 없어요</div>'; return; }
+      el.innerHTML = `<div id="typeListInner" style="display:flex;flex-direction:column;gap:6px">
+        ${taskTypes.map(t => `
+        <div class="type-drag-item" draggable="true" data-id="${t.id}"
+          style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:#FBF6EE;border:1.5px solid #ECE1D0;border-radius:10px;cursor:default;user-select:none;transition:all .15s">
+          <span class="drag-handle">⠿</span>
+          <span class="upbo-task-badge ${t.category==='event'?'event':'normal'}">${t.category==='event'?'이벤트':'일반'}</span>
+          <span style="font-size:13px;font-weight:600;flex:1">${t.name}</span>
+          <button class="btn-edit" onclick="editTaskType('${t.id}')">수정</button>
+          <button class="btn-del" onclick="delTaskType('${t.id}')">삭제</button>
+        </div>`).join('')}
+      </div>`;
+      initTypeDrag();
+    }
+    function initTypeDrag() {
+      const container = document.getElementById('typeListInner');
+      if (!container) return;
+      let dragEl = null;
+      container.querySelectorAll('.type-drag-item').forEach(item => {
+        item.addEventListener('dragstart', e => { dragEl=item; item.style.opacity='.4'; e.dataTransfer.effectAllowed='move'; });
+        item.addEventListener('dragend', () => { dragEl=null; item.style.opacity='1'; saveTypeOrder(); });
+        item.addEventListener('dragover', e => {
+          e.preventDefault(); if (!dragEl||dragEl===item) return;
+          const mid = item.getBoundingClientRect().top + item.offsetHeight/2;
+          container.insertBefore(dragEl, e.clientY < mid ? item : item.nextSibling);
+        });
+        item.addEventListener('dragenter', e => { e.preventDefault(); if(item!==dragEl) item.style.background='#FBE0EC'; });
+        item.addEventListener('dragleave', () => item.style.background='#FBF6EE');
+        item.addEventListener('drop', () => item.style.background='#FBF6EE');
       });
     }
+    async function saveTypeOrder() {
+      const items = [...document.querySelectorAll('#typeListInner .type-drag-item')];
+      await Promise.all(items.map((el,i) => sb.from('upbo_task_types').update({sort_order:i}).eq('id',el.dataset.id)));
+      taskTypes = items.map(el => taskTypes.find(t => String(t.id)===String(el.dataset.id))).filter(Boolean);
+      showToast('순서 저장됨');
+    }
+    async function addTaskType() {
+      const name = document.getElementById('typeNm').value.trim();
+      if (!name) { showToast('타입명을 입력해주세요','error'); return; }
+      const maxOrder = Math.max(0, ...taskTypes.map(t => t.sort_order||0));
+      const { error } = await sb.from('upbo_task_types').insert({ name, category: document.getElementById('typeCat').value, sort_order: maxOrder+1 });
+      if (error) { showToast('추가 실패: '+error.message,'error'); return; }
+      document.getElementById('typeNm').value = '';
+      showToast('타입 추가됨 ✓');
+      loadUpbo();
+    }
+    async function delTaskType(id) {
+      if (!confirm('삭제할까요? 이 타입의 업보 기록도 함께 삭제됩니다.')) return;
+      await sb.from('upbo_tasks').delete().eq('type_id', id);
+      await sb.from('upbo_task_types').delete().eq('id', id);
+      showToast('삭제됨');
+      loadUpbo();
+    }
+    function editTaskType(id) {
+      const t = taskTypes.find(x => String(x.id)===String(id));
+      if (!t) return;
+      const name = prompt('타입명 수정:', t.name);
+      if (!name || name===t.name) return;
+      sb.from('upbo_task_types').update({ name }).eq('id', id).then(() => { showToast('수정됨 ✓'); loadUpbo(); });
+    }
 
-    function renderAchList() {
-      const catF = document.getElementById('achFilterCat').value;
-      const list = catF === 'all' ? achData : achData.filter(a => String(a.category_id) === String(catF));
-      const el = document.getElementById('achList');
-      if (!list.length) { el.innerHTML = '<p class="text-center py-8 text-sub text-sm">등록된 업보가 없습니다</p>'; return; }
-      el.innerHTML = list.map(a => {
-        const cat = a.achievement_categories;
-        const color = cat ? cat.color : '#E6B84A';
-        return `<div class="flex items-center gap-2 p-3 bg-white rounded-xl border border-point/20 hover:border-accent/30 transition-colors">
-          <div class="w-3 h-3 rounded flex-shrink-0" style="background:${color}"></div>
-          <div class="text-xs text-sub w-16 flex-shrink-0">${a.year} ${a.date_label||''}</div>
-          <div class="flex-1 text-sm truncate">${a.content}</div>
-          <button onclick="editAchievement('${a.id}')" class="text-xs px-2 py-1 rounded-lg bg-thead text-accent hover:bg-point flex-shrink-0">수정</button>
+    // ── 시청자 관리 ──
+    function renderMemberList(list) {
+      const el = document.getElementById('memberList');
+      if (!list.length) { el.innerHTML = '<div style="color:#8A7565;font-size:13px">시청자가 없어요</div>'; return; }
+      el.innerHTML = `<div id="memberListInner" style="display:flex;flex-direction:column;gap:6px">
+        ${list.map(m => `
+        <div class="member-drag-item" draggable="true" data-id="${m.id}"
+          style="display:flex;align-items:center;gap:10px;padding:11px 14px;background:#FBF6EE;border:1.5px solid #ECE1D0;border-radius:12px;cursor:default;user-select:none;transition:all .15s">
+          <span class="drag-handle">⠿</span>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:600">${m.nickname}</div>
+            <div style="font-size:11px;color:#8A7565">${m.user_id||''}</div>
+          </div>
+          <button class="btn-edit" onclick="editMember('${m.id}')">수정</button>
+          <button class="btn-del" onclick="delMember('${m.id}')">삭제</button>
+        </div>`).join('')}
+      </div>`;
+      initMemberDrag();
+    }
+    function initMemberDrag() {
+      const container = document.getElementById('memberListInner');
+      if (!container) return;
+      let dragEl = null;
+      container.querySelectorAll('.member-drag-item').forEach(item => {
+        item.addEventListener('dragstart', e => { dragEl=item; item.style.opacity='.4'; e.dataTransfer.effectAllowed='move'; });
+        item.addEventListener('dragend', () => { dragEl=null; item.style.opacity='1'; saveMemberOrder(); });
+        item.addEventListener('dragover', e => {
+          e.preventDefault(); if (!dragEl||dragEl===item) return;
+          const mid = item.getBoundingClientRect().top + item.offsetHeight/2;
+          container.insertBefore(dragEl, e.clientY < mid ? item : item.nextSibling);
+        });
+        item.addEventListener('dragenter', e => { e.preventDefault(); if(item!==dragEl) item.style.background='#FBE0EC'; });
+        item.addEventListener('dragleave', () => item.style.background='#FBF6EE');
+        item.addEventListener('drop', () => item.style.background='#FBF6EE');
+      });
+    }
+    async function saveMemberOrder() {
+      const items = [...document.querySelectorAll('#memberListInner .member-drag-item')];
+      await Promise.all(items.map((el,i) => sb.from('upbo_members').update({sort_order:i}).eq('id',el.dataset.id)));
+      allUpboMembers = items.map(el => allUpboMembers.find(m => String(m.id)===String(el.dataset.id))).filter(Boolean);
+      renderAssignGrid(allUpboMembers);
+      showToast('순서 저장됨');
+    }
+    function filterMemberList() {
+      const q = document.getElementById('memberSearch').value.toLowerCase();
+      renderMemberList(allUpboMembers.filter(m => m.nickname.toLowerCase().includes(q) || (m.user_id||'').toLowerCase().includes(q)));
+    }
+    async function addMember() {
+      const nick = document.getElementById('memberNick').value.trim();
+      const uid  = document.getElementById('memberUid').value.trim();
+      if (!nick) { showToast('닉네임을 입력해주세요','error'); return; }
+      const { error } = await sb.from('upbo_members').insert({ nickname:nick, user_id:uid||null });
+      if (error) { showToast('추가 실패: '+error.message,'error'); return; }
+      document.getElementById('memberNick').value = '';
+      document.getElementById('memberUid').value = '';
+      showToast('시청자 추가됨 ✓');
+      loadUpbo();
+    }
+    async function delMember(id) {
+      if (!confirm('삭제할까요? 관련 업보도 모두 삭제됩니다.')) return;
+      await sb.from('upbo_tasks').delete().eq('member_id', id);
+      await sb.from('upbo_members').delete().eq('id', id);
+      if (String(selMemberId)===String(id)) { selMemberId=null; document.getElementById('assignTaskArea').style.display='none'; }
+      showToast('삭제됨');
+      loadUpbo();
+    }
+    function editMember(id) {
+      const m = allUpboMembers.find(x => String(x.id)===String(id));
+      if (!m) return;
+      const nick = prompt('닉네임 수정:', m.nickname);
+      if (!nick || nick===m.nickname) return;
+      sb.from('upbo_members').update({ nickname:nick }).eq('id', id).then(() => { showToast('수정됨 ✓'); loadUpbo(); });
+    }
+
+    // ── 업보 부여 ──
+    function renderAssignGrid(list) {
+      const el = document.getElementById('assignMemberGrid');
+      if (!list.length) { el.innerHTML = '<div style="color:#8A7565;font-size:13px">시청자가 없어요 (시청자 관리에서 먼저 추가)</div>'; return; }
+      el.innerHTML = list.map(m => `
+        <button class="upbo-member-btn${String(selMemberId)===String(m.id)?' selected':''}" data-id="${m.id}" onclick="selectMember('${m.id}')">
+          <div class="mc-nick">${m.nickname}</div>
+          <div class="mc-id">${m.user_id||''}</div>
+        </button>`).join('');
+    }
+    function filterAssignGrid() {
+      const q = document.getElementById('assignSearch').value.toLowerCase();
+      renderAssignGrid(allUpboMembers.filter(m => m.nickname.toLowerCase().includes(q) || (m.user_id||'').toLowerCase().includes(q)));
+    }
+    async function selectMember(id) {
+      selMemberId = id;
+      const m = allUpboMembers.find(x => String(x.id)===String(id));
+      document.getElementById('assignTitle').textContent = `${m.nickname} 업보 부여`;
+      document.getElementById('memberMemo').value = m.memo || '';
+      const q = document.getElementById('assignSearch').value.toLowerCase();
+      renderAssignGrid(allUpboMembers.filter(x => !q || x.nickname.toLowerCase().includes(q) || (x.user_id||'').toLowerCase().includes(q)));
+      document.getElementById('assignTaskArea').style.display = 'block';
+      await loadMemberTasks();
+    }
+    async function loadMemberTasks() {
+      const grid = document.getElementById('taskGrid');
+      memberTaskState = {};
+      const { data:existing } = await sb.from('upbo_tasks').select('*').eq('member_id', selMemberId);
+      (existing||[]).forEach(t => { memberTaskState[t.type_id] = { qty:t.quantity, memo:t.memo||'', existingId:t.id }; });
+      if (!taskTypes.length) { grid.innerHTML = '<div style="color:#8A7565;font-size:13px">업보 타입을 먼저 추가해주세요</div>'; return; }
+      grid.innerHTML = taskTypes.map(t => {
+        const cur = memberTaskState[t.id] || { qty:0, memo:'' };
+        return `<div class="upbo-task-item">
+          <div class="upbo-task-name">${t.name}
+            <span class="upbo-task-badge ${t.category==='event'?'event':'normal'}">${t.category==='event'?'이벤트':'일반'}</span>
+          </div>
+          <div class="upbo-qty-row">
+            <button class="upbo-qbtn" onclick="changeQty('${t.id}',-1)">−</button>
+            <span class="upbo-qval" id="qty-${t.id}">${cur.qty}</span>
+            <button class="upbo-qbtn" onclick="changeQty('${t.id}',1)">+</button>
+          </div>
+          <input type="text" placeholder="메모" id="memo-${t.id}" value="${(cur.memo||'').replace(/"/g,'&quot;')}" style="font-size:11px;padding:6px 10px">
         </div>`;
       }).join('');
     }
-
-    async function saveAchievement() {
-      const editId = document.getElementById('achEditId').value;
-      const content = document.getElementById('achContent').value.trim();
-      const year = parseInt(document.getElementById('achYear').value);
-      const date_label = document.getElementById('achDate').value.trim();
-      if (!content || !year) { showToast('내용과 연도는 필수입니다','error'); return; }
-      const p = { content, year, date_label, category_id: document.getElementById('achCat').value || null };
-      const { error } = editId
-        ? await sb.from('achievements').update(p).eq('id', editId)
-        : await sb.from('achievements').insert(p);
-      if (error) { showToast('오류: '+error.message,'error'); return; }
-      showToast(editId?'수정 완료':'추가 완료','success');
-      resetAchForm();
-      loadAchievements();
+    function changeQty(typeId, delta) {
+      if (!memberTaskState[typeId]) memberTaskState[typeId] = { qty:0, memo:'', existingId:null };
+      memberTaskState[typeId].qty = Math.max(0, (memberTaskState[typeId].qty||0) + delta);
+      document.getElementById(`qty-${typeId}`).textContent = memberTaskState[typeId].qty;
+    }
+    async function saveTasks() {
+      if (!selMemberId) { showToast('시청자를 선택해주세요','error'); return; }
+      for (const t of taskTypes) {
+        const qty  = parseInt(document.getElementById('qty-'+t.id)?.textContent || 0);
+        const memo = document.getElementById('memo-'+t.id)?.value || '';
+        const cur  = memberTaskState[t.id] || {};
+        if (cur.existingId) {
+          if (qty === 0) await sb.from('upbo_tasks').delete().eq('id', cur.existingId);
+          else await sb.from('upbo_tasks').update({ quantity:qty, memo }).eq('id', cur.existingId);
+        } else if (qty > 0) {
+          await sb.from('upbo_tasks').insert({ member_id:selMemberId, type_id:t.id, quantity:qty, memo });
+        }
+      }
+      const memo = document.getElementById('memberMemo').value.trim();
+      await sb.from('upbo_members').update({ memo: memo||null }).eq('id', selMemberId);
+      showToast('💾 저장 완료!');
+      await loadMemberTasks();
+      const { data: members } = await sb.from('upbo_members').select('*').order('sort_order').order('created_at');
+      allUpboMembers = members || [];
+      renderAssignGrid(allUpboMembers);
+      renderMemberList(allUpboMembers);
+    }
+    async function clearAllTasks() {
+      if (!selMemberId || !confirm('이 시청자의 업보를 전체 초기화할까요?')) return;
+      await sb.from('upbo_tasks').delete().eq('member_id', selMemberId);
+      showToast('초기화됨');
+      loadMemberTasks();
     }
 
-    function editAchievement(id) {
-      const a = achData.find(x => String(x.id) === String(id));
-      if (!a) return;
-      document.getElementById('achEditId').value = a.id;
-      document.getElementById('achYear').value = a.year;
-      document.getElementById('achDate').value = a.date_label||'';
-      document.getElementById('achContent').value = a.content;
-      document.getElementById('achCat').value = a.category_id||'';
-      document.getElementById('achFormTitle').textContent = '업보 수정';
-      document.getElementById('achDeleteBtn').classList.remove('hidden');
-      window.scrollTo({top:0,behavior:'smooth'});
+    /* ════════════════ 문의 ════════════════ */
+    let inquiries = [];
+    async function loadInqBadge() {
+      const { data } = await sb.from('upbo_inquiries').select('id, is_read').eq('is_read', false);
+      const count = (data||[]).length;
+      const badge = document.getElementById('inq-badge');
+      if (badge) badge.style.display = count > 0 ? 'inline' : 'none';
     }
-
-    async function deleteAchievement() {
-      const id = document.getElementById('achEditId').value;
-      if (!id || !confirm('삭제할까요?')) return;
-      await sb.from('achievements').delete().eq('id', id);
-      showToast('삭제 완료','success');
-      resetAchForm();
-      loadAchievements();
+    async function loadInquiries() {
+      const { data } = await sb.from('upbo_inquiries').select('*').order('created_at', { ascending: false });
+      inquiries = data || [];
+      renderInquiries();
+      const unread = inquiries.filter(i => !i.is_read).length;
+      const badge = document.getElementById('inq-badge');
+      if (badge) badge.style.display = unread > 0 ? 'inline' : 'none';
     }
-
-    function resetAchForm() {
-      document.getElementById('achEditId').value='';
-      document.getElementById('achContent').value='';
-      document.getElementById('achDate').value='';
-      document.getElementById('achCat').value='';
-      document.getElementById('achFormTitle').textContent='업보 추가';
-      document.getElementById('achDeleteBtn').classList.add('hidden');
+    function renderInquiries() {
+      const el = document.getElementById('inq-list');
+      if (!inquiries.length) { el.innerHTML = '<div style="text-align:center;padding:40px;color:#BBB">문의가 없어요</div>'; return; }
+      el.innerHTML = inquiries.map(inq => {
+        const date = new Date(inq.created_at).toLocaleString('ko-KR', { month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit' });
+        const isNew = !inq.is_read;
+        return `<div style="background:${isNew?'#FBE0EC':'#fff'};border:1.5px solid ${isNew?'#F1CFDF':'#ECE1D0'};border-radius:14px;padding:16px 18px;margin-bottom:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px">
+            <div style="display:flex;align-items:center;gap:8px">
+              ${isNew ? '<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:#EF4444;color:white">NEW</span>' : ''}
+              <span style="font-size:14px;font-weight:700;color:#4A3A30">${(inq.nickname||'익명')}</span>
+              <span style="font-size:11px;color:#8A7565">${date}</span>
+            </div>
+            <div style="display:flex;gap:6px">
+              ${isNew ? `<button onclick="markRead('${inq.id}')" style="padding:4px 12px;background:#CF7FA3;color:white;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit">읽음</button>` : ''}
+              <button onclick="delInquiry('${inq.id}')" style="padding:4px 10px;background:none;border:1px solid #F2C4C4;color:#E07A7A;border-radius:6px;font-size:11px;cursor:pointer;font-family:inherit">삭제</button>
+            </div>
+          </div>
+          <p style="font-size:13px;color:#4A3A30;line-height:1.6;white-space:pre-wrap">${(inq.content||'')}</p>
+        </div>`;
+      }).join('');
     }
+    async function markRead(id) { await sb.from('upbo_inquiries').update({ is_read: true }).eq('id', id); loadInquiries(); }
+    async function markAllRead() { await sb.from('upbo_inquiries').update({ is_read: true }).eq('is_read', false); showToast('전체 읽음 처리됨'); loadInquiries(); }
+    async function delInquiry(id) { if (!confirm('삭제할까요?')) return; await sb.from('upbo_inquiries').delete().eq('id', id); showToast('삭제됨'); loadInquiries(); }
 
-    async function addCategory() {
-      const name = document.getElementById('catName').value.trim();
-      if (!name) { showToast('카테고리 이름을 입력해주세요','error'); return; }
-      const { error } = await sb.from('achievement_categories').insert({ name, color: selectedCatColor, sort_order: achCats.length });
-      if (error) { showToast('오류: '+error.message,'error'); return; }
-      document.getElementById('catName').value='';
-      showToast('카테고리 추가 완료','success');
-      loadAchievements();
-    }
-
-    async function deleteCat(id) {
-      if (!confirm('카테고리를 삭제할까요? 해당 카테고리의 업보는 미분류 처리됩니다.')) return;
-      await sb.from('achievement_categories').delete().eq('id', id);
-      showToast('삭제 완료','success');
-      loadAchievements();
-    }
-
-    // ── VOD · 클립 ──
+    /* ════════════════ VOD · 클립 ════════════════ */
     let vodList = [];
     let dragSrcRow = null;
 
@@ -475,13 +653,9 @@
       vodList = data || [];
       renderVodTable();
     }
-
     function renderVodTable() {
       const tbody = document.getElementById('vodTableBody');
-      if (!vodList.length) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-sub text-sm">등록된 영상이 없습니다</td></tr>';
-        return;
-      }
+      if (!vodList.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-sub text-sm">등록된 영상이 없습니다</td></tr>'; return; }
       tbody.innerHTML = vodList.map((v, i) => `
         <tr class="vod-drag-row" draggable="true" data-id="${v.id}" data-idx="${i}">
           <td class="text-sub"><span class="drag-handle">⠿</span>${i+1}</td>
@@ -489,33 +663,18 @@
           <td class="font-medium">${v.title}</td>
           <td><code class="bg-thead px-2 py-0.5 rounded text-xs">${v.vod_id}</code></td>
           <td class="text-sub text-xs">${v.created_at ? v.created_at.slice(0,10) : ''}</td>
-          <td>
-            <div class="flex gap-2">
-              <button onclick="openEditVodModal('${v.id}')" class="text-xs px-3 py-1 rounded-lg bg-thead text-accent hover:bg-point transition-colors">수정</button>
-              <button onclick="deleteVod('${v.id}')" class="text-xs px-3 py-1 rounded-lg text-red-400 hover:bg-red-50 border border-red-100 transition-colors">삭제</button>
-            </div>
-          </td>
-        </tr>
-      `).join('');
+          <td><div class="flex gap-2">
+            <button onclick="openEditVodModal('${v.id}')" class="text-xs px-3 py-1 rounded-lg bg-thead text-accent hover:bg-point transition-colors">수정</button>
+            <button onclick="deleteVod('${v.id}')" class="text-xs px-3 py-1 rounded-lg text-red-400 hover:bg-red-50 border border-red-100 transition-colors">삭제</button>
+          </div></td>
+        </tr>`).join('');
       initVodDrag();
     }
-
     function initVodDrag() {
-      const rows = document.querySelectorAll('.vod-drag-row');
-      rows.forEach(row => {
-        row.addEventListener('dragstart', e => {
-          dragSrcRow = row; row.classList.add('dragging');
-          e.dataTransfer.effectAllowed = 'move';
-        });
-        row.addEventListener('dragend', () => {
-          row.classList.remove('dragging');
-          document.querySelectorAll('.vod-drag-row').forEach(r => r.classList.remove('drag-over'));
-        });
-        row.addEventListener('dragover', e => {
-          e.preventDefault(); e.dataTransfer.dropEffect = 'move';
-          document.querySelectorAll('.vod-drag-row').forEach(r => r.classList.remove('drag-over'));
-          if (row !== dragSrcRow) row.classList.add('drag-over');
-        });
+      document.querySelectorAll('.vod-drag-row').forEach(row => {
+        row.addEventListener('dragstart', e => { dragSrcRow = row; row.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; });
+        row.addEventListener('dragend', () => { row.classList.remove('dragging'); document.querySelectorAll('.vod-drag-row').forEach(r => r.classList.remove('drag-over')); });
+        row.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; document.querySelectorAll('.vod-drag-row').forEach(r => r.classList.remove('drag-over')); if (row !== dragSrcRow) row.classList.add('drag-over'); });
         row.addEventListener('drop', async e => {
           e.preventDefault();
           if (row === dragSrcRow) return;
@@ -530,31 +689,25 @@
         });
       });
     }
-
     let _lastThumbUrl = '';
-
     async function previewVod() {
       const id = document.getElementById('vodId').value.trim();
       if (!id) return;
-      const wrap = document.getElementById('vodPreview');
-      const frame = document.getElementById('vodPreviewFrame');
-      frame.src = `https://vod.sooplive.com/player/${id}/embed?showChat=false&autoPlay=false&mutePlay=false`;
-      wrap.classList.remove('hidden');
+      document.getElementById('vodPreviewFrame').src = `https://vod.sooplive.com/player/${id}/embed?showChat=false&autoPlay=false&mutePlay=false`;
+      document.getElementById('vodPreview').classList.remove('hidden');
       _lastThumbUrl = '';
       try {
         const res = await fetch(`/api/soop-thumb?vod_id=${id}`);
         const json = await res.json();
         if (json.thumb) { _lastThumbUrl = json.thumb; showMsg('vodMsg', '✅ 썸네일 자동 감지됨', 'ok'); }
-      } catch(e) { /* 썸네일 없어도 무방 */ }
+      } catch(e) {}
     }
-
     async function handleAddVod() {
       const title = document.getElementById('vodTitle').value.trim();
       const vodId = document.getElementById('vodId').value.trim();
       const kind  = document.getElementById('vodKind').value;
       if (!title || !vodId) { showMsg('vodMsg', '제목과 VOD ID를 입력해주세요', 'error'); return; }
-      const thumbUrl = _lastThumbUrl || null;
-      const { error } = await sb.from('vod_clips').insert({ title, vod_id: vodId, kind, thumb_url: thumbUrl });
+      const { error } = await sb.from('vod_clips').insert({ title, vod_id: vodId, kind, thumb_url: _lastThumbUrl || null });
       if (error) { showMsg('vodMsg', '오류: ' + error.message, 'error'); return; }
       showMsg('vodMsg', '✅ 추가됐어요', 'ok');
       document.getElementById('vodTitle').value = '';
@@ -565,13 +718,11 @@
       _lastThumbUrl = '';
       loadVodAdmin();
     }
-
     async function deleteVod(id) {
       if (!confirm('삭제할까요?')) return;
       await sb.from('vod_clips').delete().eq('id', id);
       loadVodAdmin();
     }
-
     async function openEditVodModal(id) {
       const { data } = await sb.from('vod_clips').select('*').eq('id', id).single();
       document.getElementById('editVodId').value       = data.id;
@@ -582,24 +733,20 @@
       document.getElementById('editVodThumbUrl').value = data.thumb_url || '';
       document.getElementById('editVodModal').classList.remove('hidden');
     }
-
     async function saveEditVod() {
       const id = document.getElementById('editVodId').value;
-      let thumbUrl = document.getElementById('editVodThumbUrl') ? document.getElementById('editVodThumbUrl').value : null;
+      let thumbUrl = document.getElementById('editVodThumbUrl').value;
       await sb.from('vod_clips').update({
         title:      document.getElementById('editVodTitle').value.trim(),
         vod_id:     document.getElementById('editVodVodId').value.trim(),
         kind:       document.getElementById('editVodKind').value,
         sort_order: parseInt(document.getElementById('editVodOrder').value) || 0,
-        ...(thumbUrl !== null ? { thumb_url: thumbUrl || null } : {}),
+        thumb_url:  thumbUrl || null,
       }).eq('id', id);
       closeEditVodModal();
       loadVodAdmin();
     }
-
-    function closeEditVodModal() {
-      document.getElementById('editVodModal').classList.add('hidden');
-    }
+    function closeEditVodModal() { document.getElementById('editVodModal').classList.add('hidden'); }
   </script>
   <div id="toast" class="toast"></div>
 </body>

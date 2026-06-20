@@ -12,55 +12,91 @@
 <style>
   :root{
     --ink:#4a3a30; --paper:#fbf6ee; --grid:#ece1d0;
-    --c-card:#f6ead0; --t-card:#ecd6a4; --accent:#ff8fb0;
+    --c-card:#f6ead0; --t-card:#ecd6a4;
+    --accent:#ff8fb0; --accent-deep:#e36f95;
+    --pink-soft:#fbe0ec; --lav:#efe1d2;
+    --red:#e07a7a;
   }
-  *{box-sizing:border-box;}
-  html,body{margin:0;}
-  body{
-    font-family:'Gaegu',system-ui,sans-serif;color:var(--ink);
-    background-color:var(--paper);
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Gaegu',system-ui,sans-serif;color:var(--ink);background-color:var(--paper);
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-    background-size:24px 24px;-webkit-font-smoothing:antialiased;padding:0 14px 56px;line-height:1.45;
-  }
-  .diary{max-width:460px;margin:0 auto;}
+    background-size:24px 24px;-webkit-font-smoothing:antialiased;padding:0 14px 56px;line-height:1.45;min-height:100vh;}
+  .diary{max-width:560px;margin:0 auto;}
 
   nav.tabs{display:flex;justify-content:center;gap:6px;padding:16px 0 6px;position:sticky;top:0;z-index:30;background:linear-gradient(var(--paper) 78%,transparent);}
   nav.tabs a{font-weight:700;font-size:1.08rem;text-decoration:none;color:var(--ink);padding:3px 16px 5px;border:2px solid var(--ink);border-radius:14px;background:#fff;box-shadow:2px 2px 0 rgba(74,58,48,.16);transform:rotate(-1.5deg);transition:transform .15s;}
   nav.tabs a:nth-child(2){transform:rotate(1deg);}
   nav.tabs a:nth-child(3){transform:rotate(-.5deg);}
   nav.tabs a:hover{transform:translateY(-2px) rotate(0);}
-  nav.tabs a.active{background:#c9ecd9;}
+  nav.tabs a.active{background:var(--accent);color:#fff;}
 
   .sketch{position:relative;}
   .sketch::before{content:'';position:absolute;inset:0;border:2.4px solid var(--ink);border-radius:18px;filter:url(#wob);pointer-events:none;z-index:3;}
   .sketch.w2::before{filter:url(#wob2);}
-  .card{position:relative;border-radius:18px;padding:18px 20px;box-shadow:5px 6px 0 rgba(74,58,48,.13);background:var(--c-card);margin-bottom:30px;}
-  .card > *{position:relative;z-index:2;}
-  .tab{position:absolute;top:-17px;left:18px;padding:1px 16px 3px;border-radius:13px;font-weight:700;font-size:1.18rem;background:var(--t-card);box-shadow:3px 3px 0 rgba(74,58,48,.13);transform:rotate(-2deg);z-index:5;}
 
-  header.hero{margin:6px 2px 26px;}
-  .hero .title{font-weight:700;font-size:2.5rem;line-height:1;margin:0;}
-  .hero .sub{font-size:1.15rem;opacity:.6;margin-top:4px;}
+  header.hero{margin:6px 2px 18px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .hero .title{font-weight:700;font-size:2.4rem;line-height:1;margin:0;}
+  .hero .sub{font-size:1.1rem;opacity:.6;margin-top:2px;}
+  .hero-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .updated-badge{font-size:1rem;color:var(--ink);background:#fff;border:2px solid var(--ink);padding:2px 12px;border-radius:14px;box-shadow:2px 2px 0 rgba(74,58,48,.14);white-space:nowrap;}
+  .inquiry-btn{font-family:inherit;font-weight:700;font-size:1.02rem;cursor:pointer;color:#fff;background:var(--accent);border:2px solid var(--ink);padding:3px 15px 5px;border-radius:14px;box-shadow:2px 2px 0 rgba(74,58,48,.16);transition:transform .15s;}
+  .inquiry-btn:hover{transform:translateY(-2px);}
 
-  /* 필터 */
-  .filters{display:flex;flex-wrap:wrap;gap:6px;margin:0 2px 22px;}
-  .filters button{font-family:inherit;font-weight:700;font-size:1rem;cursor:pointer;padding:2px 13px 4px;border:2px solid var(--ink);border-radius:13px;background:#fff;color:var(--ink);transition:transform .12s;}
-  .filters button:hover{transform:translateY(-1px);}
-  .filters button.on{background:var(--accent);color:#fff;}
+  .search-input{width:100%;padding:11px 16px;border-radius:15px;border:2.4px solid var(--ink);background:#fff;font-family:inherit;font-size:1.12rem;color:var(--ink);outline:none;margin-bottom:20px;box-shadow:3px 3px 0 rgba(74,58,48,.12);}
+  .search-input::placeholder{color:#4a3a3066;}
 
-  /* 업보 항목 */
-  .ach-row{display:flex;gap:10px;align-items:flex-start;padding:7px 2px;border-bottom:2px dashed #4a3a3030;}
-  .ach-row:last-child{border-bottom:none;}
-  .ach-date{font-weight:700;min-width:46px;font-size:1.02rem;opacity:.75;flex-shrink:0;}
-  .ach-content{font-size:1.12rem;flex:1;}
-  .ach-mark{display:inline-block;padding:0 4px;border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone;}
-  .ach-cat{display:inline-block;font-size:.78rem;font-weight:700;color:#fff;padding:1px 8px;border-radius:9px;margin-left:6px;vertical-align:middle;}
+  .member-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media(max-width:480px){.member-grid{grid-template-columns:repeat(2,1fr);gap:12px;}}
 
-  .empty{text-align:center;padding:40px 0;opacity:.6;font-size:1.15rem;}
-  .loading{text-align:center;padding:40px 0;opacity:.5;font-size:1.1rem;}
+  .member-card{background:var(--c-card);border-radius:18px;padding:16px 12px 14px;text-align:center;cursor:pointer;
+    box-shadow:5px 6px 0 rgba(74,58,48,.13);opacity:0;transform:translateY(12px);transition:transform .2s,box-shadow .2s,opacity .4s;}
+  .member-card:nth-child(3n){transform:rotate(-1deg) translateY(12px);}
+  .member-card:nth-child(3n+2){transform:rotate(1deg) translateY(12px);}
+  .member-card.visible{opacity:1;transform:translateY(0);}
+  .member-card.visible:nth-child(3n){transform:rotate(-1deg);}
+  .member-card.visible:nth-child(3n+2){transform:rotate(1deg);}
+  .member-card:hover{transform:translateY(-4px) rotate(0)!important;}
+  .member-card > *{position:relative;z-index:2;}
 
-  footer{margin:40px 4px 0;text-align:center;font-size:1rem;opacity:.55;}
+  .member-avatar{width:62px;height:62px;border-radius:50%;margin:0 auto 9px;background:linear-gradient(135deg,#f0d6b8,#f6c8da);
+    overflow:hidden;border:2.4px solid var(--ink);display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .member-avatar img{width:100%;height:100%;object-fit:cover;}
+  .member-nick{font-size:1.12rem;font-weight:700;color:var(--ink);margin-bottom:2px;line-height:1.25;word-break:break-all;}
+  .member-id{font-size:.92rem;color:#4a3a3088;margin-bottom:7px;}
+  .member-count{display:inline-flex;align-items:center;gap:4px;font-size:.95rem;font-weight:700;background:var(--pink-soft);color:var(--accent-deep);border:2px solid var(--accent);padding:1px 11px 2px;border-radius:14px;}
 
+  .state-box{text-align:center;padding:54px 20px;color:#4a3a3099;font-size:1.15rem;}
+  .spinner{width:28px;height:28px;border-radius:50%;border:3px solid var(--t-card);border-top-color:var(--accent);animation:spin .8s linear infinite;margin:0 auto 14px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* 팝업 */
+  .modal-backdrop{position:fixed;inset:0;z-index:100;background:rgba(74,58,48,.32);backdrop-filter:blur(4px);display:none;}
+  .modal-backdrop.open{display:flex;}
+  .modal-box{position:fixed;left:50%;transform:translateX(-50%);background:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:22px 22px;
+    border:2.6px solid var(--ink);border-radius:22px;padding:24px;max-width:400px;width:90%;max-height:80vh;overflow-y:auto;
+    box-shadow:7px 8px 0 rgba(74,58,48,.18);animation:popIn .22s cubic-bezier(.34,1.56,.64,1);}
+  @keyframes popIn{from{transform:translateX(-50%) translateY(8px) scale(.97);opacity:0}to{transform:translateX(-50%) translateY(0) scale(1);opacity:1}}
+  .modal-header{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+  .modal-avatar{width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#f0d6b8,#f6c8da);overflow:hidden;border:2.4px solid var(--ink);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:20px;}
+  .modal-avatar img{width:100%;height:100%;object-fit:cover;}
+  .modal-nick{font-size:1.3rem;font-weight:700;color:var(--ink);}
+  .modal-uid{font-size:1rem;color:#4a3a3088;}
+  .task-list{display:flex;flex-direction:column;gap:8px;}
+  .task-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#fff;border:2px solid var(--ink);border-radius:13px;}
+  .task-name{font-size:1.08rem;font-weight:700;color:var(--ink);}
+  .task-memo-txt{font-size:.92rem;color:#4a3a3088;margin-top:1px;}
+  .task-qty{font-size:1rem;font-weight:700;color:var(--accent-deep);background:var(--pink-soft);border:2px solid var(--accent);padding:1px 11px 2px;border-radius:14px;white-space:nowrap;}
+  .modal-close{width:100%;padding:11px;border-radius:14px;background:#fff;color:var(--ink);border:2.4px solid var(--ink);font-family:inherit;font-size:1.08rem;font-weight:700;cursor:pointer;margin-top:18px;box-shadow:3px 3px 0 rgba(74,58,48,.14);transition:transform .12s;}
+  .modal-close:hover{transform:translateY(-2px);}
+
+  .modal-input{width:100%;padding:11px 14px;border-radius:13px;border:2.4px solid var(--ink);font-family:inherit;font-size:1.05rem;color:var(--ink);background:#fff;outline:none;margin-bottom:10px;}
+  textarea.modal-input{height:96px;resize:none;}
+  .modal-submit{width:100%;padding:11px;border-radius:14px;background:var(--accent);color:#fff;border:2.4px solid var(--ink);font-family:inherit;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:3px 3px 0 rgba(74,58,48,.16);transition:transform .12s;}
+  .modal-submit:hover{transform:translateY(-2px);}
+
+  footer{margin:36px 4px 0;text-align:center;font-size:1rem;opacity:.55;}
   body.embed nav.tabs{display:none;}
 </style>
 </head>
@@ -80,82 +116,206 @@
   </nav>
 
   <header class="hero">
-    <h1 class="title">업보책 📖</h1>
-    <div class="sub">두미가 쌓아온 발자취</div>
+    <div>
+      <h1 class="title">업보 현황 📖</h1>
+      <div class="sub">두콩이들의 업보 모음</div>
+    </div>
+    <div class="hero-right">
+      <span class="updated-badge" id="updatedLabel">갱신일: —</span>
+      <button class="inquiry-btn" onclick="openInquiry()">업보 문의</button>
+    </div>
   </header>
 
-  <div class="filters" id="catFilters"></div>
+  <input class="search-input" id="searchInput" type="text" placeholder="🔍 닉네임 또는 아이디 검색...">
 
-  <div id="achWrap">
-    <div class="loading">불러오는 중...</div>
-  </div>
+  <div id="loadingState" class="state-box"><div class="spinner"></div>불러오는 중...</div>
+  <div id="emptyState" class="state-box" style="display:none">아직 업보가 없어요 ✨</div>
+  <div class="member-grid" id="memberGrid"></div>
 
-  <footer>
-    <p>© 2026 두미 · 두콩이들 💗</p>
-    <p>Designed &amp; Developed by 아키텍트 크리에이티브 · profile@soop.info</p>
-  </footer>
 </main>
+
+<!-- 업보 팝업 -->
+<div class="modal-backdrop" id="upboModal" onclick="closeUpboModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-avatar" id="modal-avatar"><span>🐱</span></div>
+      <div>
+        <div class="modal-nick" id="modal-nick"></div>
+        <div class="modal-uid" id="modal-uid"></div>
+      </div>
+    </div>
+    <div class="task-list" id="modal-task-list"></div>
+    <button class="modal-close" onclick="document.getElementById('upboModal').classList.remove('open'); document.querySelector('#upboModal .modal-box').style.top = ''">닫기</button>
+  </div>
+</div>
+
+<!-- 문의 모달 -->
+<div class="modal-backdrop" id="inquiryModal" onclick="closeInquiry(event)">
+  <div class="modal-box" onclick="event.stopPropagation()" style="top:50%;transform:translate(-50%,-50%)">
+    <div style="font-size:1.3rem;font-weight:700;margin-bottom:16px">업보 문의 ✏️</div>
+    <div id="inquiryForm">
+      <input class="modal-input" id="iNick" type="text" placeholder="닉네임">
+      <textarea class="modal-input" id="iContent" placeholder="문의 내용을 입력해주세요"></textarea>
+      <button class="modal-submit" onclick="submitInquiry()">문의 접수</button>
+    </div>
+    <div id="inquirySuccess" style="display:none;text-align:center;padding:20px">
+      <div style="font-size:2.5rem;margin-bottom:10px">✅</div>
+      <div style="font-weight:700;color:var(--ink)">문의가 접수됐어요!</div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 두미 · 두콩이들 💗</p>
+  <p>Designed &amp; Developed by 아키텍트 크리에이티브 · profile@soop.info</p>
+</footer>
 
 <script src="../js/supabase-config.js"></script>
 <script>
-  if (new URLSearchParams(location.search).has('embed')) document.body.classList.add('embed');
+const sb = initSupabase();
 
-  const sb = initSupabase();
-  let cats = [];
-  let achs = [];
-  let catFilter = 'all';
+let allMembers = [], memberTasks = {};
 
-  async function load() {
-    const [{ data: c }, { data: a }] = await Promise.all([
-      sb.from('achievement_categories').select('*').order('sort_order'),
-      sb.from('achievements').select('*, achievement_categories(name,color)').order('year', { ascending:false }).order('sort_order').order('date_label')
+function esc(t){ const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
+
+function avatarUrl(uid){
+  if(!uid) return null;
+  const pre = uid.substring(0,2);
+  return `https://profile.img.sooplive.com/LOGO/${pre}/${uid}/${uid}.jpg`;
+}
+
+async function load(){
+  try{
+    const [{ data: settings }, { data: members }, { data: tasks }] = await Promise.all([
+      sb.from('upbo_settings').select('*').eq('key','last_updated').single(),
+      sb.from('upbo_members').select('*').order('sort_order').order('nickname'),
+      sb.from('upbo_tasks').select('*, upbo_task_types(id,name,category,sort_order)').gt('quantity', 0)
     ]);
-    cats = c || [];
-    achs = a || [];
-    renderFilters();
-    render();
+
+    if(settings?.value) document.getElementById('updatedLabel').textContent = '갱신일: ' + settings.value;
+
+    memberTasks = {};
+    (tasks||[]).forEach(t => {
+      if(!memberTasks[t.member_id]) memberTasks[t.member_id] = [];
+      memberTasks[t.member_id].push(t);
+    });
+
+    allMembers = (members||[]).filter(m => (memberTasks[m.id]?.length) && !m.is_hidden);
+
+    document.getElementById('loadingState').style.display = 'none';
+    if(!allMembers.length){ document.getElementById('emptyState').style.display='block'; return; }
+    render(allMembers);
+  }catch(e){
+    document.getElementById('loadingState').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
   }
+}
 
-  function renderFilters() {
-    const el = document.getElementById('catFilters');
-    let html = `<button class="${catFilter==='all'?'on':''}" onclick="setFilter('all',this)">전체</button>`;
-    html += cats.map(cat =>
-      `<button class="${String(catFilter)===String(cat.id)?'on':''}" style="${String(catFilter)===String(cat.id)?`background:${cat.color};border-color:${cat.color}`:''}" onclick="setFilter('${cat.id}',this)">${cat.name}</button>`
-    ).join('');
-    el.innerHTML = html;
+function render(members){
+  const grid = document.getElementById('memberGrid');
+  const empty = document.getElementById('emptyState');
+  if(!members.length){ empty.style.display='block'; grid.innerHTML=''; return; }
+  empty.style.display = 'none';
+
+  grid.innerHTML = members.map((m, idx) => {
+    const tasks = memberTasks[m.id] || [];
+    const totalQty = tasks.reduce((s,t) => s + (t.quantity||1), 0);
+    const url = avatarUrl(m.user_id);
+    const imgHtml = url
+      ? `<img src="${url}" alt="${esc(m.nickname)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      : '';
+    const fallback = `<span style="${url?'display:none':''}">🐱</span>`;
+
+    return `<div class="member-card" onclick="openUpboModal('${m.id}', event)">
+      <div class="member-avatar">${imgHtml}${fallback}</div>
+      <div class="member-nick">${esc(m.nickname)}</div>
+      ${m.user_id ? `<div class="member-id">(${esc(m.user_id)})</div>` : ''}
+      <span class="member-count">업보 ${totalQty}</span>
+    </div>`;
+  }).join('');
+
+  const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:.05});
+  grid.querySelectorAll('.member-card').forEach(el => obs.observe(el));
+}
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase().trim();
+  render(q ? allMembers.filter(m =>
+    m.nickname.toLowerCase().includes(q) || (m.user_id||'').toLowerCase().includes(q)
+  ) : allMembers);
+});
+
+function openUpboModal(memberId, clickEvent){
+  const card = clickEvent?.currentTarget;
+  const modal = document.querySelector('#upboModal .modal-box');
+  if(card && modal){
+    const rect = card.getBoundingClientRect();
+    const centerY = rect.top + rect.height / 2;
+    const vh = window.innerHeight;
+    const mh = Math.min(modal.offsetHeight || 400, vh * 0.8);
+    let top = centerY - mh / 2;
+    top = Math.max(16, Math.min(top, vh - mh - 16));
+    modal.style.top = top + 'px';
   }
+  const m = allMembers.find(x => String(x.id) === String(memberId));
+  if(!m) return;
+  const tasks = (memberTasks[memberId] || []).slice().sort((a, b) => {
+    const na = a.upbo_task_types?.name || '';
+    const nb = b.upbo_task_types?.name || '';
+    const isKo = s => /^[가-힣]/.test(s);
+    const isEn = s => /^[A-Za-z]/.test(s);
+    const rank = s => isKo(s) ? 0 : isEn(s) ? 1 : 2;
+    if(rank(na) !== rank(nb)) return rank(na) - rank(nb);
+    return na.localeCompare(nb, 'ko');
+  });
 
-  function setFilter(id, btn) {
-    catFilter = id;
-    renderFilters();
-    render();
-  }
+  const avatarEl = document.getElementById('modal-avatar');
+  const url = avatarUrl(m.user_id);
+  avatarEl.innerHTML = url
+    ? `<img src="${url}" alt="" onerror="this.parentElement.innerHTML='<span>🐱</span>'" style="width:100%;height:100%;object-fit:cover">`
+    : '<span>🐱</span>';
 
-  function render() {
-    const wrap = document.getElementById('achWrap');
-    const list = catFilter === 'all' ? achs : achs.filter(a => String(a.category_id) === String(catFilter));
-    if (!list.length) { wrap.innerHTML = '<div class="empty">아직 기록된 업보가 없어요 🌱</div>'; return; }
+  document.getElementById('modal-nick').textContent = m.nickname;
+  document.getElementById('modal-uid').textContent = m.user_id ? `(${m.user_id})` : '';
 
-    // 연도별 그룹
-    const byYear = {};
-    list.forEach(a => { const y = a.year || '기타'; (byYear[y] = byYear[y] || []).push(a); });
-    const years = Object.keys(byYear).sort((x, y) => (y === '기타' ? -1 : x === '기타' ? 1 : y - x));
+  const listEl = document.getElementById('modal-task-list');
+  listEl.innerHTML = tasks.map(t => `
+    <div class="task-row">
+      <div>
+        <div class="task-name">${esc(t.upbo_task_types?.name||'')}</div>
+        ${t.memo ? `<div class="task-memo-txt">${esc(t.memo)}</div>` : ''}
+      </div>
+      <span class="task-qty">×${t.quantity||1}</span>
+    </div>`).join('');
 
-    wrap.innerHTML = years.map(y => `
-      <section class="card sketch w2">
-        <span class="tab">${y}${y==='기타'?'':'년'}</span>
-        ${byYear[y].map(a => {
-          const cat = a.achievement_categories;
-          const color = cat ? cat.color : '#ecd6a4';
-          return `<div class="ach-row">
-            <div class="ach-date">${a.date_label || ''}</div>
-            <div class="ach-content"><span class="ach-mark" style="background:${color}55">${a.content}</span>${cat ? `<span class="ach-cat" style="background:${color}">${cat.name}</span>` : ''}</div>
-          </div>`;
-        }).join('')}
-      </section>`).join('');
-  }
+  document.getElementById('upboModal').classList.add('open');
+}
 
-  load();
+function closeUpboModal(e){ if(e.target===e.currentTarget){ document.getElementById('upboModal').classList.remove('open'); document.querySelector('#upboModal .modal-box').style.top = ''; } }
+document.addEventListener('keydown', e => { if(e.key==='Escape'){ document.getElementById('upboModal').classList.remove('open'); document.getElementById('inquiryModal').classList.remove('open'); }});
+
+function openInquiry(){
+  document.getElementById('inquiryForm').style.display='block';
+  document.getElementById('inquirySuccess').style.display='none';
+  document.getElementById('iNick').value='';
+  document.getElementById('iContent').value='';
+  document.getElementById('inquiryModal').classList.add('open');
+}
+function closeInquiry(e){ if(e.target===e.currentTarget) document.getElementById('inquiryModal').classList.remove('open'); }
+async function submitInquiry(){
+  const nick = document.getElementById('iNick').value.trim();
+  const content = document.getElementById('iContent').value.trim();
+  if(!nick||!content) return;
+  const { error } = await sb.from('upbo_inquiries').insert({ nickname:nick, content });
+  if(error){ alert('접수 실패: '+error.message); return; }
+  document.getElementById('inquiryForm').style.display='none';
+  document.getElementById('inquirySuccess').style.display='block';
+  setTimeout(() => document.getElementById('inquiryModal').classList.remove('open'), 2000);
+}
+
+if(new URLSearchParams(location.search).has('embed')) document.body.classList.add('embed');
+
+load();
 </script>
 </body>
 </html>
