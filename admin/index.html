@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <title>🔐 두미 Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          bg: '#FBF6EE', card: '#FFFFFF',
+          point: '#F1CFDF', accent: '#CF7FA3', accent2: '#B86A8F',
+          txt: '#4A3A30', sub: '#8A7565', thead: '#FBE0EC',
+        },
+        fontFamily: { sans: ['Noto Sans KR', 'sans-serif'] }
+      }}
+    }
+  </script>
+  <style>
+    .tab-btn { transition: all 0.2s; }
+    .tab-btn.active { color: #CF7FA3; border-bottom: 2px solid #CF7FA3; font-weight: 600; }
+    .tab-btn:not(.active) { color: #8A7565; border-bottom: 2px solid transparent; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .vod-table { width: 100%; border-collapse: collapse; }
+    .vod-drag-row { cursor: grab; transition: background .15s; }
+    .vod-drag-row:active { cursor: grabbing; }
+    .vod-drag-row.dragging { opacity: .4; background: #FBE0EC; }
+    .vod-drag-row.drag-over { border-top: 2px solid #CF7FA3; }
+    .drag-handle { color: #bbb; font-size: 14px; cursor: grab; padding: 0 4px; user-select: none; }
+    .vod-table th { background: #FBE0EC; color: #4A3A30; font-size: 0.75rem; font-weight: 600; padding: 10px 12px; text-align: left; }
+    .vod-table th:first-child { border-radius: 10px 0 0 10px; }
+    .vod-table th:last-child { border-radius: 0 10px 10px 0; }
+    .vod-table td { padding: 10px 12px; font-size: 0.8125rem; border-bottom: 1px solid rgba(176,122,143,.1); color: #4A3A30; }
+    .vod-table tr:last-child td { border-bottom: none; }
+    .input-field{width:100%;padding:10px 14px;border:1px solid rgba(176,122,143,.3);border-radius:10px;font-size:.875rem;color:#4A3A30;background:#fff;transition:border-color .2s;outline:none;font-family:'Noto Sans KR',sans-serif}
+    .input-field:focus{border-color:#CF7FA3}
+    select.input-field{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238C8C8C' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+    .color-option{width:28px;height:28px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .2s;flex-shrink:0}
+    .color-option:hover{transform:scale(1.1)}
+    .color-option.selected{border-color:#4A3A30;box-shadow:0 0 0 2px #fff,0 0 0 4px #4A3A30}
+    .toast{position:fixed;bottom:24px;right:24px;padding:12px 20px;border-radius:12px;font-size:.875rem;font-weight:500;box-shadow:0 8px 24px rgba(0,0,0,.15);transform:translateY(100px);opacity:0;transition:all .3s;z-index:200}
+    .toast.show{transform:translateY(0);opacity:1}.toast.success{background:#48BB78;color:#fff}.toast.error{background:#EF4444;color:#fff}
+  </style>
+</head>
+<body class="bg-bg min-h-screen font-sans">
+
+  <!-- ==================== LOGIN ==================== -->
+  <div id="loginScreen" class="min-h-screen flex items-center justify-center px-4">
+    <div class="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm border border-point/40">
+      <div class="text-center mb-6">
+        <div class="text-3xl mb-2">🐱</div>
+        <h1 class="text-2xl font-bold text-txt mb-1">Admin</h1>
+        <p class="text-sub text-sm">두미 관리자 페이지</p>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label class="block text-sm text-txt mb-1">이메일</label>
+          <input type="email" id="loginEmail"
+            class="w-full px-4 py-2.5 rounded-xl border border-point/50 bg-bg focus:outline-none focus:ring-2 focus:ring-accent/30 text-sm">
+        </div>
+        <div>
+          <label class="block text-sm text-txt mb-1">비밀번호</label>
+          <input type="password" id="loginPassword"
+            class="w-full px-4 py-2.5 rounded-xl border border-point/50 bg-bg focus:outline-none focus:ring-2 focus:ring-accent/30 text-sm"
+            onkeydown="if(event.key==='Enter')handleLogin()">
+        </div>
+        <button onclick="handleLogin()"
+          class="w-full py-2.5 rounded-xl bg-accent text-white font-semibold hover:bg-accent2 transition-colors text-sm">
+          로그인
+        </button>
+      </div>
+      <p id="loginError" class="text-red-400 text-xs text-center mt-3 hidden"></p>
+    </div>
+  </div>
+
+  <!-- ==================== ADMIN ==================== -->
+  <div id="adminScreen" class="hidden">
+
+    <header class="sticky top-0 z-50 bg-bg/95 backdrop-filter backdrop-blur border-b border-point/40">
+      <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <a href="../" class="text-sub hover:text-accent transition-colors text-sm">←</a>
+          <h1 class="text-lg font-bold text-txt">🐱 두미 Admin</h1>
+        </div>
+        <button onclick="handleLogout()"
+          class="px-3 py-1.5 rounded-lg border border-sub/30 text-sub text-xs hover:bg-red-50 hover:text-red-400 hover:border-red-200 transition-colors">
+          로그아웃
+        </button>
+      </div>
+    </header>
+
+    <div class="max-w-5xl mx-auto px-4 pt-4">
+      <div class="flex gap-6 border-b border-point/40 overflow-x-auto">
+        <button class="tab-btn active pb-3 text-sm whitespace-nowrap" data-tab="vod">🎬 VOD · 클립</button>
+        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="achievement">🏆 업보 관리</button>
+      </div>
+    </div>
+
+    <main class="max-w-5xl mx-auto px-4 py-6">
+
+      <!-- ========== VOD · 클립 ========== -->
+      <div id="tab-vod" class="tab-content active">
+
+        <div class="bg-white rounded-2xl shadow-sm border border-point/30 p-6 mb-6">
+          <h2 class="font-semibold text-txt mb-4">➕ 영상 추가</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div>
+              <label class="block text-sm text-txt mb-1">영상 제목 <span class="text-red-400">*</span></label>
+              <input type="text" id="vodTitle" placeholder="예: 어찌라구 명장면"
+                class="w-full px-4 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none focus:ring-2 focus:ring-accent/30 text-sm">
+            </div>
+            <div>
+              <label class="block text-sm text-txt mb-1">SOOP VOD ID <span class="text-red-400">*</span></label>
+              <input type="text" id="vodId" placeholder="예: 194780409"
+                class="w-full px-4 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none focus:ring-2 focus:ring-accent/30 text-sm">
+            </div>
+            <div>
+              <label class="block text-sm text-txt mb-1">종류</label>
+              <select id="vodKind" class="input-field">
+                <option value="vod">VOD (다시보기)</option>
+                <option value="clip">클립</option>
+              </select>
+            </div>
+          </div>
+          <div class="mb-2 text-xs text-sub">
+            💡 SOOP VOD/클립 URL의 숫자 부분만 입력: <code class="bg-thead px-1 rounded">vod.sooplive.com/player/<b>194780409</b></code><br>
+            ID 입력 후 미리보기 클릭 시 썸네일 자동 로드
+          </div>
+          <div id="vodPreview" class="hidden mb-4">
+            <div class="aspect-video rounded-xl overflow-hidden bg-black w-full max-w-xs">
+              <iframe id="vodPreviewFrame" src="" class="w-full h-full border-none" allowfullscreen></iframe>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="previewVod()"
+              class="px-4 py-2 rounded-xl border border-accent text-accent text-sm font-medium hover:bg-thead transition-colors">
+              👁 미리보기
+            </button>
+            <button onclick="handleAddVod()"
+              class="px-6 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">
+              ➕ 추가
+            </button>
+          </div>
+          <p id="vodMsg" class="text-xs mt-2 hidden"></p>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-point/30 p-6">
+          <h2 class="font-semibold text-txt mb-4">🎬 등록된 영상</h2>
+          <div class="overflow-x-auto">
+            <table class="vod-table">
+              <thead>
+                <tr><th>#</th><th>종류</th><th>제목</th><th>VOD ID</th><th>등록일</th><th>관리</th></tr>
+              </thead>
+              <tbody id="vodTableBody">
+                <tr><td colspan="6" class="text-center py-8 text-sub text-sm">불러오는 중...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== 업보 관리 ========== -->
+      <div id="tab-achievement" class="tab-content">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+
+          <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-2xl border border-point/30 p-6">
+              <h2 id="achFormTitle" class="text-base font-bold text-txt mb-4">업보 추가</h2>
+              <input type="hidden" id="achEditId">
+              <div class="space-y-3">
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs text-sub mb-1 font-medium">연도 *</label>
+                    <input type="number" id="achYear" class="input-field" value="2026" min="2020" max="2099" placeholder="예: 2026">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-sub mb-1 font-medium">날짜 *</label>
+                    <input type="text" id="achDate" class="input-field" placeholder="예: 6.1 또는 5.23-5.28">
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs text-sub mb-1 font-medium">내용 *</label>
+                  <input type="text" id="achContent" class="input-field" placeholder="업보 내용">
+                </div>
+                <div>
+                  <label class="block text-xs text-sub mb-1 font-medium">카테고리</label>
+                  <select id="achCat" class="input-field">
+                    <option value="">-- 선택 --</option>
+                  </select>
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="saveAchievement()" class="flex-1 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">저장</button>
+                  <button onclick="resetAchForm()" class="flex-1 py-2 rounded-xl border border-sub/30 text-sub text-sm hover:bg-gray-50 transition-colors">초기화</button>
+                  <button id="achDeleteBtn" onclick="deleteAchievement()" class="hidden py-2 px-4 rounded-xl border border-red-200 text-red-400 text-sm hover:bg-red-50 transition-colors">삭제</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-point/30 p-6">
+              <h2 class="text-base font-bold text-txt mb-4">카테고리 관리</h2>
+              <div class="space-y-3 mb-4">
+                <div>
+                  <label class="block text-xs text-sub mb-1 font-medium">카테고리 이름</label>
+                  <input type="text" id="catName" class="input-field" placeholder="예: 노래">
+                </div>
+                <div>
+                  <label class="block text-xs text-sub mb-1 font-medium">색상</label>
+                  <div class="flex gap-2 flex-wrap" id="catColorPicker">
+                    <div class="color-option selected" style="background:#FF8FB0" data-color="#FF8FB0" onclick="selectCatColor(this)"></div>
+                    <div class="color-option" style="background:#CF7FA3" data-color="#CF7FA3" onclick="selectCatColor(this)"></div>
+                    <div class="color-option" style="background:#C49A72" data-color="#C49A72" onclick="selectCatColor(this)"></div>
+                    <div class="color-option" style="background:#E6B84A" data-color="#E6B84A" onclick="selectCatColor(this)"></div>
+                    <div class="color-option" style="background:#3BAD7A" data-color="#3BAD7A" onclick="selectCatColor(this)"></div>
+                    <div class="color-option" style="background:#4299E1" data-color="#4299E1" onclick="selectCatColor(this)"></div>
+                    <div class="color-option" style="background:#9F7AEA" data-color="#9F7AEA" onclick="selectCatColor(this)"></div>
+                    <div class="color-option" style="background:#ED8936" data-color="#ED8936" onclick="selectCatColor(this)"></div>
+                  </div>
+                </div>
+                <button onclick="addCategory()" class="w-full py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">➕ 카테고리 추가</button>
+              </div>
+              <div id="catList" class="space-y-2"></div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-3">
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="text-base font-bold text-txt">등록된 업보</h2>
+              <div class="flex gap-2">
+                <select id="achFilterYear" class="input-field" style="width:auto;padding:6px 12px;font-size:.8125rem" onchange="loadAchievements()"><option value="all">전체</option></select>
+                <select id="achFilterCat" class="input-field" style="width:auto;padding:6px 12px;font-size:.8125rem" onchange="renderAchList()">
+                  <option value="all">전체 카테고리</option>
+                </select>
+              </div>
+            </div>
+            <div id="achList" class="space-y-2"></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- VOD 수정 모달 -->
+  <div id="editVodModal" class="hidden fixed inset-0 bg-black/30 z-50 flex items-center justify-center px-4">
+    <div class="bg-white rounded-2xl shadow-xl p-6 w-full max-w-sm border border-point/30">
+      <h3 class="font-semibold text-txt mb-4">✏️ 영상 수정</h3>
+      <div class="space-y-3">
+        <input type="hidden" id="editVodId">
+        <div>
+          <label class="block text-sm text-txt mb-1">제목</label>
+          <input type="text" id="editVodTitle" class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm">
+        </div>
+        <div>
+          <label class="block text-sm text-txt mb-1">VOD ID</label>
+          <input type="text" id="editVodVodId" class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm">
+        </div>
+        <div>
+          <label class="block text-sm text-txt mb-1">종류</label>
+          <select id="editVodKind" class="input-field">
+            <option value="vod">VOD (다시보기)</option>
+            <option value="clip">클립</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-txt mb-1">순서</label>
+          <input type="number" id="editVodOrder" min="0" class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm">
+        </div>
+        <div>
+          <label class="block text-sm text-txt mb-1">썸네일 URL <span class="text-sub text-xs">(비우면 기본 배경)</span></label>
+          <input type="text" id="editVodThumbUrl" placeholder="https://videoimg.sooplive.com/..." class="w-full px-3 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none text-sm">
+        </div>
+        <div class="flex gap-2 pt-2">
+          <button onclick="saveEditVod()" class="flex-1 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">저장</button>
+          <button onclick="closeEditVodModal()" class="flex-1 py-2 rounded-xl border border-sub/30 text-sub text-sm hover:bg-gray-50 transition-colors">취소</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/supabase-config.js"></script>
+  <script>
+    let sb;
+
+    // ── AUTH ──
+    async function handleLogin() {
+      const email = document.getElementById('loginEmail').value.trim();
+      const pw    = document.getElementById('loginPassword').value;
+      const errEl = document.getElementById('loginError');
+      errEl.classList.add('hidden');
+      sb = initSupabase();
+      const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+      if (error) {
+        errEl.textContent = '이메일 또는 비밀번호가 올바르지 않습니다.';
+        errEl.classList.remove('hidden');
+      } else {
+        document.getElementById('loginScreen').classList.add('hidden');
+        document.getElementById('adminScreen').classList.remove('hidden');
+        loadVodAdmin();
+        loadAchievements();
+      }
+    }
+
+    async function handleLogout() {
+      await sb.auth.signOut();
+      location.reload();
+    }
+
+    // ── TABS ──
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+        });
+      });
+    });
+
+    function showToast(msg, type='success') {
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.className = `toast ${type} show`;
+      setTimeout(() => t.classList.remove('show'), 3000);
+    }
+    function showMsg(id, text, type) {
+      const el = document.getElementById(id);
+      el.textContent = text;
+      el.className = 'text-xs mt-2 ' + (type === 'ok' ? 'text-green-600' : 'text-red-400');
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 3000);
+    }
+
+    // ── ACHIEVEMENT (업보) ──
+    let achData = [];
+    let achCats = [];
+    let selectedCatColor = '#FF8FB0';
+
+    function selectCatColor(el) {
+      document.querySelectorAll('#catColorPicker .color-option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      selectedCatColor = el.dataset.color;
+    }
+
+    async function loadAchievements() {
+      const yr = document.getElementById('achFilterYear').value;
+      const { data: cats } = await sb.from('achievement_categories').select('*').order('sort_order');
+      achCats = cats || [];
+      renderCatList();
+      renderCatSelects();
+      let q = sb.from('achievements').select('*, achievement_categories(name,color)').order('year', { ascending:false }).order('sort_order').order('date_label');
+      if (yr !== 'all') q = q.eq('year', parseInt(yr));
+      const { data } = await q;
+      achData = data || [];
+      const years = [...new Set(achData.map(a => a.year).filter(Boolean))].sort((a, b) => b - a);
+      const sel = document.getElementById('achFilterYear');
+      const cur = sel.value;
+      sel.innerHTML = '<option value="all">전체</option>' + years.map(y => `<option value="${y}">${y}년</option>`).join('');
+      sel.value = cur;
+      renderAchList();
+    }
+
+    function renderCatList() {
+      const el = document.getElementById('catList');
+      if (!achCats.length) { el.innerHTML = '<p class="text-xs text-sub text-center py-2">카테고리 없음</p>'; return; }
+      el.innerHTML = achCats.map(cat => `
+        <div class="flex items-center gap-2 p-2 rounded-lg border border-point/20">
+          <div class="w-4 h-4 rounded" style="background:${cat.color}"></div>
+          <span class="flex-1 text-sm">${cat.name}</span>
+          <button onclick="deleteCat('${cat.id}')" class="text-xs text-red-400 hover:text-red-600">삭제</button>
+        </div>`).join('');
+    }
+
+    function renderCatSelects() {
+      ['achCat','achFilterCat'].forEach(id => {
+        const el = document.getElementById(id);
+        const cur = el.value;
+        const opts = id === 'achFilterCat' ? '<option value="all">전체 카테고리</option>' : '<option value="">-- 선택 --</option>';
+        el.innerHTML = opts + achCats.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+        el.value = cur;
+      });
+    }
+
+    function renderAchList() {
+      const catF = document.getElementById('achFilterCat').value;
+      const list = catF === 'all' ? achData : achData.filter(a => String(a.category_id) === String(catF));
+      const el = document.getElementById('achList');
+      if (!list.length) { el.innerHTML = '<p class="text-center py-8 text-sub text-sm">등록된 업보가 없습니다</p>'; return; }
+      el.innerHTML = list.map(a => {
+        const cat = a.achievement_categories;
+        const color = cat ? cat.color : '#E6B84A';
+        return `<div class="flex items-center gap-2 p-3 bg-white rounded-xl border border-point/20 hover:border-accent/30 transition-colors">
+          <div class="w-3 h-3 rounded flex-shrink-0" style="background:${color}"></div>
+          <div class="text-xs text-sub w-16 flex-shrink-0">${a.year} ${a.date_label||''}</div>
+          <div class="flex-1 text-sm truncate">${a.content}</div>
+          <button onclick="editAchievement('${a.id}')" class="text-xs px-2 py-1 rounded-lg bg-thead text-accent hover:bg-point flex-shrink-0">수정</button>
+        </div>`;
+      }).join('');
+    }
+
+    async function saveAchievement() {
+      const editId = document.getElementById('achEditId').value;
+      const content = document.getElementById('achContent').value.trim();
+      const year = parseInt(document.getElementById('achYear').value);
+      const date_label = document.getElementById('achDate').value.trim();
+      if (!content || !year) { showToast('내용과 연도는 필수입니다','error'); return; }
+      const p = { content, year, date_label, category_id: document.getElementById('achCat').value || null };
+      const { error } = editId
+        ? await sb.from('achievements').update(p).eq('id', editId)
+        : await sb.from('achievements').insert(p);
+      if (error) { showToast('오류: '+error.message,'error'); return; }
+      showToast(editId?'수정 완료':'추가 완료','success');
+      resetAchForm();
+      loadAchievements();
+    }
+
+    function editAchievement(id) {
+      const a = achData.find(x => String(x.id) === String(id));
+      if (!a) return;
+      document.getElementById('achEditId').value = a.id;
+      document.getElementById('achYear').value = a.year;
+      document.getElementById('achDate').value = a.date_label||'';
+      document.getElementById('achContent').value = a.content;
+      document.getElementById('achCat').value = a.category_id||'';
+      document.getElementById('achFormTitle').textContent = '업보 수정';
+      document.getElementById('achDeleteBtn').classList.remove('hidden');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    async function deleteAchievement() {
+      const id = document.getElementById('achEditId').value;
+      if (!id || !confirm('삭제할까요?')) return;
+      await sb.from('achievements').delete().eq('id', id);
+      showToast('삭제 완료','success');
+      resetAchForm();
+      loadAchievements();
+    }
+
+    function resetAchForm() {
+      document.getElementById('achEditId').value='';
+      document.getElementById('achContent').value='';
+      document.getElementById('achDate').value='';
+      document.getElementById('achCat').value='';
+      document.getElementById('achFormTitle').textContent='업보 추가';
+      document.getElementById('achDeleteBtn').classList.add('hidden');
+    }
+
+    async function addCategory() {
+      const name = document.getElementById('catName').value.trim();
+      if (!name) { showToast('카테고리 이름을 입력해주세요','error'); return; }
+      const { error } = await sb.from('achievement_categories').insert({ name, color: selectedCatColor, sort_order: achCats.length });
+      if (error) { showToast('오류: '+error.message,'error'); return; }
+      document.getElementById('catName').value='';
+      showToast('카테고리 추가 완료','success');
+      loadAchievements();
+    }
+
+    async function deleteCat(id) {
+      if (!confirm('카테고리를 삭제할까요? 해당 카테고리의 업보는 미분류 처리됩니다.')) return;
+      await sb.from('achievement_categories').delete().eq('id', id);
+      showToast('삭제 완료','success');
+      loadAchievements();
+    }
+
+    // ── VOD · 클립 ──
+    let vodList = [];
+    let dragSrcRow = null;
+
+    async function loadVodAdmin() {
+      const { data } = await sb.from('vod_clips').select('*').order('sort_order').order('created_at');
+      vodList = data || [];
+      renderVodTable();
+    }
+
+    function renderVodTable() {
+      const tbody = document.getElementById('vodTableBody');
+      if (!vodList.length) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-8 text-sub text-sm">등록된 영상이 없습니다</td></tr>';
+        return;
+      }
+      tbody.innerHTML = vodList.map((v, i) => `
+        <tr class="vod-drag-row" draggable="true" data-id="${v.id}" data-idx="${i}">
+          <td class="text-sub"><span class="drag-handle">⠿</span>${i+1}</td>
+          <td><span class="text-xs px-2 py-0.5 rounded-full ${(v.kind||'vod')==='clip'?'bg-point text-accent2':'bg-thead text-accent'}">${(v.kind||'vod')==='clip'?'클립':'VOD'}</span></td>
+          <td class="font-medium">${v.title}</td>
+          <td><code class="bg-thead px-2 py-0.5 rounded text-xs">${v.vod_id}</code></td>
+          <td class="text-sub text-xs">${v.created_at ? v.created_at.slice(0,10) : ''}</td>
+          <td>
+            <div class="flex gap-2">
+              <button onclick="openEditVodModal('${v.id}')" class="text-xs px-3 py-1 rounded-lg bg-thead text-accent hover:bg-point transition-colors">수정</button>
+              <button onclick="deleteVod('${v.id}')" class="text-xs px-3 py-1 rounded-lg text-red-400 hover:bg-red-50 border border-red-100 transition-colors">삭제</button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+      initVodDrag();
+    }
+
+    function initVodDrag() {
+      const rows = document.querySelectorAll('.vod-drag-row');
+      rows.forEach(row => {
+        row.addEventListener('dragstart', e => {
+          dragSrcRow = row; row.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+        row.addEventListener('dragend', () => {
+          row.classList.remove('dragging');
+          document.querySelectorAll('.vod-drag-row').forEach(r => r.classList.remove('drag-over'));
+        });
+        row.addEventListener('dragover', e => {
+          e.preventDefault(); e.dataTransfer.dropEffect = 'move';
+          document.querySelectorAll('.vod-drag-row').forEach(r => r.classList.remove('drag-over'));
+          if (row !== dragSrcRow) row.classList.add('drag-over');
+        });
+        row.addEventListener('drop', async e => {
+          e.preventDefault();
+          if (row === dragSrcRow) return;
+          const srcIdx = parseInt(dragSrcRow.dataset.idx);
+          const dstIdx = parseInt(row.dataset.idx);
+          const newList = [...vodList];
+          const [moved] = newList.splice(srcIdx, 1);
+          newList.splice(dstIdx, 0, moved);
+          vodList = newList;
+          renderVodTable();
+          await Promise.all(vodList.map((v, i) => sb.from('vod_clips').update({ sort_order: i }).eq('id', v.id)));
+        });
+      });
+    }
+
+    let _lastThumbUrl = '';
+
+    async function previewVod() {
+      const id = document.getElementById('vodId').value.trim();
+      if (!id) return;
+      const wrap = document.getElementById('vodPreview');
+      const frame = document.getElementById('vodPreviewFrame');
+      frame.src = `https://vod.sooplive.com/player/${id}/embed?showChat=false&autoPlay=false&mutePlay=false`;
+      wrap.classList.remove('hidden');
+      _lastThumbUrl = '';
+      try {
+        const res = await fetch(`/api/soop-thumb?vod_id=${id}`);
+        const json = await res.json();
+        if (json.thumb) { _lastThumbUrl = json.thumb; showMsg('vodMsg', '✅ 썸네일 자동 감지됨', 'ok'); }
+      } catch(e) { /* 썸네일 없어도 무방 */ }
+    }
+
+    async function handleAddVod() {
+      const title = document.getElementById('vodTitle').value.trim();
+      const vodId = document.getElementById('vodId').value.trim();
+      const kind  = document.getElementById('vodKind').value;
+      if (!title || !vodId) { showMsg('vodMsg', '제목과 VOD ID를 입력해주세요', 'error'); return; }
+      const thumbUrl = _lastThumbUrl || null;
+      const { error } = await sb.from('vod_clips').insert({ title, vod_id: vodId, kind, thumb_url: thumbUrl });
+      if (error) { showMsg('vodMsg', '오류: ' + error.message, 'error'); return; }
+      showMsg('vodMsg', '✅ 추가됐어요', 'ok');
+      document.getElementById('vodTitle').value = '';
+      document.getElementById('vodId').value = '';
+      document.getElementById('vodKind').value = 'vod';
+      document.getElementById('vodPreview').classList.add('hidden');
+      document.getElementById('vodPreviewFrame').src = '';
+      _lastThumbUrl = '';
+      loadVodAdmin();
+    }
+
+    async function deleteVod(id) {
+      if (!confirm('삭제할까요?')) return;
+      await sb.from('vod_clips').delete().eq('id', id);
+      loadVodAdmin();
+    }
+
+    async function openEditVodModal(id) {
+      const { data } = await sb.from('vod_clips').select('*').eq('id', id).single();
+      document.getElementById('editVodId').value       = data.id;
+      document.getElementById('editVodTitle').value    = data.title;
+      document.getElementById('editVodVodId').value    = data.vod_id;
+      document.getElementById('editVodKind').value     = data.kind || 'vod';
+      document.getElementById('editVodOrder').value    = data.sort_order || 0;
+      document.getElementById('editVodThumbUrl').value = data.thumb_url || '';
+      document.getElementById('editVodModal').classList.remove('hidden');
+    }
+
+    async function saveEditVod() {
+      const id = document.getElementById('editVodId').value;
+      let thumbUrl = document.getElementById('editVodThumbUrl') ? document.getElementById('editVodThumbUrl').value : null;
+      await sb.from('vod_clips').update({
+        title:      document.getElementById('editVodTitle').value.trim(),
+        vod_id:     document.getElementById('editVodVodId').value.trim(),
+        kind:       document.getElementById('editVodKind').value,
+        sort_order: parseInt(document.getElementById('editVodOrder').value) || 0,
+        ...(thumbUrl !== null ? { thumb_url: thumbUrl || null } : {}),
+      }).eq('id', id);
+      closeEditVodModal();
+      loadVodAdmin();
+    }
+
+    function closeEditVodModal() {
+      document.getElementById('editVodModal').classList.add('hidden');
+    }
+  </script>
+  <div id="toast" class="toast"></div>
+</body>
+</html>
