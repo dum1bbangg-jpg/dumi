@@ -11,192 +11,121 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
-    --ink:#4a3a30;
-    --paper:#fbf6ee;
-    --grid:#ece1d0;
-    --c-bio:#f6ead0;   --t-bio:#ecd6a4;   /* 기본정보 - 크림 */
-    --c-about:#eddcc2; --t-about:#dcc296; /* 소개 - 라떼/연갈 */
-    --c-like:#f8d6e6;  --t-like:#efb6d2;  /* likes - 핑크 */
-    --c-dis:#f4d2d4;   --t-dis:#e6a8ad;   /* dislikes - 로즈 */
-    --c-goal:#f7ddc4;  --t-goal:#ebc09a;  /* goal - 피치 */
-    --c-vod:#fbe0ec;   --t-vod:#f3bcd6;   /* vod/clip - 라이트핑크 */
-    --c-photo:#ffffff;
-    --accent:#ff8fb0;
-    --soop:#00b4d8;
+    --ink:#4a3a30; --paper:#fbf6ee; --grid:#ece1d0;
+    --c-bio:#f6ead0;   --t-bio:#ecd6a4;
+    --c-about:#eddcc2; --t-about:#dcc296;
+    --c-like:#f8d6e6;  --t-like:#efb6d2;
+    --c-dis:#f4d2d4;   --t-dis:#e6a8ad;
+    --c-goal:#f7ddc4;  --t-goal:#ebc09a;
+    --c-vod:#fbe0ec;   --t-vod:#f3bcd6;
+    --c-photo:#ffffff; --accent:#ff8fb0; --soop:#00b4d8;
   }
-
   *{box-sizing:border-box;}
   html,body{margin:0;}
-  body{
-    font-family:'Gaegu',system-ui,sans-serif;
-    color:var(--ink);
-    background-color:var(--paper);
-    background-image:
-      linear-gradient(var(--grid) 1px,transparent 1px),
-      linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-    background-size:24px 24px;
-    -webkit-font-smoothing:antialiased;
-    padding:0 14px 56px;
-    line-height:1.45;
-  }
+  body{font-family:'Gaegu',system-ui,sans-serif;color:var(--ink);background-color:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:28px 28px;-webkit-font-smoothing:antialiased;padding:0 22px 70px;line-height:1.45;}
+  /* 1:2 세로형 — 폭 940px 통일 */
+  .diary{max-width:940px;margin:0 auto;}
 
-  /* ===== 9:21 세로형 좁은 다이어리 컬럼 ===== */
-  .diary{max-width:460px;margin:0 auto;}
-
-  /* ===== NAV ===== */
-  nav.tabs{
-    display:flex;justify-content:center;gap:6px;
-    padding:16px 0 6px;position:sticky;top:0;z-index:30;
-    background:linear-gradient(var(--paper) 78%,transparent);
-  }
-  nav.tabs a{
-    font-weight:700;font-size:1.08rem;text-decoration:none;color:var(--ink);
-    padding:3px 16px 5px;border:2px solid var(--ink);border-radius:14px;
-    background:#fff;box-shadow:2px 2px 0 rgba(74,58,48,.16);
-    transform:rotate(-1.5deg);transition:transform .15s;
-  }
-  nav.tabs a:nth-child(2){transform:rotate(1deg);}
-  nav.tabs a:nth-child(3){transform:rotate(-.5deg);}
+  nav.tabs{display:flex;justify-content:center;gap:8px;padding:20px 0 8px;position:sticky;top:0;z-index:30;background:linear-gradient(var(--paper) 80%,transparent);}
+  nav.tabs a{font-weight:700;font-size:1.2rem;text-decoration:none;color:var(--ink);padding:4px 20px 6px;border:2.4px solid var(--ink);border-radius:16px;background:#fff;box-shadow:3px 3px 0 rgba(74,58,48,.16);transform:rotate(-1.5deg);transition:transform .15s;}
+  nav.tabs a:nth-child(2){transform:rotate(1deg);} nav.tabs a:nth-child(3){transform:rotate(-.5deg);}
   nav.tabs a:hover{transform:translateY(-2px) rotate(0);}
   nav.tabs a.active{background:var(--t-like);}
 
-  /* ===== 손그림 삐뚤 테두리 ===== */
   .sketch{position:relative;}
-  .sketch::before{
-    content:'';position:absolute;inset:0;
-    border:2.4px solid var(--ink);border-radius:18px;
-    filter:url(#wob);pointer-events:none;z-index:3;
-  }
-  .sketch.w2::before{filter:url(#wob2);}
-  .sketch.w3::before{filter:url(#wob3);}
-
-  .card{
-    position:relative;border-radius:18px;padding:18px 20px;
-    box-shadow:5px 6px 0 rgba(74,58,48,.13);transition:transform .18s ease;
-  }
+  .sketch::before{content:'';position:absolute;inset:0;border:2.6px solid var(--ink);border-radius:20px;filter:url(#wob);pointer-events:none;z-index:3;}
+  .sketch.w2::before{filter:url(#wob2);} .sketch.w3::before{filter:url(#wob3);}
+  .card{position:relative;border-radius:20px;padding:24px 28px;box-shadow:6px 7px 0 rgba(74,58,48,.13);transition:transform .18s ease;}
   .card:hover{transform:translateY(-3px);}
   .card > *{position:relative;z-index:2;}
+  .tab{position:absolute;top:-19px;left:22px;padding:2px 18px 4px;border-radius:14px;font-weight:700;font-size:1.3rem;box-shadow:3px 3px 0 rgba(74,58,48,.13);transform:rotate(-2deg);z-index:5;}
 
-  .tab{
-    position:absolute;top:-17px;left:18px;
-    padding:1px 16px 3px;border-radius:13px;
-    font-weight:700;font-size:1.12rem;
-    box-shadow:3px 3px 0 rgba(74,58,48,.13);
-    transform:rotate(-2deg);z-index:5;
-  }
-
-  /* ===== 헤더 ===== */
-  header.hero{margin:6px 2px 28px;}
-  .hero .name{font-weight:700;font-size:2.9rem;line-height:1;margin:0;letter-spacing:-1px;}
-  .hero .reading{font-size:1.1rem;opacity:.6;margin-top:2px;}
-  .hero .tagline{font-size:1.25rem;margin-top:10px;}
+  header.hero{margin:10px 4px 34px;}
+  .hero .name{font-weight:700;font-size:3.6rem;line-height:1;margin:0;letter-spacing:-1px;}
+  .hero .reading{font-size:1.3rem;opacity:.6;margin-top:4px;}
+  .hero .tagline{font-size:1.55rem;margin-top:12px;}
   .hero .deco{display:inline-block;transform:rotate(-6deg);color:var(--accent);}
 
-  /* ===== 사진 ===== */
-  .photo{
-    position:relative;width:240px;aspect-ratio:1/1.05;margin:0 auto 26px;
-    border-radius:18px;background:var(--c-photo);padding:9px;transform:rotate(-1.6deg);
-  }
-  .photo .frame{
-    width:100%;height:100%;border-radius:12px;overflow:hidden;
-    background:linear-gradient(150deg,#e2c2a0,#f0c2d6);
-    display:flex;align-items:center;justify-content:center;
-    color:#ffffffd0;font-size:1.2rem;font-weight:700;text-shadow:0 1px 2px #0002;
-  }
+  /* 상단 2단: 사진 + 정보 */
+  .top{display:grid;grid-template-columns:320px 1fr;gap:34px;align-items:start;margin-bottom:32px;}
+  .photo{position:relative;width:100%;aspect-ratio:1/1.05;border-radius:20px;background:var(--c-photo);padding:11px;transform:rotate(-1.6deg);}
+  .photo .frame{width:100%;height:100%;border-radius:14px;overflow:hidden;background:linear-gradient(150deg,#e2c2a0,#f0c2d6);
+    display:flex;align-items:center;justify-content:center;color:#ffffffd0;font-size:1.5rem;font-weight:700;text-shadow:0 1px 2px #0002;}
   .photo .frame img{width:100%;height:100%;object-fit:cover;display:block;}
-  .tape{position:absolute;width:80px;height:24px;background:#fceec0cc;
-    box-shadow:1px 1px 0 rgba(74,58,48,.08);opacity:.85;}
-  .tape.tl{top:-11px;left:-6px;transform:rotate(-24deg);}
-  .tape.br{bottom:-9px;right:-5px;transform:rotate(-22deg);background:#f4c9e3cc;}
+  .tape{position:absolute;width:100px;height:30px;background:#fceec0cc;box-shadow:1px 1px 0 rgba(74,58,48,.08);opacity:.85;}
+  .tape.tl{top:-13px;left:-8px;transform:rotate(-24deg);} .tape.br{bottom:-11px;right:-6px;transform:rotate(-22deg);background:#f4c9e3cc;}
 
-  /* ===== 카드 색 ===== */
-  .bio{background:var(--c-bio);transform:rotate(.7deg);margin-bottom:26px;}
+  .bio{background:var(--c-bio);transform:rotate(.6deg);height:100%;}
   .bio .tab{background:var(--t-bio);}
-  .bio .row{display:flex;gap:8px;padding:4px 2px;border-bottom:2px dashed #4a3a3040;font-size:1.12rem;}
+  .bio .row{display:flex;gap:10px;padding:7px 2px;border-bottom:2px dashed #4a3a3040;font-size:1.3rem;}
   .bio .row:last-child{border-bottom:none;}
-  .bio .k{font-weight:700;min-width:56px;}
-  .bio .v{opacity:.85;}
+  .bio .k{font-weight:700;min-width:74px;} .bio .v{opacity:.85;}
 
-  .about{background:var(--c-about);margin-bottom:26px;}
+  .about{background:var(--c-about);margin-bottom:32px;}
   .about .tab{background:var(--t-about);}
-  .about p{font-size:1.22rem;margin:6px 0 0;}
+  .about p{font-size:1.5rem;margin:8px 0 0;}
 
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:26px;align-items:start;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;align-items:start;}
   .like{background:var(--c-like);transform:rotate(-1deg);}
   .like .tab{background:var(--t-like);}
   .dis{background:var(--c-dis);transform:rotate(1deg);}
   .dis .tab{background:var(--t-dis);}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px;font-size:1.28rem;}
+  .chip{padding:2px 14px 4px;border:2px solid var(--ink);border-radius:22px;background:#ffffff88;}
 
-  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;font-size:1.08rem;}
-  .chip{padding:1px 11px 3px;border:2px solid var(--ink);border-radius:20px;background:#ffffff88;}
-
-  .goal{background:var(--c-goal);margin-bottom:26px;}
+  .goal{background:var(--c-goal);margin-bottom:32px;}
   .goal .tab{background:var(--t-goal);}
-  .goal p{font-size:1.22rem;margin:8px 0 0;}
+  .goal p{font-size:1.5rem;margin:10px 0 0;}
 
-  /* ===== 링크 ===== */
-  .links{display:flex;flex-wrap:wrap;gap:10px;margin:0 2px 28px;justify-content:center;}
-  .link-btn{
-    display:inline-flex;align-items:center;gap:7px;text-decoration:none;
-    font-weight:700;font-size:1.08rem;color:#fff;padding:7px 18px;border-radius:14px;
-    border:2px solid var(--ink);box-shadow:3px 3px 0 rgba(74,58,48,.18);transition:transform .15s;
-  }
+  .links{display:flex;flex-wrap:wrap;gap:12px;margin:0 2px 36px;justify-content:center;}
+  .link-btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:700;font-size:1.25rem;color:#fff;padding:9px 24px;border-radius:16px;border:2.4px solid var(--ink);box-shadow:3px 3px 0 rgba(74,58,48,.18);transition:transform .15s;}
   .link-btn:hover{transform:translateY(-2px);}
   .link-btn.soop{background:var(--soop);}
 
-  /* ===== VOD / 클립 (명장면캐치) ===== */
-  .vod{background:var(--c-vod);margin-bottom:10px;}
+  /* VOD / 클립 */
+  .vod{background:var(--c-vod);margin-bottom:12px;}
   .vod .tab{background:var(--t-vod);}
-  .vod-filter{display:flex;gap:6px;margin:6px 0 12px;}
-  .vod-filter button{
-    font-family:inherit;font-weight:700;font-size:.98rem;cursor:pointer;
-    padding:2px 13px 4px;border:2px solid var(--ink);border-radius:13px;
-    background:#ffffff88;color:var(--ink);transition:transform .12s;
-  }
+  .vod-filter{display:flex;gap:8px;margin:8px 0 16px;}
+  .vod-filter button{font-family:inherit;font-weight:700;font-size:1.1rem;cursor:pointer;padding:3px 16px 5px;border:2.4px solid var(--ink);border-radius:15px;background:#ffffff88;color:var(--ink);transition:transform .12s;}
   .vod-filter button:hover{transform:translateY(-1px);}
   .vod-filter button.on{background:var(--accent);color:#fff;}
-  .vod-player{border-radius:14px;overflow:hidden;background:#000;aspect-ratio:16/9;
-    margin-bottom:10px;border:2.4px solid var(--ink);box-shadow:3px 4px 0 rgba(74,58,48,.16);}
+  .vod-player{border-radius:16px;overflow:hidden;background:#000;aspect-ratio:16/9;margin:0 auto 14px;max-width:660px;border:2.6px solid var(--ink);box-shadow:3px 4px 0 rgba(74,58,48,.16);}
   .vod-player iframe{width:100%;height:100%;border:none;display:block;}
-  .vod-empty{display:flex;align-items:center;justify-content:center;height:170px;
-    background:#fff8;border-radius:14px;color:#4a3a3099;font-size:1.05rem;}
-  .vod-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
-  .vod-thumb{position:relative;border-radius:10px;overflow:hidden;cursor:pointer;
-    border:2px solid var(--ink);transition:transform .18s;background:#000;aspect-ratio:16/9;}
+  .vod-empty{display:flex;align-items:center;justify-content:center;height:230px;max-width:660px;margin:0 auto;background:#fff8;border-radius:16px;color:#4a3a3099;font-size:1.2rem;}
+  .vod-list{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px;}
+  .vod-thumb{position:relative;border-radius:12px;overflow:hidden;cursor:pointer;border:2.4px solid var(--ink);transition:transform .18s;background:#000;aspect-ratio:16/9;}
   .vod-thumb:hover{transform:translateY(-2px);}
   .vod-thumb.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent);}
-  .vod-thumb-bg{width:100%;height:100%;background:linear-gradient(135deg,#fbe0ec,#f3bcd6);
-    display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;}
+  .vod-thumb-bg{width:100%;height:100%;background:linear-gradient(135deg,#fbe0ec,#f3bcd6);display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;}
   .vod-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
-  .vod-thumb-title{position:absolute;bottom:0;left:0;right:0;padding:5px 7px;
-    background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:.66rem;font-weight:700;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .vod-kind{position:absolute;top:4px;left:4px;font-size:.58rem;font-weight:700;
-    padding:1px 6px;border-radius:8px;background:rgba(255,255,255,.9);color:#4a3a30;}
+  .vod-thumb-title{position:absolute;bottom:0;left:0;right:0;padding:6px 9px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .vod-kind{position:absolute;top:5px;left:5px;font-size:.66rem;font-weight:700;padding:1px 7px;border-radius:9px;background:rgba(255,255,255,.9);color:#4a3a30;}
 
   .doodle{position:absolute;color:var(--accent);z-index:6;pointer-events:none;}
+  footer{margin:48px 4px 0;text-align:center;font-size:1.15rem;opacity:.55;}
 
-  footer{margin:40px 4px 0;text-align:center;font-size:1rem;opacity:.55;}
-
-  @media (max-width:380px){
-    .hero .name{font-size:2.4rem;}
+  @media (max-width:720px){
+    .top{grid-template-columns:1fr;gap:24px;}
+    .photo{max-width:300px;margin:0 auto;}
+    .row2{grid-template-columns:1fr;}
     .vod-list{grid-template-columns:repeat(2,1fr);}
+    .hero .name{font-size:2.6rem;}
   }
   body.embed nav.tabs{display:none;}
-  a:focus-visible,.card:focus-visible{outline:3px solid var(--ink);outline-offset:3px;}
   @media (prefers-reduced-motion:reduce){.card{transition:none;}.card:hover{transform:none;}}
 </style>
 </head>
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/></filter>
-  <filter id="wob2"><feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="2" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/></filter>
-  <filter id="wob3"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="27" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="wob2"><feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="wob3"><feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="2" seed="27" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G"/></filter>
 </svg>
 
 <main class="diary">
-
   <nav class="tabs">
     <a href="/" class="active">프로필</a>
     <a href="/upbo/">업보</a>
@@ -209,64 +138,51 @@
     <div class="tagline">“6시에 와요, 화요일은 쉬어요 (｡•ᴗ•｡)♡”</div>
   </header>
 
-  <!-- 사진 (기본 프사 = SOOP hika12) -->
-  <div class="photo sketch">
-    <span class="tape tl"></span>
-    <span class="tape br"></span>
-    <div class="frame">
-      <img src="https://profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg" alt="두미 프로필"
-        onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'두미'}))">
+  <section class="top">
+    <div class="photo sketch">
+      <span class="tape tl"></span><span class="tape br"></span>
+      <div class="frame">
+        <img src="https://profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg" alt="두미 프로필"
+          onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'두미'}))">
+      </div>
     </div>
-  </div>
+    <div class="card bio sketch w2">
+      <span class="tab">My Bio</span>
+      <div class="row"><span class="k">이름</span><span class="v">두미</span></div>
+      <div class="row"><span class="k">데뷔</span><span class="v">2025.07.17</span></div>
+      <div class="row"><span class="k">생일</span><span class="v">11월 25일</span></div>
+      <div class="row"><span class="k">소속</span><span class="v">개인</span></div>
+      <div class="row"><span class="k">머리</span><span class="v">연갈색 + 핑크브릿지</span></div>
+      <div class="row"><span class="k">눈</span><span class="v">핑크</span></div>
+      <div class="row"><span class="k">팬네임</span><span class="v">두콩이들</span></div>
+    </div>
+  </section>
 
-  <!-- 기본 정보 -->
-  <div class="card bio sketch w2">
-    <span class="tab">My Bio</span>
-    <div class="row"><span class="k">이름</span><span class="v">두미</span></div>
-    <div class="row"><span class="k">데뷔</span><span class="v">2025.07.17</span></div>
-    <div class="row"><span class="k">생일</span><span class="v">11월 25일</span></div>
-    <div class="row"><span class="k">소속</span><span class="v">개인</span></div>
-    <div class="row"><span class="k">머리</span><span class="v">연갈색 + 핑크브릿지</span></div>
-    <div class="row"><span class="k">눈</span><span class="v">핑크</span></div>
-    <div class="row"><span class="k">팬네임</span><span class="v">두콩이들</span></div>
-  </div>
-
-  <!-- 소개 -->
   <section class="card about sketch w3">
     <span class="tab">About Me</span>
-    <span class="doodle" style="top:-22px;right:22px;font-size:1.4rem;transform:rotate(12deg)">♡</span>
+    <span class="doodle" style="top:-24px;right:26px;font-size:1.7rem;transform:rotate(12deg)">♡</span>
     <p>저녁 6시에 찾아오는 소통 버튜버 두미예요! 화요일은 쉬어가구요, 가끔은 노래도 불러요 🎵 오른쪽 덧니가 트레이드마크 🦷 밝고 귀엽게, 두콩이들이랑 매일 도란도란 떠드는 게 제일 좋아 — 어찌라구~셩!</p>
   </section>
 
-  <!-- Likes / Dislikes -->
   <section class="row2">
-    <div class="card like sketch">
-      <span class="tab">Likes</span>
-      <div class="chips">
-        <span class="chip">소통</span><span class="chip">롤</span><span class="chip">노래</span>
-      </div>
+    <div class="card like sketch"><span class="tab">Likes</span>
+      <div class="chips"><span class="chip">소통</span><span class="chip">롤</span><span class="chip">노래</span></div>
     </div>
-    <div class="card dis sketch w2">
-      <span class="tab">Dislikes</span>
-      <div class="chips">
-        <span class="chip">당근</span>
-      </div>
+    <div class="card dis sketch w2"><span class="tab">Dislikes</span>
+      <div class="chips"><span class="chip">당근</span></div>
     </div>
   </section>
 
-  <!-- Goal -->
   <section class="card goal sketch w3">
     <span class="tab">함께해요</span>
-    <span class="doodle" style="bottom:12px;right:16px;font-size:1.5rem;transform:rotate(-10deg)">★</span>
+    <span class="doodle" style="bottom:14px;right:20px;font-size:1.8rem;transform:rotate(-10deg)">★</span>
     <p>두콩이들이랑 도란도란 오래오래 ♡ 첫 1주년도 같이 맞이하기!</p>
   </section>
 
-  <!-- 링크 -->
   <div class="links">
     <a class="link-btn soop" href="https://www.sooplive.com/station/hika12" target="_blank" rel="noopener">🎬 SOOP 채널</a>
   </div>
 
-  <!-- VOD / 클립 (명장면캐치) -->
   <section class="card vod sketch w2">
     <span class="tab">명장면캐치</span>
     <div class="vod-filter" id="vodFilter">
@@ -274,9 +190,7 @@
       <button data-kind="vod" onclick="setVodKind('vod',this)">VOD</button>
       <button data-kind="clip" onclick="setVodKind('clip',this)">클립</button>
     </div>
-    <div id="vodPlayer" class="vod-player">
-      <div class="vod-empty" id="vodEmpty">등록된 영상이 없어요</div>
-    </div>
+    <div id="vodPlayer" class="vod-player"><div class="vod-empty" id="vodEmpty">등록된 영상이 없어요</div></div>
     <div class="vod-list" id="vodList"></div>
   </section>
 
@@ -288,41 +202,30 @@
 
 <script src="js/supabase-config.js"></script>
 <script>
-  // ?embed -> nav 숨김 (SOOP 게시판 임베드용)
   if (new URLSearchParams(location.search).has('embed')) document.body.classList.add('embed');
-
   const sb = initSupabase();
-  let vodAll = [];     // 전체 데이터
-  let vodKind = 'all'; // 현재 필터
-  let vodView = [];    // 필터 적용된 목록
+  let vodAll = [], vodKind = 'all', vodView = [];
 
   async function loadVod() {
     const { data } = await sb.from('vod_clips').select('*').order('sort_order').order('created_at');
     vodAll = data || [];
     applyVodFilter();
   }
-
   function setVodKind(kind, btn) {
     vodKind = kind;
     document.querySelectorAll('#vodFilter button').forEach(b => b.classList.remove('on'));
     btn.classList.add('on');
     applyVodFilter();
   }
-
   function applyVodFilter() {
     vodView = vodKind === 'all' ? vodAll : vodAll.filter(v => (v.kind || 'vod') === vodKind);
     renderVod();
   }
-
   function thumbHtml(v) {
     if (v.thumb_url) return `<img src="${v.thumb_url}" alt="${v.title}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'vod-thumb-bg',textContent:'▶'}))">`;
     return `<div class="vod-thumb-bg">▶</div>`;
   }
-
-  function embedUrl(id) {
-    return `https://vod.sooplive.com/player/${id}/embed?showChat=false&autoPlay=false&mutePlay=false`;
-  }
-
+  function embedUrl(id){ return `https://vod.sooplive.com/player/${id}/embed?showChat=false&autoPlay=false&mutePlay=false`; }
   function renderVod() {
     const playerEl = document.getElementById('vodPlayer');
     const listEl = document.getElementById('vodList');
@@ -339,7 +242,6 @@
         <div class="vod-thumb-title">${v.title}</div>
       </div>`).join('');
   }
-
   function switchVod(idx) {
     const v = vodView[idx];
     if (!v) return;
@@ -348,7 +250,6 @@
     const el = document.querySelector(`.vod-thumb[data-idx="${idx}"]`);
     if (el) el.classList.add('active');
   }
-
   loadVod();
 </script>
 </body>

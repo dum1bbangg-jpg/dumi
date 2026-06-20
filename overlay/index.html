@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>두미 Overlay</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+html, body { background: transparent; overflow: hidden; width: 700px; height: 120px; }
+
+.bar {
+  display: inline-flex; align-items: center; height: 90px;
+  margin: 15px 0 0 10px; border-radius: 50px; padding: 0 20px 0 6px; gap: 0;
+  background: rgba(255, 255, 255, 0.86);
+  border: 1.5px solid rgba(255, 143, 176, 0.7);
+  opacity: 0; transition: opacity .5s ease, width .35s ease;
+  max-width: 460px;
+}
+.bar.visible { opacity: 1; }
+
+.profile-wrap { flex-shrink: 0; z-index: 2; }
+.profile-bg {
+  width: 78px; height: 78px; border-radius: 50%;
+  background: linear-gradient(135deg, #e2c2a0, #f0c2d6);
+  overflow: hidden; display: flex; align-items: center; justify-content: center;
+}
+.profile-bg img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+.song-info { overflow: hidden; padding: 0 14px; min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+.song-title-wrap { white-space: nowrap; overflow: hidden; max-width: 340px; }
+.song-title-text { display: inline-block; font-family: 'Noto Sans KR', sans-serif; font-size: 20px; font-weight: 700; color: #4A3A30; white-space: nowrap; }
+.song-artist { font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 500; color: #8A7565; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 5px; }
+.artist-name { color: #8A7565; }
+.artist-sep { font-size: 10px; opacity: .4; }
+.singer-name { color: #E36F95; font-weight: 700; }
+
+@keyframes rolling { 0% { transform: translateX(0); } 100% { transform: translateX(var(--roll-dist)); } }
+</style>
+</head>
+<body>
+
+<div class="bar" id="bar">
+  <div class="profile-wrap">
+    <div class="profile-bg">
+      <img src="https://profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg" alt="두미" onerror="this.style.display='none'">
+    </div>
+  </div>
+  <div class="song-info" id="songInfo">
+    <div class="song-title-wrap" id="titleWrap"><span class="song-title-text" id="titleText">🎵 두미</span></div>
+    <div class="song-artist" id="artistText"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../js/supabase-config.js"></script>
+<script>
+const sb = initSupabase();
+const MAX_WIDTH = 460;
+let lastKey = null, rollingAnim = null;
+
+function applyRolling(el, wrap) {
+  if (rollingAnim) { el.style.animation = 'none'; el.style.transform = 'translateX(0)'; rollingAnim = null; }
+  requestAnimationFrame(() => {
+    const overflow = el.scrollWidth - wrap.clientWidth;
+    if (overflow > 0) {
+      const gap = 60;
+      const totalDist = el.scrollWidth + gap;
+      const duration = totalDist / 65;
+      el.style.setProperty('--roll-dist', `-${totalDist}px`);
+      const txt = el.textContent;
+      el.innerHTML = `<span>${txt}</span><span style="padding-left:${gap}px">${txt}</span>`;
+      el.style.animation = `rolling ${duration}s linear infinite`;
+      rollingAnim = true;
+    } else {
+      el.innerHTML = el.textContent; el.style.animation = 'none'; el.style.transform = 'translateX(0)';
+    }
+  });
+}
+function fitBarWidth(titleEl, artistEl) {
+  requestAnimationFrame(() => {
+    const bar = document.getElementById('bar');
+    const profileW = 78 + 6 + 20;
+    const textW = Math.min(Math.max(titleEl.scrollWidth, artistEl.scrollWidth) + 28, MAX_WIDTH);
+    bar.style.width = (profileW + textW + 20) + 'px';
+  });
+}
+async function poll() {
+  try {
+    const { data } = await sb.from('overlay_state').select('*').eq('id', 1).maybeSingle();
+    if (!data) return;
+    const bar = document.getElementById('bar');
+    if (!data.is_visible || !data.song_title) { bar.classList.remove('visible'); return; }
+    const key = data.song_title + '|' + data.song_artist;
+    if (key === lastKey) { bar.classList.add('visible'); return; }
+    lastKey = key;
+    const titleEl = document.getElementById('titleText');
+    const artistEl = document.getElementById('artistText');
+    const titleWrap = document.getElementById('titleWrap');
+    titleEl.style.animation = 'none'; titleEl.style.transform = 'translateX(0)'; titleEl.innerHTML = ''; rollingAnim = null;
+    titleEl.textContent = data.song_title;
+    const artist = data.song_artist || '';
+    artistEl.innerHTML = artist
+      ? `<span class="artist-name">${artist}</span><span class="artist-sep">·</span><span class="singer-name">두미</span>`
+      : `<span class="singer-name">두미</span>`;
+    fitBarWidth(titleEl, artistEl);
+    bar.classList.add('visible');
+    setTimeout(() => applyRolling(titleEl, titleWrap), 200);
+  } catch(e) {}
+}
+poll();
+setInterval(poll, 5000);
+</script>
+</body>
+</html>

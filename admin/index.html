@@ -72,6 +72,8 @@
     .btn-edit{padding:4px 12px;background:#FBE0EC;color:#B86A8F;border:none;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
     .btn-del{padding:4px 12px;background:none;color:#E07A7A;border:1px solid #F2C4C4;border-radius:8px;font-size:11px;cursor:pointer;font-family:inherit}
     .form-field-label{font-size:11px;font-weight:600;color:#8A7565;margin-bottom:4px}
+    .song-inp{width:100%;padding:8px 12px;border:1.5px solid #ECE1D0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;color:#4A3A30;background:#fff}
+    .song-inp:focus{border-color:#CF7FA3}
     #tab-upbo input[type=text], #tab-upbo input[type=date], #tab-upbo select, #tab-upbo textarea{width:100%;padding:8px 12px;border:1.5px solid #ECE1D0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;color:#4A3A30;background:#fff}
     #tab-upbo input:focus, #tab-upbo select:focus, #tab-upbo textarea:focus{border-color:#CF7FA3}
 
@@ -131,6 +133,8 @@
       <div class="flex gap-6 border-b border-point/40 overflow-x-auto">
         <button class="tab-btn active pb-3 text-sm whitespace-nowrap" data-tab="vod">🎬 VOD · 클립</button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="upbo">⚡ 업보 관리</button>
+        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="songs">🎵 노래 관리</button>
+        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="overlay">🎤 오버레이</button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="inquiry">✉️ 문의 <span id="inq-badge" style="display:none;background:#EF4444;color:white;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:2px">NEW</span></button>
       </div>
     </div>
@@ -271,6 +275,62 @@
         <div id="inq-list"><div style="text-align:center;padding:40px;color:#BBB">불러오는 중...</div></div>
       </div>
 
+      <!-- ========== 노래 관리 ========== -->
+      <div id="tab-songs" class="tab-content">
+        <div class="sc">
+          <div class="sc-title">🎵 노래 추가</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div><p class="form-field-label">가수</p><input type="text" id="f-artist" placeholder="가수명" class="song-inp"></div>
+            <div><p class="form-field-label">제목</p><input type="text" id="f-title" placeholder="곡 제목" class="song-inp"></div>
+            <div><p class="form-field-label">장르</p>
+              <select id="f-genre" class="song-inp"><option value="kpop">Kpop</option><option value="jpop">Jpop</option><option value="pop">Pop</option><option value="indie">인디</option><option value="folk">포크</option><option value="etc" selected>기타</option></select>
+            </div>
+            <div><p class="form-field-label">숙련도 (0~5)</p><input type="number" id="f-level" min="0" max="5" value="3" class="song-inp"></div>
+            <div style="grid-column:1/-1"><p class="form-field-label">메모</p><input type="text" id="f-memo" placeholder="메모 (선택)" class="song-inp"></div>
+          </div>
+          <button class="btn-add" id="add-btn" onclick="addSong()">+ 추가</button>
+        </div>
+        <div class="sc">
+          <div class="sc-title">등록된 노래 <span style="font-size:12px;color:#8A7565;font-weight:400">· 드래그로 순서 변경, 🎤로 오버레이 송출</span></div>
+          <div style="overflow-x:auto">
+            <table class="vod-table">
+              <thead><tr><th></th><th>가수</th><th>제목</th><th>장르</th><th>숙련도</th><th>메모</th><th>송출</th><th>관리</th></tr></thead>
+              <tbody id="admin-tbody"><tr><td colspan="8" style="text-align:center;padding:40px;color:#BBB">불러오는 중...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========== 오버레이 ========== -->
+      <div id="tab-overlay" class="tab-content">
+        <div class="sc">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+            <div class="sc-title" style="margin-bottom:0">🎤 OBS 오버레이</div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span id="overlay-status-badge" style="font-size:11px;font-weight:700;padding:3px 12px;border-radius:20px;background:#ECE1D0;color:#8A7565">OFF</span>
+              <button onclick="hideOverlay()" style="font-family:inherit;font-size:12px;padding:5px 14px;border-radius:8px;border:1.5px solid #ECE1D0;background:#fff;color:#8A7565;cursor:pointer">끄기</button>
+            </div>
+          </div>
+          <p class="form-field-label">OBS 브라우저 소스 URL (700×120, 배경 투명)</p>
+          <div style="display:flex;gap:8px;margin-bottom:14px">
+            <input type="text" id="overlay-url-display" readonly value="배포 후 /overlay/ 경로" style="flex:1;padding:8px 12px;border:1.5px solid #ECE1D0;border-radius:8px;font-size:12px;font-family:inherit;color:#8A7565;background:#FBF6EE">
+            <button onclick="copyOverlayUrl()" style="font-family:inherit;padding:8px 14px;background:#FBE0EC;border:1.5px solid #F1CFDF;color:#B86A8F;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">복사</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:flex-end">
+            <div><p class="form-field-label">제목</p><input type="text" id="overlay-title" placeholder="곡 제목" class="song-inp"></div>
+            <div><p class="form-field-label">가수</p><input type="text" id="overlay-artist" placeholder="가수명" class="song-inp"></div>
+            <div><button onclick="publishOverlay()" class="btn-add">🎤 송출</button></div>
+          </div>
+        </div>
+        <div class="sc">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+            <div class="sc-title" style="margin-bottom:0">노래책에서 고르기</div>
+            <input type="text" id="overlay-search" placeholder="🔍 검색..." oninput="renderOverlaySongList()" style="padding:6px 12px;border:1.5px solid #ECE1D0;border-radius:8px;font-size:12px;font-family:inherit;outline:none;width:180px">
+          </div>
+          <div id="overlay-song-list" style="display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto"></div>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -294,6 +354,27 @@
           <button onclick="saveEditVod()" class="flex-1 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">저장</button>
           <button onclick="closeEditVodModal()" class="flex-1 py-2 rounded-xl border border-sub/30 text-sub text-sm hover:bg-gray-50 transition-colors">취소</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 노래 수정 모달 -->
+  <div id="editSongModal" style="display:none;position:fixed;inset:0;z-index:60;background:rgba(74,58,48,.32);align-items:center;justify-content:center;padding:16px">
+    <div class="bg-white rounded-2xl p-6 w-full max-w-sm border border-point/30" style="box-shadow:0 20px 60px rgba(0,0,0,.15)">
+      <h3 class="font-semibold text-txt mb-4">🎵 노래 수정</h3>
+      <input type="hidden" id="edit-song-id">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <div><p class="form-field-label">가수</p><input type="text" id="edit-artist" class="song-inp"></div>
+        <div><p class="form-field-label">제목</p><input type="text" id="edit-title" class="song-inp"></div>
+        <div><p class="form-field-label">장르</p>
+          <select id="edit-genre" class="song-inp"><option value="kpop">Kpop</option><option value="jpop">Jpop</option><option value="pop">Pop</option><option value="indie">인디</option><option value="folk">포크</option><option value="etc">기타</option></select>
+        </div>
+        <div><p class="form-field-label">숙련도 (0~5)</p><input type="number" id="edit-level" min="0" max="5" class="song-inp"></div>
+        <div style="grid-column:1/-1"><p class="form-field-label">메모</p><input type="text" id="edit-memo" class="song-inp"></div>
+      </div>
+      <div class="flex gap-2">
+        <button onclick="saveEditSong()" class="flex-1 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">저장</button>
+        <button onclick="closeEditSong()" class="flex-1 py-2 rounded-xl border border-sub/30 text-sub text-sm hover:bg-gray-50 transition-colors">취소</button>
       </div>
     </div>
   </div>
@@ -332,6 +413,8 @@
           btn.classList.add('active');
           document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
           if (btn.dataset.tab === 'upbo') loadUpbo();
+          if (btn.dataset.tab === 'songs') loadAdminSongs();
+          if (btn.dataset.tab === 'overlay') loadOverlayState();
           if (btn.dataset.tab === 'inquiry') loadInquiries();
         });
       });
@@ -389,15 +472,17 @@
       const el = document.getElementById('typeList');
       if (!taskTypes.length) { el.innerHTML = '<div style="color:#8A7565;font-size:13px">타입이 없어요</div>'; return; }
       el.innerHTML = `<div id="typeListInner" style="display:flex;flex-direction:column;gap:6px">
-        ${taskTypes.map(t => `
+        ${taskTypes.map(t => { const active = t.is_active !== false; return `
         <div class="type-drag-item" draggable="true" data-id="${t.id}"
-          style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:#FBF6EE;border:1.5px solid #ECE1D0;border-radius:10px;cursor:default;user-select:none;transition:all .15s">
+          style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:#FBF6EE;border:1.5px solid #ECE1D0;border-radius:10px;cursor:default;user-select:none;transition:all .15s;${active?'':'opacity:.5'}">
           <span class="drag-handle">⠿</span>
           <span class="upbo-task-badge ${t.category==='event'?'event':'normal'}">${t.category==='event'?'이벤트':'일반'}</span>
           <span style="font-size:13px;font-weight:600;flex:1">${t.name}</span>
+          ${active?'':'<span style="font-size:10px;color:#8A7565;background:#ECE1D0;padding:1px 7px;border-radius:8px">비활성</span>'}
+          <button onclick="toggleTypeActive('${t.id}',${!active})" style="font-family:inherit;font-size:11px;padding:4px 10px;border-radius:8px;cursor:pointer;border:1px solid ${active?'#ECE1D0':'#86c79a'};background:#fff;color:${active?'#8A7565':'#4a9d63'}">${active?'비활성화':'활성화'}</button>
           <button class="btn-edit" onclick="editTaskType('${t.id}')">수정</button>
           <button class="btn-del" onclick="delTaskType('${t.id}')">삭제</button>
-        </div>`).join('')}
+        </div>`; }).join('')}
       </div>`;
       initTypeDrag();
     }
@@ -447,6 +532,12 @@
       const name = prompt('타입명 수정:', t.name);
       if (!name || name===t.name) return;
       sb.from('upbo_task_types').update({ name }).eq('id', id).then(() => { showToast('수정됨 ✓'); loadUpbo(); });
+    }
+    async function toggleTypeActive(id, newActive) {
+      const { error } = await sb.from('upbo_task_types').update({ is_active: newActive }).eq('id', id);
+      if (error) { showToast('변경 실패: '+error.message,'error'); return; }
+      showToast(newActive ? '활성화됨 ✓' : '비활성화됨');
+      loadUpbo();
     }
 
     // ── 시청자 관리 ──
@@ -551,10 +642,11 @@
       const grid = document.getElementById('taskGrid');
       memberTaskState = {};
       const { data:existing } = await sb.from('upbo_tasks').select('*').eq('member_id', selMemberId);
-      (existing||[]).forEach(t => { memberTaskState[t.type_id] = { qty:t.quantity, memo:t.memo||'', existingId:t.id }; });
-      if (!taskTypes.length) { grid.innerHTML = '<div style="color:#8A7565;font-size:13px">업보 타입을 먼저 추가해주세요</div>'; return; }
-      grid.innerHTML = taskTypes.map(t => {
-        const cur = memberTaskState[t.id] || { qty:0, memo:'' };
+      (existing||[]).forEach(t => { memberTaskState[t.type_id] = { qty:t.quantity, memo:t.memo||'', prepared:!!t.is_prepared, existingId:t.id }; });
+      const activeTypes = taskTypes.filter(t => t.is_active !== false);
+      if (!activeTypes.length) { grid.innerHTML = '<div style="color:#8A7565;font-size:13px">활성 업보 타입이 없어요 (타입 관리에서 추가/활성화)</div>'; return; }
+      grid.innerHTML = activeTypes.map(t => {
+        const cur = memberTaskState[t.id] || { qty:0, memo:'', prepared:false };
         return `<div class="upbo-task-item">
           <div class="upbo-task-name">${t.name}
             <span class="upbo-task-badge ${t.category==='event'?'event':'normal'}">${t.category==='event'?'이벤트':'일반'}</span>
@@ -563,6 +655,10 @@
             <button class="upbo-qbtn" onclick="changeQty('${t.id}',-1)">−</button>
             <span class="upbo-qval" id="qty-${t.id}">${cur.qty}</span>
             <button class="upbo-qbtn" onclick="changeQty('${t.id}',1)">+</button>
+            <label style="display:flex;align-items:center;gap:3px;margin-left:auto;cursor:pointer" title="준비완료">
+              <input type="checkbox" id="prep-${t.id}" ${cur.prepared?'checked':''} style="width:15px;height:15px;accent-color:#FB7185;cursor:pointer">
+              <span style="font-size:10px;color:#FB7185;font-weight:700">준비</span>
+            </label>
           </div>
           <input type="text" placeholder="메모" id="memo-${t.id}" value="${(cur.memo||'').replace(/"/g,'&quot;')}" style="font-size:11px;padding:6px 10px">
         </div>`;
@@ -575,15 +671,19 @@
     }
     async function saveTasks() {
       if (!selMemberId) { showToast('시청자를 선택해주세요','error'); return; }
-      for (const t of taskTypes) {
-        const qty  = parseInt(document.getElementById('qty-'+t.id)?.textContent || 0);
+      const activeTypes = taskTypes.filter(t => t.is_active !== false);
+      for (const t of activeTypes) {
+        const qtyEl = document.getElementById('qty-'+t.id);
+        if (!qtyEl) continue;
+        const qty  = parseInt(qtyEl.textContent || 0);
         const memo = document.getElementById('memo-'+t.id)?.value || '';
+        const prepared = document.getElementById('prep-'+t.id)?.checked || false;
         const cur  = memberTaskState[t.id] || {};
         if (cur.existingId) {
           if (qty === 0) await sb.from('upbo_tasks').delete().eq('id', cur.existingId);
-          else await sb.from('upbo_tasks').update({ quantity:qty, memo }).eq('id', cur.existingId);
+          else await sb.from('upbo_tasks').update({ quantity:qty, memo, is_prepared:prepared }).eq('id', cur.existingId);
         } else if (qty > 0) {
-          await sb.from('upbo_tasks').insert({ member_id:selMemberId, type_id:t.id, quantity:qty, memo });
+          await sb.from('upbo_tasks').insert({ member_id:selMemberId, type_id:t.id, quantity:qty, memo, is_prepared:prepared });
         }
       }
       const memo = document.getElementById('memberMemo').value.trim();
@@ -747,6 +847,166 @@
       loadVodAdmin();
     }
     function closeEditVodModal() { document.getElementById('editVodModal').classList.add('hidden'); }
+
+    /* ════════════════ 노래 관리 ════════════════ */
+    function escA(t){ const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
+    const GENRE_MAP = { kpop:'Kpop', jpop:'Jpop', pop:'Pop', indie:'인디', folk:'포크', etc:'기타' };
+    let songs = [];
+
+    async function loadAdminSongs() {
+      const { data } = await sb.from('songs').select('*').order('sort_order').order('artist');
+      songs = data || [];
+      renderSongTable();
+    }
+    function renderSongTable() {
+      const tbody = document.getElementById('admin-tbody');
+      if (!songs.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:#BBB">등록된 노래가 없어요</td></tr>'; return; }
+      tbody.innerHTML = songs.map(s => `
+        <tr class="vod-drag-row song-drag-row" draggable="true" data-id="${s.id}">
+          <td style="color:#bbb;text-align:center;cursor:grab"><span class="drag-handle">⠿</span></td>
+          <td>${escA(s.artist)||'—'}</td>
+          <td class="font-medium">${escA(s.title)||'—'}</td>
+          <td><span class="text-xs px-2 py-0.5 rounded-full bg-thead text-accent">${GENRE_MAP[s.genre]||s.genre||'기타'}</span></td>
+          <td>${s.level||0} / 5</td>
+          <td class="text-sub text-xs">${escA(s.memo)||''}</td>
+          <td><button onclick="pushSongToOverlay('${s.id}')" class="text-xs px-2 py-1 rounded-lg border border-accent text-accent hover:bg-thead transition-colors" title="오버레이 송출">🎤</button></td>
+          <td><div class="flex gap-2">
+            <button onclick="openEditSong('${s.id}')" class="text-xs px-3 py-1 rounded-lg bg-thead text-accent hover:bg-point transition-colors">수정</button>
+            <button onclick="deleteSong('${s.id}')" class="text-xs px-3 py-1 rounded-lg text-red-400 hover:bg-red-50 border border-red-100 transition-colors">삭제</button>
+          </div></td>
+        </tr>`).join('');
+      initSongDrag();
+    }
+    function initSongDrag() {
+      const tbody = document.getElementById('admin-tbody');
+      if (!tbody) return;
+      let dragEl = null;
+      tbody.querySelectorAll('.song-drag-row').forEach(row => {
+        row.addEventListener('dragstart', e => { dragEl=row; row.style.opacity='.4'; e.dataTransfer.effectAllowed='move'; });
+        row.addEventListener('dragend', () => { dragEl=null; row.style.opacity='1'; saveSongOrder(); });
+        row.addEventListener('dragover', e => { e.preventDefault(); if(!dragEl||dragEl===row) return; const mid=row.getBoundingClientRect().top+row.offsetHeight/2; tbody.insertBefore(dragEl, e.clientY<mid?row:row.nextSibling); });
+        row.addEventListener('dragenter', e => { e.preventDefault(); if(row!==dragEl) row.style.background='#FBE0EC'; });
+        row.addEventListener('dragleave', () => row.style.background='');
+        row.addEventListener('drop', () => row.style.background='');
+      });
+    }
+    async function saveSongOrder() {
+      const rows = [...document.querySelectorAll('#admin-tbody .song-drag-row')];
+      await Promise.all(rows.map((row,i) => sb.from('songs').update({sort_order:i}).eq('id',row.dataset.id)));
+      songs = rows.map(r => songs.find(s => String(s.id)===String(r.dataset.id))).filter(Boolean);
+      showToast('순서 저장됨 ✓');
+    }
+    async function addSong() {
+      const artist = document.getElementById('f-artist').value.trim();
+      const title  = document.getElementById('f-title').value.trim();
+      const genre  = document.getElementById('f-genre').value;
+      const level  = parseInt(document.getElementById('f-level').value) || 0;
+      const memo   = document.getElementById('f-memo').value.trim();
+      if (!artist || !title) { showToast('가수와 제목을 입력해주세요','error'); return; }
+      const maxOrder = Math.max(0, ...songs.map(s => s.sort_order||0));
+      const { error } = await sb.from('songs').insert({ artist, title, genre, level, memo, sort_order:maxOrder+1 });
+      if (error) { showToast('추가 실패: '+error.message,'error'); return; }
+      document.getElementById('f-artist').value=''; document.getElementById('f-title').value=''; document.getElementById('f-memo').value='';
+      showToast('노래 추가됨 🎵');
+      loadAdminSongs();
+    }
+    async function deleteSong(id) {
+      if (!confirm('삭제할까요?')) return;
+      await sb.from('songs').delete().eq('id', id);
+      showToast('삭제됨');
+      loadAdminSongs();
+    }
+    function openEditSong(id) {
+      const s = songs.find(x => String(x.id)===String(id));
+      if (!s) return;
+      document.getElementById('edit-song-id').value = id;
+      document.getElementById('edit-artist').value = s.artist || '';
+      document.getElementById('edit-title').value = s.title || '';
+      document.getElementById('edit-genre').value = s.genre || 'etc';
+      document.getElementById('edit-level').value = s.level ?? 3;
+      document.getElementById('edit-memo').value = s.memo || '';
+      document.getElementById('editSongModal').style.display = 'flex';
+    }
+    function closeEditSong() { document.getElementById('editSongModal').style.display = 'none'; }
+    async function saveEditSong() {
+      const id = document.getElementById('edit-song-id').value;
+      const artist = document.getElementById('edit-artist').value.trim();
+      const title  = document.getElementById('edit-title').value.trim();
+      const genre  = document.getElementById('edit-genre').value;
+      const level  = parseInt(document.getElementById('edit-level').value) || 0;
+      const memo   = document.getElementById('edit-memo').value.trim();
+      if (!artist || !title) { showToast('가수와 제목을 입력해주세요','error'); return; }
+      const { error } = await sb.from('songs').update({ artist, title, genre, level, memo: memo||null }).eq('id', id);
+      if (error) { showToast('수정 실패: '+error.message,'error'); return; }
+      closeEditSong(); showToast('수정됐어요 ✓'); loadAdminSongs();
+    }
+
+    /* ════════════════ 오버레이 ════════════════ */
+    let overlaySongs = [];
+    function setOverlayBadge(on) {
+      const b = document.getElementById('overlay-status-badge');
+      if (on) { b.textContent='ON'; b.style.background='#D1FAE5'; b.style.color='#065F46'; }
+      else { b.textContent='OFF'; b.style.background='#ECE1D0'; b.style.color='#8A7565'; }
+    }
+    async function loadOverlayState() {
+      try {
+        const { data } = await sb.from('overlay_state').select('*').eq('id',1).maybeSingle();
+        if (data) {
+          document.getElementById('overlay-title').value = data.song_title || '';
+          document.getElementById('overlay-artist').value = data.song_artist || '';
+          setOverlayBadge(data.is_visible);
+        }
+      } catch(e) {}
+      const { data } = await sb.from('songs').select('id,title,artist,genre').order('sort_order').order('artist');
+      overlaySongs = data || [];
+      renderOverlaySongList();
+    }
+    function renderOverlaySongList() {
+      const q = (document.getElementById('overlay-search')?.value || '').toLowerCase();
+      const filtered = overlaySongs.filter(s => !q || (s.artist||'').toLowerCase().includes(q) || (s.title||'').toLowerCase().includes(q));
+      const el = document.getElementById('overlay-song-list');
+      if (!filtered.length) { el.innerHTML = '<div style="text-align:center;padding:20px;color:#BBB">없어요</div>'; return; }
+      el.innerHTML = filtered.map(s => `
+        <div onclick="pickOverlaySong('${s.id}')" style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #ECE1D0;border-radius:10px;padding:9px 14px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='#CF7FA3'" onmouseout="this.style.borderColor='#ECE1D0'">
+          <span style="font-size:11px;background:#FBE0EC;color:#B86A8F;padding:2px 8px;border-radius:20px;white-space:nowrap">${GENRE_MAP[s.genre]||s.genre||'기타'}</span>
+          <span style="font-size:13px;font-weight:600;color:#4A3A30;flex:1">${escA(s.title)}</span>
+          <span style="font-size:12px;color:#8A7565">${escA(s.artist)}</span>
+        </div>`).join('');
+    }
+    function pickOverlaySong(id) {
+      const s = overlaySongs.find(x => String(x.id)===String(id));
+      if (!s) return;
+      document.getElementById('overlay-title').value = s.title || '';
+      document.getElementById('overlay-artist').value = s.artist || '';
+      publishOverlay();
+    }
+    function pushSongToOverlay(id) {
+      const s = songs.find(x => String(x.id)===String(id));
+      if (!s) return;
+      document.getElementById('overlay-title').value = s.title || '';
+      document.getElementById('overlay-artist').value = s.artist || '';
+      const btn = document.querySelector('.tab-btn[data-tab="overlay"]');
+      publishOverlay();
+    }
+    async function publishOverlay() {
+      const title = document.getElementById('overlay-title').value.trim();
+      const artist = document.getElementById('overlay-artist').value.trim();
+      if (!title) { showToast('곡 제목을 입력해주세요','error'); return; }
+      const { error } = await sb.from('overlay_state').upsert({ id:1, song_title:title, song_artist:artist, is_visible:true }, { onConflict:'id' });
+      if (error) { showToast('실패: '+error.message,'error'); return; }
+      setOverlayBadge(true);
+      showToast('🎤 송출 중: '+title);
+    }
+    async function hideOverlay() {
+      const { error } = await sb.from('overlay_state').update({ is_visible:false }).eq('id',1);
+      if (error) { showToast('실패: '+error.message,'error'); return; }
+      setOverlayBadge(false);
+      showToast('오버레이 꺼짐');
+    }
+    function copyOverlayUrl() {
+      const url = location.origin + '/overlay/';
+      navigator.clipboard.writeText(url).then(() => { document.getElementById('overlay-url-display').value = url; showToast('📋 URL 복사됨'); });
+    }
   </script>
   <div id="toast" class="toast"></div>
 </body>
