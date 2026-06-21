@@ -221,11 +221,12 @@ function nickRank(s){
   if(/[A-Za-z]/.test(c)) return 1;            // 영문(ABCD)
   return 2;                                    // 숫자·특문
 }
+function totalQtyOf(m){ return (memberTasks[m.id]||[]).reduce((s,t)=>s+(t.quantity||1),0); }
 function memberSort(a, b){
-  const so = (a.sort_order||0) - (b.sort_order||0);
-  if(so !== 0) return so;
+  const ha = totalQtyOf(a) > 0 ? 0 : 1, hb = totalQtyOf(b) > 0 ? 0 : 1;
+  if(ha !== hb) return ha - hb;               // 업보 있는 사람 먼저, 없는(코인만) 사람 뒤로
   const ra = nickRank(a.nickname), rb = nickRank(b.nickname);
-  if(ra !== rb) return ra - rb;
+  if(ra !== rb) return ra - rb;               // 한글 → 영문 → 숫자·특문
   return (a.nickname||'').localeCompare(b.nickname||'', 'ko');
 }
 
