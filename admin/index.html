@@ -135,19 +135,19 @@
 
     <div class="max-w-5xl mx-auto px-4 pt-4">
       <div class="flex gap-6 border-b border-point/40 overflow-x-auto">
-        <button class="tab-btn active pb-3 text-sm whitespace-nowrap" data-tab="vod">🎬 VOD · 클립</button>
-        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="upbo">⚡ 업보 관리</button>
+        <button class="tab-btn active pb-3 text-sm whitespace-nowrap" data-tab="upbo">⚡ 업보 관리</button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="songs">🎵 노래 관리</button>
-        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="overlay">🎤 오버레이</button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="inquiry">✉️ 문의 <span id="inq-badge" style="display:none;background:#EF4444;color:white;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:2px">NEW</span></button>
+        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="overlay">🎤 오버레이</button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="profile">✏️ 프로필</button>
+        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="vod">🎬 VOD · 클립</button>
       </div>
     </div>
 
     <main class="max-w-5xl mx-auto px-4 py-6">
 
       <!-- ========== VOD · 클립 ========== -->
-      <div id="tab-vod" class="tab-content active">
+      <div id="tab-vod" class="tab-content">
         <div class="bg-white rounded-2xl shadow-sm border border-point/30 p-6 mb-6">
           <h2 class="font-semibold text-txt mb-4">➕ 영상 추가</h2>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -158,7 +158,7 @@
             </div>
             <div>
               <label class="block text-sm text-txt mb-1">SOOP VOD ID <span class="text-red-400">*</span></label>
-              <input type="text" id="vodId" placeholder="예: 194780409"
+              <input type="text" id="vodId" placeholder="예: 198965769"
                 class="w-full px-4 py-2 rounded-xl border border-point/50 bg-bg focus:outline-none focus:ring-2 focus:ring-accent/30 text-sm">
             </div>
             <div>
@@ -170,7 +170,7 @@
             </div>
           </div>
           <div class="mb-2 text-xs text-sub">
-            💡 SOOP VOD/클립 URL의 숫자 부분만 입력: <code class="bg-thead px-1 rounded">vod.sooplive.com/player/<b>194780409</b></code><br>
+            💡 SOOP VOD/클립 URL의 숫자 부분만 입력: <code class="bg-thead px-1 rounded">https://vod.sooplive.com/player/<b>198965769</b></code><br>
             ID 입력 후 미리보기 클릭 시 썸네일 자동 로드
           </div>
           <div id="vodPreview" class="hidden mb-4">
@@ -197,7 +197,7 @@
       </div>
 
       <!-- ========== 업보 관리 (송민트 방식) ========== -->
-      <div id="tab-upbo" class="tab-content">
+      <div id="tab-upbo" class="tab-content active">
         <div class="upbo-sub-nav">
           <button class="upbo-sub-btn active" onclick="switchUpboSub('assign')">📋 업보 부여</button>
           <button class="upbo-sub-btn" onclick="switchUpboSub('members')">👥 시청자 관리</button>
@@ -469,6 +469,7 @@
           document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
           btn.classList.add('active');
           document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+          if (btn.dataset.tab === 'vod') loadVodAdmin();
           if (btn.dataset.tab === 'upbo') loadUpbo();
           if (btn.dataset.tab === 'songs') loadAdminSongs();
           if (btn.dataset.tab === 'overlay') loadOverlayState();
