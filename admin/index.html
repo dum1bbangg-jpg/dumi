@@ -1097,6 +1097,17 @@
       'ps-bio-agency':'bio_agency', 'ps-bio-hair':'bio_hair', 'ps-bio-eye':'bio_eye', 'ps-bio-fanname':'bio_fanname',
       'ps-about':'about', 'ps-likes':'likes', 'ps-dislikes':'dislikes', 'to-msg':'to_doukong'
     };
+    const PROFILE_DEFAULTS = {
+      profile_image: 'https://profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg',
+      channel_url: 'https://www.sooplive.com/station/hika12',
+      hero_name: '두미',
+      tagline: '“6시에 와요, 화요일은 쉬어요 (｡•ᴗ•｡)♡”',
+      bio_name: '두미', bio_debut: '2025.07.17', bio_birthday: '11월 25일',
+      bio_agency: '개인', bio_hair: '연갈색 + 핑크브릿지', bio_eye: '핑크', bio_fanname: '두콩이들',
+      about: '저녁 6시에 찾아오는 소통 버튜버 두미예요! 화요일은 쉬어가구요,\n가끔은 노래도 불러요 🎵 오른쪽 덧니가 트레이드마크\n밝고 귀엽게, 두콩이들이랑 매일 도란도란 떠드는 게 제일 좋아',
+      likes: '소통, 롤, 노래', dislikes: '당근',
+      to_doukong: '두콩이들이랑 도란도란 오래오래 ♡ 첫 1주년도 같이 맞이하기!'
+    };
     async function loadProfileSettings() {
       const { data } = await sb.from('site_settings').select('key,value');
       const s = {}; (data||[]).forEach(r => s[r.key] = r.value);
@@ -1105,10 +1116,15 @@
       }
     }
     async function saveProfile() {
-      const rows = Object.entries(PROFILE_FIELDS).map(([id,key]) => ({ key, value: document.getElementById(id)?.value ?? '' }));
+      const rows = Object.entries(PROFILE_FIELDS).map(([id,key]) => {
+        let val = document.getElementById(id)?.value ?? '';
+        if (val.trim() === '') val = PROFILE_DEFAULTS[key] ?? '';
+        return { key, value: val };
+      });
       const { error } = await sb.from('site_settings').upsert(rows, { onConflict:'key' });
       if (error) { showToast('저장 실패: '+error.message,'error'); return; }
-      showToast('프로필 저장됐어요 ✓');
+      showToast('프로필 저장됐어요 ✓ (빈칸은 기본값 적용)');
+      await loadProfileSettings();
     }
   </script>
   <div id="toast" class="toast"></div>
