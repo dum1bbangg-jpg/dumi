@@ -126,6 +126,17 @@ DROP POLICY IF EXISTS "auth all overlay" ON public.overlay_state;
 CREATE POLICY "public read overlay" ON public.overlay_state FOR SELECT USING (true);
 CREATE POLICY "auth all overlay" ON public.overlay_state FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
+-- ========== 8-1. 사이트 설정 (프로필 To 두콩이 메시지 등) ==========
+CREATE TABLE IF NOT EXISTS public.site_settings ( key text PRIMARY KEY, value text );
+ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "public read site_settings" ON public.site_settings;
+DROP POLICY IF EXISTS "auth all site_settings" ON public.site_settings;
+CREATE POLICY "public read site_settings" ON public.site_settings FOR SELECT USING (true);
+CREATE POLICY "auth all site_settings" ON public.site_settings FOR ALL TO authenticated USING (true) WITH CHECK (true);
+INSERT INTO public.site_settings (key, value) VALUES
+  ('to_doukong', '두콩이들이랑 도란도란 오래오래 ♡ 첫 1주년도 같이 맞이하기!')
+ON CONFLICT (key) DO NOTHING;
+
 -- ========== 9. 두미 기본 업보 타입 시드 ==========
 INSERT INTO public.upbo_task_types (name, category, sort_order) VALUES
   ('지각', 'normal', 0), ('노래 신청', 'normal', 1),

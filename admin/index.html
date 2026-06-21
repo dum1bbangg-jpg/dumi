@@ -140,6 +140,7 @@
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="songs">🎵 노래 관리</button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="overlay">🎤 오버레이</button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="inquiry">✉️ 문의 <span id="inq-badge" style="display:none;background:#EF4444;color:white;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:2px">NEW</span></button>
+        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="profile">✏️ 프로필</button>
       </div>
     </div>
 
@@ -345,6 +346,16 @@
         </div>
       </div>
 
+      <!-- ========== 프로필 ========== -->
+      <div id="tab-profile" class="tab-content">
+        <div class="bg-white rounded-2xl shadow-sm border border-point/30 p-6">
+          <h2 class="font-semibold text-txt mb-1">📮 To 두콩이 메시지</h2>
+          <p class="text-sub text-sm mb-4">프로필 페이지 'To 두콩이' 카드에 표시되는 내용이에요 (줄바꿈 그대로 반영)</p>
+          <textarea id="to-msg" rows="5" class="input-field" style="resize:vertical;min-height:120px" placeholder="두콩이들에게 전하는 메시지"></textarea>
+          <button onclick="saveToMessage()" class="mt-3 px-6 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">저장</button>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -430,6 +441,7 @@
           if (btn.dataset.tab === 'songs') loadAdminSongs();
           if (btn.dataset.tab === 'overlay') loadOverlayState();
           if (btn.dataset.tab === 'inquiry') loadInquiries();
+          if (btn.dataset.tab === 'profile') loadToMessage();
         });
       });
     });
@@ -1042,6 +1054,18 @@
     function copyOverlayUrl() {
       const url = location.origin + '/overlay/';
       navigator.clipboard.writeText(url).then(() => { document.getElementById('overlay-url-display').value = url; showToast('📋 URL 복사됨'); });
+    }
+
+    /* ════════════════ 프로필 (To 두콩이) ════════════════ */
+    async function loadToMessage() {
+      const { data } = await sb.from('site_settings').select('value').eq('key','to_doukong').maybeSingle();
+      document.getElementById('to-msg').value = data?.value || '';
+    }
+    async function saveToMessage() {
+      const val = document.getElementById('to-msg').value;
+      const { error } = await sb.from('site_settings').upsert({ key:'to_doukong', value:val }, { onConflict:'key' });
+      if (error) { showToast('저장 실패: '+error.message,'error'); return; }
+      showToast('저장됐어요 ✓');
     }
   </script>
   <div id="toast" class="toast"></div>
