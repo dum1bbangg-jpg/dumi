@@ -38,6 +38,11 @@
   .updated-badge{font-size:1.15rem;color:var(--ink);background:#fff;border:2.4px solid var(--ink);padding:3px 14px;border-radius:15px;box-shadow:2px 2px 0 rgba(74,58,48,.14);white-space:nowrap;}
   .inquiry-btn{font-family:inherit;font-weight:700;font-size:1.15rem;cursor:pointer;color:#fff;background:var(--accent);border:2.4px solid var(--ink);padding:4px 18px 6px;border-radius:15px;box-shadow:2px 2px 0 rgba(74,58,48,.16);transition:transform .15s;}
   .inquiry-btn:hover{transform:translateY(-2px);}
+  .coin-guide-btn{font-family:inherit;font-weight:700;font-size:1.15rem;cursor:pointer;color:#5a430f;background:#e7b955;border:2.4px solid var(--ink);padding:4px 18px 6px;border-radius:15px;box-shadow:2px 2px 0 rgba(74,58,48,.16);transition:transform .15s;}
+  .coin-guide-btn:hover{transform:translateY(-2px);}
+  .ctier{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;border-bottom:2px dashed #4a3a3026;}
+  .cbadge{flex-shrink:0;background:#fbeccd;color:#a9761f;border:2px solid #e7b955;font-weight:700;font-size:1rem;padding:1px 11px 2px;border-radius:13px;white-space:nowrap;}
+  .citem{font-size:1.12rem;padding-top:1px;}
 
   .legend{display:flex;gap:14px;flex-wrap:wrap;margin:0 2px 14px;font-size:1.02rem;color:#4a3a30aa;align-items:center;}
   .legend .dot{display:inline-block;width:13px;height:13px;border-radius:4px;vertical-align:-1px;margin-right:5px;border:2px solid var(--ink);}
@@ -60,6 +65,8 @@
   .member-nick{font-size:1.42rem;font-weight:700;color:var(--ink);margin-bottom:2px;line-height:1.25;word-break:break-all;}
   .member-id{font-size:1.1rem;color:#4a3a3088;margin-bottom:9px;}
   .member-count{display:inline-flex;align-items:center;gap:4px;font-size:1.18rem;font-weight:700;background:var(--pink-soft);color:var(--accent-deep);border:2px solid var(--accent);padding:1px 12px 2px;border-radius:15px;}
+  .count-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+  .coin-count{display:inline-flex;align-items:center;gap:3px;font-size:1.08rem;font-weight:700;background:#fbeccd;color:#a9761f;border:2px solid #e7b955;padding:1px 11px 2px;border-radius:15px;white-space:nowrap;}
 
   .state-box{text-align:center;padding:60px 20px;color:#4a3a3099;font-size:1.25rem;}
   .spinner{width:30px;height:30px;border-radius:50%;border:3px solid var(--t-card);border-top-color:var(--accent);animation:spin .8s linear infinite;margin:0 auto 14px;}
@@ -119,6 +126,7 @@
     </div>
     <div class="hero-right">
       <span class="updated-badge" id="updatedLabel">갱신일: —</span>
+      <button class="coin-guide-btn" onclick="openCoinGuide()">🪙 코인 교환</button>
       <button class="inquiry-btn" onclick="openInquiry()">업보 문의</button>
     </div>
   </header>
@@ -140,7 +148,7 @@
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="modal-header">
       <div class="modal-avatar" id="modal-avatar"><span>🐱</span></div>
-      <div><div class="modal-nick" id="modal-nick"></div><div class="modal-uid" id="modal-uid"></div></div>
+      <div><div class="modal-nick" id="modal-nick"></div><div class="modal-uid" id="modal-uid"></div><div id="modal-coin" style="margin-top:4px"></div></div>
     </div>
     <div class="task-list" id="modal-task-list"></div>
     <button class="modal-close" onclick="document.getElementById('upboModal').classList.remove('open'); document.querySelector('#upboModal .modal-box').style.top = ''">닫기</button>
@@ -159,6 +167,32 @@
       <div style="font-size:2.8rem;margin-bottom:10px">✅</div>
       <div style="font-weight:700;color:var(--ink)">문의가 접수됐어요!</div>
     </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="coinGuideModal" onclick="closeCoinGuide(event)">
+  <div class="modal-box" onclick="event.stopPropagation()" style="top:50%;transform:translate(-50%,-50%);max-width:480px">
+    <div style="font-size:1.5rem;font-weight:700;margin-bottom:4px">🪙 코인 교환 안내</div>
+    <div style="font-size:1.05rem;color:#4a3a3088;margin-bottom:14px">모은 코인으로 아래 항목과 교환할 수 있어요</div>
+
+    <div style="font-weight:700;font-size:1.22rem;margin:8px 0 6px;color:var(--accent-deep)">코인 교환 가능 업보</div>
+    <div class="ctier"><span class="cbadge">🪙 1개</span><span class="citem">단컷방셀 · 움짤방셀 · 배너 or 움짤프사</span></div>
+    <div class="ctier"><span class="cbadge">🪙 5개</span><span class="citem">손편지</span></div>
+    <div class="ctier"><span class="cbadge">🪙 10개</span><span class="citem">원하는 게임 or 공포게임 · 15시간 노방종 · 음성메세지</span></div>
+    <div class="ctier"><span class="cbadge">🪙 15개</span><span class="citem">괴식핀볼</span></div>
+    <div style="font-size:1rem;color:#4a3a3088;margin:10px 0 4px;text-align:center">— 나머지 업보는 교환 불가합니다 —</div>
+
+    <div style="font-weight:700;font-size:1.22rem;margin:16px 0 6px;color:var(--accent-deep)">▼ 아래 항목으로 교환 가능 (택1) ▼</div>
+    <div class="ctier"><span class="cbadge">🪙 1개</span><span class="citem">두미 발도장 5개</span></div>
+    <div class="ctier"><span class="cbadge">🪙 5개</span><span class="citem">배너(상단·하단·플로팅 택1) · 단컷방셀</span></div>
+    <div class="ctier"><span class="cbadge">🪙 10개</span><span class="citem">히든 단컷방셀 · 손편지</span></div>
+    <div class="ctier"><span class="cbadge">🪙 20개</span><span class="citem">히든 움짤방셀</span></div>
+    <div class="ctier"><span class="cbadge">🪙 30개</span><span class="citem">원하는 게임 or 공포게임</span></div>
+    <div class="ctier"><span class="cbadge">🪙 70개</span><span class="citem">괴식핀볼 · 24시간 노방종</span></div>
+    <div class="ctier"><span class="cbadge">🪙 100개</span><span class="citem">사랑이 가득 담긴 팬심배송</span></div>
+    <div class="ctier" style="border-bottom:none"><span class="cbadge">🪙 150개</span><span class="citem">수제향수 · 장패드 · 키캡</span></div>
+
+    <button class="modal-close" onclick="document.getElementById('coinGuideModal').classList.remove('open')">닫기</button>
   </div>
 </div>
 
@@ -185,7 +219,7 @@ async function load(){
     if(settings?.value) document.getElementById('updatedLabel').textContent = '갱신일: ' + settings.value;
     memberTasks = {};
     (tasks||[]).forEach(t => { (memberTasks[t.member_id] = memberTasks[t.member_id] || []).push(t); });
-    allMembers = (members||[]).filter(m => (memberTasks[m.id]?.length) && !m.is_hidden);
+    allMembers = (members||[]).filter(m => ((memberTasks[m.id]?.length) || m.coins > 0) && !m.is_hidden);
     document.getElementById('loadingState').style.display = 'none';
     if(!allMembers.length){ document.getElementById('emptyState').style.display='block'; return; }
     render(allMembers);
@@ -210,7 +244,7 @@ function render(members){
       <div class="member-avatar">${imgHtml}${fallback}</div>
       <div class="member-nick">${esc(m.nickname)}</div>
       ${m.user_id ? `<div class="member-id">(${esc(m.user_id)})</div>` : ''}
-      <span class="member-count">업보 ${totalQty}</span>
+      <div class="count-row"><span class="member-count">업보 ${totalQty}</span>${m.coins>0?`<span class="coin-count">🪙 ${m.coins}</span>`:''}</div>
     </div>`;
   }).join('');
   const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:.05});
@@ -237,6 +271,7 @@ function openUpboModal(memberId, clickEvent){
   avatarEl.innerHTML = url ? `<img src="${url}" alt="" onerror="this.parentElement.innerHTML='<span>🐱</span>'" style="width:100%;height:100%;object-fit:cover">` : '<span>🐱</span>';
   document.getElementById('modal-nick').textContent = m.nickname;
   document.getElementById('modal-uid').textContent = m.user_id ? `(${m.user_id})` : '';
+  document.getElementById('modal-coin').innerHTML = m.coins>0 ? `<span class="coin-count">🪙 코인 ${m.coins}개</span>` : '';
   const listEl = document.getElementById('modal-task-list');
   listEl.innerHTML = tasks.map(t => {
     const isEvent = t.upbo_task_types?.category === 'event';
@@ -250,7 +285,7 @@ function openUpboModal(memberId, clickEvent){
       </div>
       <span class="task-qty">×${t.quantity||1}</span>
     </div>`;
-  }).join('');
+  }).join('') || '<div style="text-align:center;color:#4a3a3088;padding:16px;font-size:1.15rem">보유 업보가 없어요 🪙</div>';
   const modalEl = document.getElementById('upboModal');
   modalEl.classList.add('open');
   requestAnimationFrame(() => {
@@ -264,7 +299,7 @@ function openUpboModal(memberId, clickEvent){
 }
 
 function closeUpboModal(e){ if(e.target===e.currentTarget){ document.getElementById('upboModal').classList.remove('open'); document.querySelector('#upboModal .modal-box').style.top = ''; } }
-document.addEventListener('keydown', e => { if(e.key==='Escape'){ document.getElementById('upboModal').classList.remove('open'); document.getElementById('inquiryModal').classList.remove('open'); }});
+document.addEventListener('keydown', e => { if(e.key==='Escape'){ document.getElementById('upboModal').classList.remove('open'); document.getElementById('inquiryModal').classList.remove('open'); document.getElementById('coinGuideModal').classList.remove('open'); }});
 
 function openInquiry(){
   document.getElementById('inquiryForm').style.display='block';
@@ -274,6 +309,8 @@ function openInquiry(){
   document.getElementById('inquiryModal').classList.add('open');
 }
 function closeInquiry(e){ if(e.target===e.currentTarget) document.getElementById('inquiryModal').classList.remove('open'); }
+function openCoinGuide(){ document.getElementById('coinGuideModal').classList.add('open'); }
+function closeCoinGuide(e){ if(e.target===e.currentTarget) document.getElementById('coinGuideModal').classList.remove('open'); }
 async function submitInquiry(){
   const nick = document.getElementById('iNick').value.trim();
   const content = document.getElementById('iContent').value.trim();

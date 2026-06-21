@@ -35,10 +35,11 @@ CREATE TABLE IF NOT EXISTS public.upbo_members (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   nickname text NOT NULL, user_id text,
   memo text, is_hidden boolean DEFAULT false,
-  sort_order int DEFAULT 0, created_at timestamptz DEFAULT now()
+  sort_order int DEFAULT 0, coins int DEFAULT 0, created_at timestamptz DEFAULT now()
 );
 ALTER TABLE public.upbo_members ADD COLUMN IF NOT EXISTS memo text;
 ALTER TABLE public.upbo_members ADD COLUMN IF NOT EXISTS sort_order int DEFAULT 0;
+ALTER TABLE public.upbo_members ADD COLUMN IF NOT EXISTS coins int DEFAULT 0;
 
 -- ========== 4. 업보 기록 (멤버×타입×수량, 준비완료 체크) ==========
 CREATE TABLE IF NOT EXISTS public.upbo_tasks (

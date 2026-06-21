@@ -74,6 +74,10 @@
     .form-field-label{font-size:11px;font-weight:600;color:#8A7565;margin-bottom:4px}
     .song-inp{width:100%;padding:8px 12px;border:1.5px solid #ECE1D0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;color:#4A3A30;background:#fff}
     .song-inp:focus{border-color:#CF7FA3}
+    .coin-row{display:flex;align-items:center;gap:10px;background:#FBE0EC;border:1.5px solid #F1CFDF;border-radius:12px;padding:10px 14px;margin-bottom:14px;flex-wrap:wrap}
+    .coin-label{font-size:13px;font-weight:700;color:#B86A8F}
+    .coin-dir{width:30px;height:30px;border-radius:8px;border:1.5px solid #ECE1D0;background:#fff;font-size:16px;font-weight:700;cursor:pointer;color:#4A3A30}
+    .coin-dir:hover{border-color:#CF7FA3;background:#fff0f6}
     #tab-upbo input[type=text], #tab-upbo input[type=date], #tab-upbo select, #tab-upbo textarea{width:100%;padding:8px 12px;border:1.5px solid #ECE1D0;border-radius:8px;font-size:13px;font-family:inherit;outline:none;color:#4A3A30;background:#fff}
     #tab-upbo input:focus, #tab-upbo select:focus, #tab-upbo textarea:focus{border-color:#CF7FA3}
 
@@ -221,7 +225,17 @@
                 <button onclick="saveTasks()" style="padding:6px 16px;background:#CF7FA3;color:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit">💾 저장</button>
               </div>
             </div>
-            <div class="upbo-task-grid" id="taskGrid"></div>
+            <div class="coin-row">
+            <span class="coin-label">🪙 코인</span>
+            <span id="coinCurrent" style="font-weight:800;font-size:14px;color:#4A3A30;min-width:46px">0개</span>
+            <div style="display:flex;align-items:center;gap:6px;margin-left:auto">
+              <button class="coin-dir" onclick="adjustCoinPending(-1)">−</button>
+              <span id="coinPending" style="font-weight:800;font-size:14px;min-width:38px;text-align:center;color:#8A7565">0</span>
+              <button class="coin-dir" onclick="adjustCoinPending(1)">＋</button>
+            </div>
+            <span style="font-size:11px;color:#8A7565;white-space:nowrap">저장 시 반영</span>
+          </div>
+          <div class="upbo-task-grid" id="taskGrid"></div>
             <div style="margin-top:14px">
               <label class="form-field-label" style="display:block;margin-bottom:6px">📝 관리자 메모 (비공개)</label>
               <textarea id="memberMemo" placeholder="이 시청자에 대한 메모" style="resize:vertical;min-height:72px"></textarea>
@@ -435,7 +449,7 @@
     }
 
     /* ════════════════ 업보 (송민트 방식) ════════════════ */
-    let taskTypes = [], allUpboMembers = [], selMemberId = null, memberTaskState = {};
+    let taskTypes = [], allUpboMembers = [], selMemberId = null, memberTaskState = {}, coinPending = 0;
 
     function switchUpboSub(name) {
       document.querySelectorAll('.upbo-sub-btn').forEach(b => b.classList.remove('active'));
@@ -591,7 +605,7 @@
       const nick = document.getElementById('memberNick').value.trim();
       const uid  = document.getElementById('memberUid').value.trim();
       if (!nick) { showToast('닉네임을 입력해주세요','error'); return; }
-      const { error } = await sb.from('upbo_members').insert({ nickname:nick, user_id:uid||null });
+      const { error } = await sb.from('upbo_members').insert({ nickname:nick, user_id:uid||null, coins:0 });
       if (error) { showToast('추가 실패: '+error.message,'error'); return; }
       document.getElementById('memberNick').value = '';
       document.getElementById('memberUid').value = '';
@@ -622,6 +636,7 @@
         <button class="upbo-member-btn${String(selMemberId)===String(m.id)?' selected':''}" data-id="${m.id}" onclick="selectMember('${m.id}')">
           <div class="mc-nick">${m.nickname}</div>
           <div class="mc-id">${m.user_id||''}</div>
+          ${m.coins>0?`<div style="font-size:10px;color:#B86A8F;font-weight:700;margin-top:2px">🪙 ${m.coins}</div>`:''}
         </button>`).join('');
     }
     function filterAssignGrid() {
@@ -633,10 +648,20 @@
       const m = allUpboMembers.find(x => String(x.id)===String(id));
       document.getElementById('assignTitle').textContent = `${m.nickname} 업보 부여`;
       document.getElementById('memberMemo').value = m.memo || '';
+      coinPending = 0;
+      document.getElementById('coinCurrent').textContent = `${m.coins||0}개`;
+      document.getElementById('coinPending').textContent = '0';
+      document.getElementById('coinPending').style.color = '#8A7565';
       const q = document.getElementById('assignSearch').value.toLowerCase();
       renderAssignGrid(allUpboMembers.filter(x => !q || x.nickname.toLowerCase().includes(q) || (x.user_id||'').toLowerCase().includes(q)));
       document.getElementById('assignTaskArea').style.display = 'block';
       await loadMemberTasks();
+    }
+    function adjustCoinPending(delta) {
+      coinPending += delta;
+      const el = document.getElementById('coinPending');
+      el.textContent = (coinPending>=0?'+':'') + coinPending;
+      el.style.color = coinPending>0 ? '#16a34a' : coinPending<0 ? '#dc2626' : '#8A7565';
     }
     async function loadMemberTasks() {
       const grid = document.getElementById('taskGrid');
@@ -687,8 +712,19 @@
         }
       }
       const memo = document.getElementById('memberMemo').value.trim();
-      await sb.from('upbo_members').update({ memo: memo||null }).eq('id', selMemberId);
-      showToast('💾 저장 완료!');
+      const updateData = { memo: memo||null };
+      let newCoins = null;
+      if (coinPending !== 0) {
+        const mem = allUpboMembers.find(x => String(x.id)===String(selMemberId));
+        newCoins = Math.max(0, (mem?.coins||0) + coinPending);
+        updateData.coins = newCoins;
+      }
+      await sb.from('upbo_members').update(updateData).eq('id', selMemberId);
+      showToast(coinPending !== 0 ? `💾 저장! 코인 ${coinPending>=0?'+':''}${coinPending} → ${newCoins}개` : '💾 저장 완료!');
+      coinPending = 0;
+      document.getElementById('coinPending').textContent = '0';
+      document.getElementById('coinPending').style.color = '#8A7565';
+      if (newCoins !== null) document.getElementById('coinCurrent').textContent = `${newCoins}개`;
       await loadMemberTasks();
       const { data: members } = await sb.from('upbo_members').select('*').order('sort_order').order('created_at');
       allUpboMembers = members || [];
