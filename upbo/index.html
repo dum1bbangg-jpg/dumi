@@ -101,6 +101,11 @@
   .modal-submit{width:100%;padding:12px;border-radius:15px;background:var(--accent);color:#fff;border:2.6px solid var(--ink);font-family:inherit;font-size:1.2rem;font-weight:700;cursor:pointer;box-shadow:3px 3px 0 rgba(74,58,48,.16);transition:transform .12s;}
   .modal-submit:hover{transform:translateY(-2px);}
 
+  .pagination{display:flex;align-items:center;justify-content:center;gap:5px;padding:24px 0 8px;flex-wrap:wrap;}
+  .page-btn{min-width:38px;height:38px;padding:0 8px;border-radius:11px;border:2.2px solid var(--ink);background:#fff;color:var(--ink);font-family:inherit;font-size:1.1rem;font-weight:700;cursor:pointer;transition:transform .12s;display:flex;align-items:center;justify-content:center;}
+  .page-btn:hover{transform:translateY(-1px);}
+  .page-btn.active{background:var(--accent);color:#fff;}
+  .page-btn:disabled{opacity:.35;cursor:default;pointer-events:none;}
   footer{margin:44px 4px 0;text-align:center;font-size:1.15rem;opacity:.55;}
   body.embed nav.tabs{display:none;}
   @media (max-width:600px){.member-grid{grid-template-columns:repeat(2,1fr);}.hero .title{font-size:2.4rem;}}
@@ -142,6 +147,7 @@
   <div id="loadingState" class="state-box"><div class="spinner"></div>불러오는 중...</div>
   <div id="emptyState" class="state-box" style="display:none">아직 업보가 없어요 ✨</div>
   <div class="member-grid" id="memberGrid"></div>
+  <div class="pagination" id="pagination"></div>
 </main>
 
 <div class="modal-backdrop" id="upboModal" onclick="closeUpboModal(event)">
@@ -205,6 +211,8 @@
 <script>
 const sb = initSupabase();
 let allMembers = [], memberTasks = {};
+let currentPage = 1, _renderList = [];
+const PAGE_SIZE = 24; // 4열 × 6행
 
 function esc(t){ const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
 function avatarUrl(uid){ if(!uid) return null; const pre=uid.substring(0,2); return `https://profile.img.sooplive.com/LOGO/${pre}/${uid}/${uid}.jpg`; }
@@ -230,11 +238,21 @@ async function load(){
 }
 
 function render(members){
+  _renderList = members;
+  const totalPages = Math.ceil(members.length / PAGE_SIZE);
+  if(currentPage > totalPages) currentPage = totalPages || 1;
+  renderPage();
+}
+
+function renderPage(){
   const grid = document.getElementById('memberGrid');
   const empty = document.getElementById('emptyState');
-  if(!members.length){ empty.style.display='block'; grid.innerHTML=''; return; }
+  const members = _renderList;
+  if(!members.length){ empty.style.display='block'; grid.innerHTML=''; renderPagination(0); return; }
   empty.style.display = 'none';
-  grid.innerHTML = members.map((m) => {
+  const start = (currentPage-1)*PAGE_SIZE;
+  const paged = members.slice(start, start+PAGE_SIZE);
+  grid.innerHTML = paged.map((m) => {
     const tasks = memberTasks[m.id] || [];
     const totalQty = tasks.reduce((s,t) => s + (t.quantity||1), 0);
     const url = avatarUrl(m.user_id);
@@ -249,10 +267,28 @@ function render(members){
   }).join('');
   const obs = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); }), {threshold:.05});
   grid.querySelectorAll('.member-card').forEach(el => obs.observe(el));
+  renderPagination(Math.ceil(members.length / PAGE_SIZE));
 }
+
+function renderPagination(totalPages){
+  const el = document.getElementById('pagination');
+  if(totalPages <= 1){ el.innerHTML=''; return; }
+  let b = `<button class="page-btn" ${currentPage===1?'disabled':''} onclick="goPage(${currentPage-1})">‹</button>`;
+  const delta=2;
+  for(let i=1;i<=totalPages;i++){
+    if(i===1||i===totalPages||(i>=currentPage-delta&&i<=currentPage+delta)){
+      b += `<button class="page-btn ${i===currentPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+    } else if(i===currentPage-delta-1||i===currentPage+delta+1){ b += `<span style="padding:0 4px;color:#4a3a3066">…</span>`; }
+  }
+  b += `<button class="page-btn" ${currentPage===totalPages?'disabled':''} onclick="goPage(${currentPage+1})">›</button>`;
+  el.innerHTML = b;
+}
+
+function goPage(n){ currentPage=n; renderPage(); document.querySelector('.member-grid')?.scrollIntoView({behavior:'smooth',block:'start'}); }
 
 document.getElementById('searchInput').addEventListener('input', e => {
   const q = e.target.value.toLowerCase().trim();
+  currentPage = 1;
   render(q ? allMembers.filter(m => m.nickname.toLowerCase().includes(q) || (m.user_id||'').toLowerCase().includes(q)) : allMembers);
 });
 
