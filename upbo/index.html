@@ -42,7 +42,7 @@
   .coin-guide-btn:hover{transform:translateY(-2px);}
   .ctier{display:flex;gap:10px;align-items:flex-start;padding:8px 2px;border-bottom:2px dashed #4a3a3026;}
   .cbadge{flex-shrink:0;background:#fbeccd;color:#a9761f;border:2px solid #e7b955;font-weight:700;font-size:1rem;padding:1px 11px 2px;border-radius:13px;white-space:nowrap;}
-  .citem{font-size:1.12rem;padding-top:1px;}
+  .citem{font-size:1.12rem;padding-top:1px;word-break:keep-all;}
 
   .legend{display:flex;gap:14px;flex-wrap:wrap;margin:0 2px 14px;font-size:1.02rem;color:#4a3a30aa;align-items:center;}
   .legend .dot{display:inline-block;width:13px;height:13px;border-radius:4px;vertical-align:-1px;margin-right:5px;border:2px solid var(--ink);}
@@ -114,7 +114,7 @@
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.6" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="1" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter>
 </svg>
 
 <main class="diary">

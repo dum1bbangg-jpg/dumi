@@ -83,7 +83,7 @@
 <body>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.4" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="1" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter>
 </svg>
 
 <main class="diary">
@@ -207,7 +207,9 @@
     el.innerHTML = b;
   }
   function goPage(n){ currentPage=n; render(); document.querySelector('.table-box')?.scrollIntoView({behavior:'smooth',block:'start'}); }
-  function copyTitle(btn, text){ navigator.clipboard.writeText(text).then(()=>{ btn.textContent='✓'; btn.classList.add('copied'); setTimeout(()=>{btn.textContent='복사';btn.classList.remove('copied');},1500); }); }
+  function fallbackCopy(text){ return new Promise((resolve,reject)=>{ try{ const ta=document.createElement('textarea'); ta.value=text; ta.style.cssText='position:fixed;top:0;left:0;width:1px;height:1px;opacity:0'; document.body.appendChild(ta); ta.focus(); ta.select(); const ok=document.execCommand('copy'); document.body.removeChild(ta); ok?resolve():reject(new Error('copy failed')); }catch(e){ reject(e); } }); }
+  function copyToClipboard(text){ if(navigator.clipboard && navigator.clipboard.writeText){ return navigator.clipboard.writeText(text).catch(()=>fallbackCopy(text)); } return fallbackCopy(text); }
+  function copyTitle(btn, text){ copyToClipboard(text).then(()=>{ btn.textContent='✓'; btn.classList.add('copied'); setTimeout(()=>{btn.textContent='복사';btn.classList.remove('copied');},1500); }).catch(()=>{ btn.textContent='실패'; setTimeout(()=>{btn.textContent='복사';},1500); }); }
 
   document.getElementById('search-input').addEventListener('input', e => { currentSearch=e.target.value; currentPage=1; render(); });
   document.getElementById('filter-tabs').addEventListener('click', e => {
@@ -232,7 +234,7 @@
         <div style="font-size:1.7rem;font-weight:700;color:var(--ink);margin-bottom:8px">${esc(song.title)||''}</div>
         <div style="font-size:1.1rem;color:#4a3a3088;margin-bottom:20px">${esc(song.memo)||''}</div>
         <div style="display:flex;gap:8px;justify-content:center">
-          <button onclick="navigator.clipboard.writeText('${(song.artist||'').replace(/'/g,"\\'")} - ${(song.title||'').replace(/'/g,"\\'")}').then(()=>{document.getElementById('randModal').remove()})" style="font-family:inherit;padding:9px 18px;background:var(--accent);color:#fff;border:2.4px solid var(--ink);border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer">복사</button>
+          <button onclick="copyToClipboard('${(song.artist||'').replace(/'/g,"\\'")} - ${(song.title||'').replace(/'/g,"\\'")}').then(()=>{document.getElementById('randModal').remove()})" style="font-family:inherit;padding:9px 18px;background:var(--accent);color:#fff;border:2.4px solid var(--ink);border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer">복사</button>
           <button onclick="document.getElementById('randModal').remove();songbookRandom()" style="font-family:inherit;padding:9px 18px;background:#fff;color:var(--ink);border:2.4px solid var(--ink);border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer">다시</button>
           <button onclick="document.getElementById('randModal').remove()" style="font-family:inherit;padding:9px 16px;background:#fff;color:#4a3a3088;border:2.4px solid var(--ink);border-radius:14px;font-size:1.05rem;cursor:pointer">닫기</button>
         </div></div>`;
