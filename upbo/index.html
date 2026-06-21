@@ -215,6 +215,19 @@ const PAGE_SIZE = 20; // 4열 × 5행
 
 function esc(t){ const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
 function avatarUrl(uid){ if(!uid) return null; const pre=uid.substring(0,2); return `https://profile.img.sooplive.com/LOGO/${pre}/${uid}/${uid}.jpg`; }
+function nickRank(s){
+  const c = (s||'').trim().charAt(0);
+  if(/[가-힣ㄱ-ㅎㅏ-ㅣ]/.test(c)) return 0;  // 한글(가나다)
+  if(/[A-Za-z]/.test(c)) return 1;            // 영문(ABCD)
+  return 2;                                    // 숫자·특문
+}
+function memberSort(a, b){
+  const so = (a.sort_order||0) - (b.sort_order||0);
+  if(so !== 0) return so;
+  const ra = nickRank(a.nickname), rb = nickRank(b.nickname);
+  if(ra !== rb) return ra - rb;
+  return (a.nickname||'').localeCompare(b.nickname||'', 'ko');
+}
 
 async function load(){
   try{
@@ -226,7 +239,7 @@ async function load(){
     if(settings?.value) document.getElementById('updatedLabel').textContent = '갱신일: ' + settings.value;
     memberTasks = {};
     (tasks||[]).forEach(t => { (memberTasks[t.member_id] = memberTasks[t.member_id] || []).push(t); });
-    allMembers = (members||[]).filter(m => ((memberTasks[m.id]?.length) || m.coins > 0) && !m.is_hidden);
+    allMembers = (members||[]).filter(m => ((memberTasks[m.id]?.length) || m.coins > 0) && !m.is_hidden).sort(memberSort);
     document.getElementById('loadingState').style.display = 'none';
     if(!allMembers.length){ document.getElementById('emptyState').style.display='block'; return; }
     render(allMembers);
