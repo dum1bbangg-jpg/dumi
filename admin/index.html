@@ -348,12 +348,44 @@
 
       <!-- ========== 프로필 ========== -->
       <div id="tab-profile" class="tab-content">
-        <div class="bg-white rounded-2xl shadow-sm border border-point/30 p-6">
-          <h2 class="font-semibold text-txt mb-1">📮 To 두콩이 메시지</h2>
-          <p class="text-sub text-sm mb-4">프로필 페이지 'To 두콩이' 카드에 표시되는 내용이에요 (줄바꿈 그대로 반영)</p>
-          <textarea id="to-msg" rows="5" class="input-field" style="resize:vertical;min-height:120px" placeholder="두콩이들에게 전하는 메시지"></textarea>
-          <button onclick="saveToMessage()" class="mt-3 px-6 py-2 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">저장</button>
+        <div class="sc">
+          <div class="sc-title">🖼️ 프로필 사진 & 링크</div>
+          <p class="form-field-label">프로필 사진 URL</p>
+          <input id="ps-image" class="song-inp" placeholder="https://...">
+          <p class="form-field-label" style="margin-top:10px">방송국(채널) URL</p>
+          <input id="ps-channel" class="song-inp" placeholder="https://www.sooplive.com/station/...">
         </div>
+        <div class="sc">
+          <div class="sc-title">✏️ 이름 & 한줄 소개</div>
+          <p class="form-field-label">이름</p><input id="ps-name" class="song-inp">
+          <p class="form-field-label" style="margin-top:10px">한줄 소개 (상단 따옴표 문구)</p><input id="ps-tagline" class="song-inp">
+        </div>
+        <div class="sc">
+          <div class="sc-title">📋 기본 정보 (My Bio)</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div><p class="form-field-label">이름</p><input id="ps-bio-name" class="song-inp"></div>
+            <div><p class="form-field-label">데뷔</p><input id="ps-bio-debut" class="song-inp"></div>
+            <div><p class="form-field-label">생일</p><input id="ps-bio-birthday" class="song-inp"></div>
+            <div><p class="form-field-label">소속</p><input id="ps-bio-agency" class="song-inp"></div>
+            <div><p class="form-field-label">머리</p><input id="ps-bio-hair" class="song-inp"></div>
+            <div><p class="form-field-label">눈</p><input id="ps-bio-eye" class="song-inp"></div>
+            <div style="grid-column:1/-1"><p class="form-field-label">팬네임</p><input id="ps-bio-fanname" class="song-inp"></div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="sc-title">💬 About Me <span style="font-size:11px;color:#8A7565;font-weight:400">· 줄바꿈 반영</span></div>
+          <textarea id="ps-about" rows="4" class="input-field" style="resize:vertical;min-height:90px"></textarea>
+        </div>
+        <div class="sc">
+          <div class="sc-title">🏷️ 좋아함 / 싫어함 <span style="font-size:11px;color:#8A7565;font-weight:400">· 쉼표(,)로 구분</span></div>
+          <p class="form-field-label">좋아함</p><input id="ps-likes" class="song-inp" placeholder="소통, 롤, 노래">
+          <p class="form-field-label" style="margin-top:10px">싫어함</p><input id="ps-dislikes" class="song-inp" placeholder="당근">
+        </div>
+        <div class="sc">
+          <div class="sc-title">📮 To 두콩이 메시지 <span style="font-size:11px;color:#8A7565;font-weight:400">· 줄바꿈 반영</span></div>
+          <textarea id="to-msg" rows="4" class="input-field" style="resize:vertical;min-height:90px" placeholder="두콩이들에게 전하는 메시지"></textarea>
+        </div>
+        <button onclick="saveProfile()" class="px-7 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">💾 프로필 전체 저장</button>
       </div>
 
     </main>
@@ -441,7 +473,7 @@
           if (btn.dataset.tab === 'songs') loadAdminSongs();
           if (btn.dataset.tab === 'overlay') loadOverlayState();
           if (btn.dataset.tab === 'inquiry') loadInquiries();
-          if (btn.dataset.tab === 'profile') loadToMessage();
+          if (btn.dataset.tab === 'profile') loadProfileSettings();
         });
       });
     });
@@ -1057,15 +1089,26 @@
     }
 
     /* ════════════════ 프로필 (To 두콩이) ════════════════ */
-    async function loadToMessage() {
-      const { data } = await sb.from('site_settings').select('value').eq('key','to_doukong').maybeSingle();
-      document.getElementById('to-msg').value = data?.value || '';
+    /* ════════════════ 프로필 (전체 문구/사진) ════════════════ */
+    const PROFILE_FIELDS = {
+      'ps-image':'profile_image', 'ps-channel':'channel_url',
+      'ps-name':'hero_name', 'ps-tagline':'tagline',
+      'ps-bio-name':'bio_name', 'ps-bio-debut':'bio_debut', 'ps-bio-birthday':'bio_birthday',
+      'ps-bio-agency':'bio_agency', 'ps-bio-hair':'bio_hair', 'ps-bio-eye':'bio_eye', 'ps-bio-fanname':'bio_fanname',
+      'ps-about':'about', 'ps-likes':'likes', 'ps-dislikes':'dislikes', 'to-msg':'to_doukong'
+    };
+    async function loadProfileSettings() {
+      const { data } = await sb.from('site_settings').select('key,value');
+      const s = {}; (data||[]).forEach(r => s[r.key] = r.value);
+      for (const [id,key] of Object.entries(PROFILE_FIELDS)) {
+        const el = document.getElementById(id); if (el) el.value = s[key] ?? '';
+      }
     }
-    async function saveToMessage() {
-      const val = document.getElementById('to-msg').value;
-      const { error } = await sb.from('site_settings').upsert({ key:'to_doukong', value:val }, { onConflict:'key' });
+    async function saveProfile() {
+      const rows = Object.entries(PROFILE_FIELDS).map(([id,key]) => ({ key, value: document.getElementById(id)?.value ?? '' }));
+      const { error } = await sb.from('site_settings').upsert(rows, { onConflict:'key' });
       if (error) { showToast('저장 실패: '+error.message,'error'); return; }
-      showToast('저장됐어요 ✓');
+      showToast('프로필 저장됐어요 ✓');
     }
   </script>
   <div id="toast" class="toast"></div>

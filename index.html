@@ -65,7 +65,7 @@
 
   .about{background:var(--c-about);margin-bottom:32px;}
   .about .tab{background:var(--t-about);}
-  .about p{font-size:1.5rem;margin:8px 0 0;}
+  .about p{font-size:1.5rem;margin:8px 0 0;white-space:pre-line;}
 
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;align-items:start;}
   .like{background:var(--c-like);transform:rotate(-1deg);}
@@ -134,44 +134,44 @@
 
   <header class="hero">
     <div class="hero-top">
-      <h1 class="name">두미 <span class="deco">✿</span></h1>
-      <a class="link-btn soop" href="https://www.sooplive.com/station/hika12" target="_blank" rel="noopener">🎬 방송국 바로가기</a>
+      <h1 class="name"><span id="heroName">두미</span> <span class="deco">✿</span></h1>
+      <a id="channelBtn" class="link-btn soop" href="https://www.sooplive.com/station/hika12" target="_blank" rel="noopener">🎬 방송국 바로가기</a>
     </div>
-    <div class="tagline">“6시에 와요, 화요일은 쉬어요 (｡•ᴗ•｡)♡”</div>
+    <div class="tagline" id="tagline">“6시에 와요, 화요일은 쉬어요 (｡•ᴗ•｡)♡”</div>
   </header>
 
   <section class="top">
     <div class="photo sketch">
       <span class="tape tl"></span><span class="tape br"></span>
       <div class="frame">
-        <img src="https://profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg" alt="두미 프로필"
+        <img id="profileImg" src="https://profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg" alt="두미 프로필"
           onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'두미'}))">
       </div>
     </div>
     <div class="card bio sketch w2">
       <span class="tab">My Bio</span>
-      <div class="row"><span class="k">이름</span><span class="v">두미</span></div>
-      <div class="row"><span class="k">데뷔</span><span class="v">2025.07.17</span></div>
-      <div class="row"><span class="k">생일</span><span class="v">11월 25일</span></div>
-      <div class="row"><span class="k">소속</span><span class="v">개인</span></div>
-      <div class="row"><span class="k">머리</span><span class="v">연갈색 + 핑크브릿지</span></div>
-      <div class="row"><span class="k">눈</span><span class="v">핑크</span></div>
-      <div class="row"><span class="k">팬네임</span><span class="v">두콩이들</span></div>
+      <div class="row"><span class="k">이름</span><span class="v" id="bv-name">두미</span></div>
+      <div class="row"><span class="k">데뷔</span><span class="v" id="bv-debut">2025.07.17</span></div>
+      <div class="row"><span class="k">생일</span><span class="v" id="bv-birthday">11월 25일</span></div>
+      <div class="row"><span class="k">소속</span><span class="v" id="bv-agency">개인</span></div>
+      <div class="row"><span class="k">머리</span><span class="v" id="bv-hair">연갈색 + 핑크브릿지</span></div>
+      <div class="row"><span class="k">눈</span><span class="v" id="bv-eye">핑크</span></div>
+      <div class="row"><span class="k">팬네임</span><span class="v" id="bv-fanname">두콩이들</span></div>
     </div>
   </section>
 
   <section class="card about sketch w3">
     <span class="tab">About Me</span>
     <span class="doodle" style="top:-24px;right:26px;font-size:1.7rem;transform:rotate(12deg)">♡</span>
-    <p>저녁 6시에 찾아오는 소통 버튜버 두미예요! 화요일은 쉬어가구요,<br>가끔은 노래도 불러요 🎵 오른쪽 덧니가 트레이드마크<br>밝고 귀엽게, 두콩이들이랑 매일 도란도란 떠드는 게 제일 좋아</p>
+    <p id="aboutText">저녁 6시에 찾아오는 소통 버튜버 두미예요! 화요일은 쉬어가구요,<br>가끔은 노래도 불러요 🎵 오른쪽 덧니가 트레이드마크<br>밝고 귀엽게, 두콩이들이랑 매일 도란도란 떠드는 게 제일 좋아</p>
   </section>
 
   <section class="row2">
     <div class="card like sketch"><span class="tab">Likes</span>
-      <div class="chips"><span class="chip">소통</span><span class="chip">롤</span><span class="chip">노래</span></div>
+      <div class="chips" id="likesChips"><span class="chip">소통</span><span class="chip">롤</span><span class="chip">노래</span></div>
     </div>
     <div class="card dis sketch w2"><span class="tab">Dislikes</span>
-      <div class="chips"><span class="chip">당근</span></div>
+      <div class="chips" id="dislikesChips"><span class="chip">당근</span></div>
     </div>
   </section>
 
@@ -249,13 +249,29 @@
   }
   loadVod();
 
-  async function loadToMessage(){
+  function _renderChips(id, csv){
+    const el = document.getElementById(id); if(!el) return;
+    const items = (csv||'').split(',').map(x=>x.trim()).filter(Boolean);
+    if(items.length) el.innerHTML = items.map(x=>`<span class="chip">${x.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</span>`).join('');
+  }
+  async function loadProfile(){
     try{
-      const { data } = await sb.from('site_settings').select('value').eq('key','to_doukong').maybeSingle();
-      if(data && data.value) document.getElementById('toMsg').textContent = data.value;
+      const { data } = await sb.from('site_settings').select('key,value');
+      const s = {}; (data||[]).forEach(r => s[r.key] = r.value);
+      const setTxt = (id,v) => { if(v!=null && v!==''){ const el=document.getElementById(id); if(el) el.textContent = v; } };
+      if(s.profile_image){ const img=document.getElementById('profileImg'); if(img) img.src=s.profile_image; }
+      if(s.channel_url){ const b=document.getElementById('channelBtn'); if(b) b.href=s.channel_url; }
+      setTxt('heroName', s.hero_name);
+      setTxt('tagline', s.tagline);
+      setTxt('bv-name', s.bio_name); setTxt('bv-debut', s.bio_debut); setTxt('bv-birthday', s.bio_birthday);
+      setTxt('bv-agency', s.bio_agency); setTxt('bv-hair', s.bio_hair); setTxt('bv-eye', s.bio_eye); setTxt('bv-fanname', s.bio_fanname);
+      setTxt('aboutText', s.about);
+      setTxt('toMsg', s.to_doukong);
+      _renderChips('likesChips', s.likes);
+      _renderChips('dislikesChips', s.dislikes);
     }catch(e){}
   }
-  loadToMessage();
+  loadProfile();
 </script>
 </body>
 </html>

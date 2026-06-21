@@ -134,7 +134,23 @@ DROP POLICY IF EXISTS "auth all site_settings" ON public.site_settings;
 CREATE POLICY "public read site_settings" ON public.site_settings FOR SELECT USING (true);
 CREATE POLICY "auth all site_settings" ON public.site_settings FOR ALL TO authenticated USING (true) WITH CHECK (true);
 INSERT INTO public.site_settings (key, value) VALUES
-  ('to_doukong', '두콩이들이랑 도란도란 오래오래 ♡ 첫 1주년도 같이 맞이하기!')
+  ('to_doukong', '두콩이들이랑 도란도란 오래오래 ♡ 첫 1주년도 같이 맞이하기!'),
+  ('profile_image', 'https://profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg'),
+  ('channel_url', 'https://www.sooplive.com/station/hika12'),
+  ('hero_name', '두미'),
+  ('tagline', '“6시에 와요, 화요일은 쉬어요 (｡•ᴗ•｡)♡”'),
+  ('bio_name', '두미'),
+  ('bio_debut', '2025.07.17'),
+  ('bio_birthday', '11월 25일'),
+  ('bio_agency', '개인'),
+  ('bio_hair', '연갈색 + 핑크브릿지'),
+  ('bio_eye', '핑크'),
+  ('bio_fanname', '두콩이들'),
+  ('about', '저녁 6시에 찾아오는 소통 버튜버 두미예요! 화요일은 쉬어가구요,
+가끔은 노래도 불러요 🎵 오른쪽 덧니가 트레이드마크
+밝고 귀엽게, 두콩이들이랑 매일 도란도란 떠드는 게 제일 좋아'),
+  ('likes', '소통, 롤, 노래'),
+  ('dislikes', '당근')
 ON CONFLICT (key) DO NOTHING;
 
 -- ========== 9. 두미 기본 업보 타입 시드 ==========
