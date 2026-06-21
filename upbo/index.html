@@ -222,12 +222,13 @@ function nickRank(s){
   return 2;                                    // 숫자·특문
 }
 function totalQtyOf(m){ return (memberTasks[m.id]||[]).reduce((s,t)=>s+(t.quantity||1),0); }
+function dispNick(m){ return m.soopNick || m.nickname; }   // 방송국 실시간 닉 우선, 없으면 저장된 닉
 function memberSort(a, b){
   const ha = totalQtyOf(a) > 0 ? 0 : 1, hb = totalQtyOf(b) > 0 ? 0 : 1;
   if(ha !== hb) return ha - hb;               // 업보 있는 사람 먼저, 없는(코인만) 사람 뒤로
-  const ra = nickRank(a.nickname), rb = nickRank(b.nickname);
+  const ra = nickRank(dispNick(a)), rb = nickRank(dispNick(b));
   if(ra !== rb) return ra - rb;               // 한글 → 영문 → 숫자·특문
-  return (a.nickname||'').localeCompare(b.nickname||'', 'ko');
+  return dispNick(a).localeCompare(dispNick(b), 'ko');
 }
 
 async function load(){
@@ -244,6 +245,7 @@ async function load(){
     document.getElementById('loadingState').style.display = 'none';
     if(!allMembers.length){ document.getElementById('emptyState').style.display='block'; return; }
     render(allMembers);
+    hydrateNicks();
   }catch(e){
     document.getElementById('loadingState').style.display = 'none';
     document.getElementById('emptyState').style.display = 'block';
@@ -273,7 +275,7 @@ function renderPage(){
     const fallback = `<span style="${url?'display:none':''}">🐱</span>`;
     return `<div class="member-card" onclick="openUpboModal('${m.id}', event)">
       <div class="member-avatar">${imgHtml}${fallback}</div>
-      <div class="member-nick">${esc(m.nickname)}</div>
+      <div class="member-nick">${esc(dispNick(m))}</div>
       ${m.user_id ? `<div class="member-id">(${esc(m.user_id)})</div>` : ''}
       <div class="count-row"><span class="member-count">업보 ${totalQty}</span>${m.coins>0?`<span class="coin-count">🪙 ${m.coins}</span>`:''}</div>
     </div>`;
@@ -299,11 +301,25 @@ function renderPagination(totalPages){
 
 function goPage(n){ currentPage=n; renderPage(); document.querySelector('.member-grid')?.scrollIntoView({behavior:'smooth',block:'start'}); }
 
-document.getElementById('searchInput').addEventListener('input', e => {
-  const q = e.target.value.toLowerCase().trim();
-  currentPage = 1;
-  render(q ? allMembers.filter(m => m.nickname.toLowerCase().includes(q) || (m.user_id||'').toLowerCase().includes(q)) : allMembers);
-});
+function filteredMembers(){
+  const q = document.getElementById('searchInput').value.toLowerCase().trim();
+  if(!q) return allMembers;
+  return allMembers.filter(m => dispNick(m).toLowerCase().includes(q) || (m.user_id||'').toLowerCase().includes(q));
+}
+document.getElementById('searchInput').addEventListener('input', () => { currentPage = 1; render(filteredMembers()); });
+async function hydrateNicks(){
+  const targets = allMembers.filter(m => m.user_id);
+  if(!targets.length) return;
+  await Promise.allSettled(targets.map(async m => {
+    try{
+      const r = await fetch(`/api/soop-nick?id=${encodeURIComponent(m.user_id)}`);
+      const j = await r.json();
+      if(j && j.nick) m.soopNick = j.nick;
+    }catch(e){}
+  }));
+  allMembers.sort(memberSort);
+  render(filteredMembers());
+}
 
 function openUpboModal(memberId, clickEvent){
   const cardRect = clickEvent?.currentTarget ? clickEvent.currentTarget.getBoundingClientRect() : null;
@@ -319,7 +335,7 @@ function openUpboModal(memberId, clickEvent){
   const avatarEl = document.getElementById('modal-avatar');
   const url = avatarUrl(m.user_id);
   avatarEl.innerHTML = url ? `<img src="${url}" alt="" onerror="this.parentElement.innerHTML='<span>🐱</span>'" style="width:100%;height:100%;object-fit:cover">` : '<span>🐱</span>';
-  document.getElementById('modal-nick').textContent = m.nickname;
+  document.getElementById('modal-nick').textContent = dispNick(m);
   document.getElementById('modal-uid').textContent = m.user_id ? `(${m.user_id})` : '';
   document.getElementById('modal-coin').innerHTML = m.coins>0 ? `<span class="coin-count">🪙 코인 ${m.coins}개</span>` : '';
   const listEl = document.getElementById('modal-task-list');
