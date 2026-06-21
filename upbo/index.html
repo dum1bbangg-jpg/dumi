@@ -257,6 +257,7 @@ document.getElementById('searchInput').addEventListener('input', e => {
 });
 
 function openUpboModal(memberId, clickEvent){
+  const cardRect = clickEvent?.currentTarget ? clickEvent.currentTarget.getBoundingClientRect() : null;
   const m = allMembers.find(x => String(x.id) === String(memberId));
   if(!m) return;
   const tasks = (memberTasks[memberId] || []).slice().sort((a, b) => {
@@ -292,7 +293,7 @@ function openUpboModal(memberId, clickEvent){
     const modal = modalEl.querySelector('.modal-box');
     const vh = window.innerHeight;
     const mh = Math.min(modal.offsetHeight, vh - 32);
-    let top = window.innerWidth > 700 ? 400 : (vh - mh) / 2;
+    let top = cardRect ? (cardRect.top + cardRect.height / 2 - mh / 2) : (vh - mh) / 2;
     top = Math.max(16, Math.min(top, vh - mh - 16));
     modal.style.top = top + 'px';
   });
