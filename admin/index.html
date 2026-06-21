@@ -283,7 +283,7 @@
             <div><p class="form-field-label">가수</p><input type="text" id="f-artist" placeholder="가수명" class="song-inp"></div>
             <div><p class="form-field-label">제목</p><input type="text" id="f-title" placeholder="곡 제목" class="song-inp"></div>
             <div><p class="form-field-label">장르</p>
-              <select id="f-genre" class="song-inp"><option value="kpop">Kpop</option><option value="jpop">Jpop</option><option value="pop">Pop</option><option value="indie">인디</option><option value="folk">포크</option><option value="etc" selected>기타</option></select>
+              <select id="f-genre" class="song-inp"><option value="kpop">Kpop</option><option value="jpop">Jpop</option><option value="pop">Pop</option><option value="etc" selected>기타</option></select>
             </div>
             <div><p class="form-field-label">숙련도 (0~5)</p><input type="number" id="f-level" min="0" max="5" value="3" class="song-inp"></div>
             <div style="grid-column:1/-1"><p class="form-field-label">메모</p><input type="text" id="f-memo" placeholder="메모 (선택)" class="song-inp"></div>
@@ -367,7 +367,7 @@
         <div><p class="form-field-label">가수</p><input type="text" id="edit-artist" class="song-inp"></div>
         <div><p class="form-field-label">제목</p><input type="text" id="edit-title" class="song-inp"></div>
         <div><p class="form-field-label">장르</p>
-          <select id="edit-genre" class="song-inp"><option value="kpop">Kpop</option><option value="jpop">Jpop</option><option value="pop">Pop</option><option value="indie">인디</option><option value="folk">포크</option><option value="etc">기타</option></select>
+          <select id="edit-genre" class="song-inp"><option value="kpop">Kpop</option><option value="jpop">Jpop</option><option value="pop">Pop</option><option value="etc">기타</option></select>
         </div>
         <div><p class="form-field-label">숙련도 (0~5)</p><input type="number" id="edit-level" min="0" max="5" class="song-inp"></div>
         <div style="grid-column:1/-1"><p class="form-field-label">메모</p><input type="text" id="edit-memo" class="song-inp"></div>
@@ -850,7 +850,7 @@
 
     /* ════════════════ 노래 관리 ════════════════ */
     function escA(t){ const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
-    const GENRE_MAP = { kpop:'Kpop', jpop:'Jpop', pop:'Pop', indie:'인디', folk:'포크', etc:'기타' };
+    const GENRE_MAP = { kpop:'Kpop', jpop:'Jpop', pop:'Pop', etc:'기타' };
     let songs = [];
 
     async function loadAdminSongs() {

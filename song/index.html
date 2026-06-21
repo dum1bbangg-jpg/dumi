@@ -59,7 +59,7 @@
   .star{font-size:1.15rem;} .star-on{color:var(--accent);} .star-off{color:#e3d6c8;}
   .genre-badge{font-size:.95rem;padding:2px 11px;border-radius:14px;font-weight:700;display:inline-block;border:1.5px solid var(--ink);}
   .genre-kpop{background:#fbe0ec;} .genre-jpop{background:#fbe9cf;} .genre-pop{background:#e6def5;}
-  .genre-indie{background:#dcefe0;} .genre-folk{background:#e9f0d6;} .genre-etc{background:#efe5d8;}
+  .genre-etc{background:#efe5d8;}
   .copy-btn{font-family:inherit;background:#fff;border:2px solid var(--ink);border-radius:11px;padding:4px 12px;font-size:1rem;font-weight:700;color:var(--ink);cursor:pointer;transition:transform .12s;}
   .copy-btn:hover{transform:translateY(-1px);}
   .copy-btn.copied{background:var(--accent);color:#fff;}
@@ -114,8 +114,6 @@
       <button class="filter-tab" data-genre="kpop">Kpop</button>
       <button class="filter-tab" data-genre="jpop">Jpop</button>
       <button class="filter-tab" data-genre="pop">Pop</button>
-      <button class="filter-tab" data-genre="indie">인디</button>
-      <button class="filter-tab" data-genre="folk">포크</button>
       <button class="filter-tab" data-genre="etc">기타</button>
     </div>
   </div>
@@ -144,7 +142,7 @@
 <script src="../js/supabase-config.js"></script>
 <script>
   const sb = initSupabase();
-  const GENRE_LABELS = { kpop:'Kpop', jpop:'Jpop', pop:'Pop', indie:'인디', folk:'포크', etc:'기타' };
+  const GENRE_LABELS = { kpop:'Kpop', jpop:'Jpop', pop:'Pop', etc:'기타' };
   let allSongs = [], currentGenre = 'all', currentSearch = '';
   const PAGE_SIZE = 20;
   let currentPage = 1;
@@ -163,7 +161,7 @@
       document.getElementById('empty-state').style.display = 'block';
     }
   }
-  function genreClass(g){ const map={kpop:'genre-kpop',jpop:'genre-jpop',pop:'genre-pop',indie:'genre-indie',folk:'genre-folk'}; return map[g]||'genre-etc'; }
+  function genreClass(g){ const map={kpop:'genre-kpop',jpop:'genre-jpop',pop:'genre-pop'}; return map[g]||'genre-etc'; }
   function starsHTML(n){ const c=Math.min(Math.max(parseInt(n)||0,0),5); let s='<span class="stars">'; for(let i=1;i<=5;i++) s+=`<span class="star ${i<=c?'star-on':'star-off'}">${i<=c?'★':'☆'}</span>`; return s+'</span>'; }
 
   function render(){
