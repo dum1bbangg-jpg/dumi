@@ -35,8 +35,8 @@
   nav.tabs a.active{background:var(--t-like);}
 
   .sketch{position:relative;}
-  .sketch::before{content:'';position:absolute;inset:0;border:2.6px solid var(--ink);border-radius:20px;filter:url(#wob);pointer-events:none;z-index:3;}
-  .sketch.w2::before{filter:url(#wob2);} .sketch.w3::before{filter:url(#wob3);}
+  .sketch::before{content:'';position:absolute;inset:0;border:2.6px solid var(--ink);border-radius:20px;transform:rotate(-0.5deg);pointer-events:none;z-index:3;}
+  .sketch.w2::before{transform:rotate(0.5deg);} .sketch.w3::before{transform:rotate(-0.65deg);}
   .card{position:relative;border-radius:20px;padding:24px 28px;box-shadow:6px 7px 0 rgba(74,58,48,.13);transition:transform .18s ease;}
   .card:hover{transform:translateY(-3px);}
   .card > *{position:relative;z-index:2;}
