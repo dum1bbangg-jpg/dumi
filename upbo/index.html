@@ -31,9 +31,9 @@
   html.embed .diary{opacity:1!important;animation:none!important;}
   #page-loader{position:fixed;inset:0;z-index:9999;background-color:var(--paper);
     background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;transition:opacity .5s ease;}
+    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:400px;gap:18px;transition:opacity .5s ease;}
   #page-loader.hide{opacity:0;pointer-events:none;}
-  .pl-img{height:140px;width:auto;animation:plPop 1s ease-in-out infinite;filter:drop-shadow(0 5px 7px rgba(74,58,48,.16));}
+  .pl-img{height:210px;width:auto;animation:plPop 1s ease-in-out infinite;filter:drop-shadow(0 5px 7px rgba(74,58,48,.16));}
   .pl-dots{display:flex;gap:9px;}
   .pl-dots span{width:11px;height:11px;border-radius:50%;background:var(--accent);display:block;animation:plDot .85s ease-in-out infinite;}
   .pl-dots span:nth-child(2){animation-delay:.14s;} .pl-dots span:nth-child(3){animation-delay:.28s;}
