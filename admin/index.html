@@ -1210,11 +1210,17 @@
 
     /* ════════════════ 일정 관리 ════════════════ */
     let allScheduleEvents = [];
+    const SCH_PALETTE = ['#e36f95','#8a5fb0','#5f8fd6','#3fae8e','#d98a3f','#cf9d1f','#c45fa0','#5fa3b8'];
+    const SCH_KNOWN = { '노래':'#e36f95','게임':'#5f8fd6','합방':'#3fae8e','콜라보':'#3fae8e','소통':'#d98a3f','저챗':'#d98a3f','수다':'#d98a3f','이벤트':'#8a5fb0','대회':'#cf9d1f','휴방':'#9aa0b0','기타':'#c45fa0' };
+    function schTagColor(tag){ if(!tag) return '#e36f95'; if(SCH_KNOWN[tag]) return SCH_KNOWN[tag]; let h=0; for(let i=0;i<tag.length;i++) h=(h*31+tag.charCodeAt(i))>>>0; return SCH_PALETTE[h%SCH_PALETTE.length]; }
+    function kstTodayStr(){ const now=new Date(); const utc=now.getTime()+now.getTimezoneOffset()*60000; const k=new Date(utc+9*3600000); return `${k.getFullYear()}-${String(k.getMonth()+1).padStart(2,'0')}-${String(k.getDate()).padStart(2,'0')}`; }
+    function setScheduleDefaults(){ document.getElementById('schDate').value=kstTodayStr(); document.getElementById('schTime').value='18:00'; }
     async function loadScheduleAdmin() {
       const { data, error } = await sb.from('schedule_events').select('*').order('date',{ascending:false}).order('time',{ascending:true});
       if (error) { showToast('일정 로드 실패: '+error.message,'error'); return; }
       allScheduleEvents = data || [];
       renderScheduleTable();
+      if (!document.getElementById('schDate').value) setScheduleDefaults();
     }
     function renderScheduleTable() {
       const tb = document.getElementById('scheduleTableBody');
@@ -1222,14 +1228,14 @@
       const today = new Date().toISOString().slice(0,10);
       tb.innerHTML = allScheduleEvents.map(ev => {
         const past = ev.date < today;
-        const tags = (ev.tags||[]).join(', ');
+        const tagsHtml = (ev.tags||[]).map(t=>{ const tc=schTagColor(t); return `<span style="display:inline-block;font-size:11px;border:1.5px solid ${tc};color:${tc};border-radius:8px;padding:0 7px;margin:1px 2px;font-weight:600">${escA(t)}</span>`; }).join('');
         const hb = ev.is_hidden ? '<span style="font-size:10px;background:#eee;color:#888;padding:1px 5px;border-radius:6px;margin-left:4px">숨김</span>' : '';
         const sp = ev.is_special ? '<span style="font-size:10px;background:#efdcff;color:#8a5fb0;padding:1px 5px;border-radius:6px;margin-left:4px">이벤트</span>' : '';
         return `<tr style="border-bottom:1px solid #F6E5EE;${past?'opacity:.5':''}">
           <td style="padding:8px;font-size:13px;font-weight:600">${ev.date}</td>
           <td style="padding:8px;font-size:13px;color:#888">${ev.time?ev.time.slice(0,5):'—'}</td>
           <td style="padding:8px;font-size:13px">${escA(ev.title)}${hb}${sp}</td>
-          <td style="padding:8px;font-size:12px;color:#888">${escA(tags)}</td>
+          <td style="padding:8px;font-size:12px;color:#888">${tagsHtml}</td>
           <td style="padding:8px"><div style="display:flex;gap:4px">
             <button class="btn-edit" onclick="openScheduleEdit(${ev.id})">수정</button>
             <button class="btn-edit" onclick="toggleScheduleHidden(${ev.id},${!ev.is_hidden})">${ev.is_hidden?'👁':'🙈'}</button>
@@ -1251,6 +1257,7 @@
       if (error) { showToast('추가 실패: '+error.message,'error'); return; }
       ['schDate','schTime','schTitle','schDesc','schTags'].forEach(id=>document.getElementById(id).value='');
       document.getElementById('schSpecial').checked = false;
+      setScheduleDefaults();
       showToast('✅ 일정 추가 완료!');
       loadScheduleAdmin();
     }

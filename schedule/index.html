@@ -160,6 +160,20 @@
   function pad(n){ return String(n).padStart(2,'0'); }
   function isToday(dateStr){ const t=new Date(), d=new Date(dateStr+'T00:00:00'); return t.getFullYear()===d.getFullYear()&&t.getMonth()===d.getMonth()&&t.getDate()===d.getDate(); }
 
+  // 태그(카테고리)별 색상 자동 지정 — 자주 쓰는 건 의미별 고정색, 나머지는 해시(같은 태그=같은 색)
+  const TAG_PALETTE = ['#e36f95','#8a5fb0','#5f8fd6','#3fae8e','#d98a3f','#cf9d1f','#c45fa0','#5fa3b8'];
+  const TAG_KNOWN = { '노래':'#e36f95','게임':'#5f8fd6','합방':'#3fae8e','콜라보':'#3fae8e','소통':'#d98a3f','저챗':'#d98a3f','수다':'#d98a3f','이벤트':'#8a5fb0','대회':'#cf9d1f','휴방':'#9aa0b0','기타':'#c45fa0' };
+  function tagColor(tag){
+    if(!tag) return '#e36f95';
+    if(TAG_KNOWN[tag]) return TAG_KNOWN[tag];
+    let h=0; for(let i=0;i<tag.length;i++) h=(h*31+tag.charCodeAt(i))>>>0;
+    return TAG_PALETTE[h % TAG_PALETTE.length];
+  }
+  function eventColor(ev){
+    if(ev.is_special) return '#8a5fb0';            // 이벤트=보라
+    return tagColor((ev.tags && ev.tags[0]) || '');
+  }
+
   async function loadSchedule(){
     try{
       const sb = initSupabase();
@@ -194,9 +208,10 @@
       const evs = evMap[dateStr] || [];
       const dow = (startDow + d - 1) % 7;
       const today = dateStr === todayStr;
-      const shown = evs.slice(0,2).map(ev =>
-        `<div class="cal-ev${ev.is_special?' special':''}">${ev.time?esc(ev.time.slice(0,5))+' ':''}${esc(ev.title)}</div>`
-      ).join('');
+      const shown = evs.slice(0,2).map(ev => {
+        const c = eventColor(ev);
+        return `<div class="cal-ev" style="background:${c}2b;color:${c}">${ev.time?esc(ev.time.slice(0,5))+' ':''}${esc(ev.title)}</div>`;
+      }).join('');
       const more = evs.length>2 ? `<div class="cal-more">+${evs.length-2}</div>` : '';
       const cls = `cal-cell${today?' today':''}${evs.length?' has-ev':''}`;
       const click = evs.length ? ` onclick="showDay('${dateStr}')"` : '';
@@ -220,13 +235,15 @@
     if(!evs.length) return;
     const d = new Date(dateStr+'T00:00:00');
     document.getElementById('dayModalTitle').textContent = `${d.getMonth()+1}월 ${d.getDate()}일 (${WEEKDAYS[d.getDay()]})`;
-    document.getElementById('dayModalBody').innerHTML = evs.map(ev => `
-      <div style="border:2.2px solid var(--ink);border-radius:14px;padding:12px 14px;margin-bottom:10px;${ev.is_special?'background:#f7efff;border-color:#b98fe0;':'background:#fff;'}">
-        ${ev.time?`<div style="font-size:1.05rem;color:var(--accent-deep);font-weight:700">🕒 ${esc(ev.time.slice(0,5))}</div>`:''}
+    document.getElementById('dayModalBody').innerHTML = evs.map(ev => {
+      const c = eventColor(ev);
+      return `<div style="border:2.2px solid ${c};border-radius:14px;padding:12px 14px;margin-bottom:10px;background:${c}12;">
+        ${ev.time?`<div style="font-size:1.05rem;color:${c};font-weight:700">🕒 ${esc(ev.time.slice(0,5))}</div>`:''}
         <div style="font-size:1.4rem;font-weight:700">${esc(ev.title)}</div>
         ${ev.description?`<div style="font-size:1.1rem;color:#4a3a3099;margin-top:2px">${esc(ev.description)}</div>`:''}
-        ${(ev.tags&&ev.tags.length)?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">${ev.tags.map(t=>`<span style="font-size:0.9rem;border:2px solid var(--ink);border-radius:10px;padding:0 9px;font-weight:700">${esc(t)}</span>`).join('')}</div>`:''}
-      </div>`).join('');
+        ${(ev.tags&&ev.tags.length)?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:6px">${ev.tags.map(t=>{const tc=tagColor(t);return `<span style="font-size:0.9rem;border:2px solid ${tc};color:${tc};border-radius:10px;padding:0 9px;font-weight:700">${esc(t)}</span>`;}).join('')}</div>`:''}
+      </div>`;
+    }).join('');
     document.getElementById('dayModal').classList.add('show');
   }
   function closeDayModal(){ document.getElementById('dayModal').classList.remove('show'); }
@@ -234,9 +251,9 @@
   function eventCard(ev){
     const d = new Date(ev.date+'T00:00:00');
     const today = isToday(ev.date);
-    const tags = (ev.tags||[]).map((tag,i)=>`<span class="ev-tag${i===0&&ev.is_special?' special':''}">${esc(tag)}</span>`).join('');
+    const tags = (ev.tags||[]).map(tag=>{ const tc=tagColor(tag); return `<span class="ev-tag" style="border-color:${tc};color:${tc}">${esc(tag)}</span>`; }).join('');
     const todayBadge = today ? `<span class="ev-badge-today">오늘</span>` : '';
-    return `<div class="event-card${today?' is-today':''}">
+    return `<div class="event-card${today?' is-today':''}" style="border-left:7px solid ${eventColor(ev)}">
       <div class="event-date-block">
         <div class="ev-month">${MONTHS_EN[d.getMonth()]}</div>
         <div class="ev-day-num">${d.getDate()}</div>
