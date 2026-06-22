@@ -171,6 +171,8 @@ CREATE TABLE IF NOT EXISTS public.schedule_events (
 CREATE INDEX IF NOT EXISTS idx_schedule_date ON public.schedule_events(date);
 ALTER TABLE public.schedule_events ADD COLUMN IF NOT EXISTS event_type text DEFAULT 'broadcast';
 ALTER TABLE public.schedule_events ADD COLUMN IF NOT EXISTS color text;
+ALTER TABLE public.schedule_events ADD COLUMN IF NOT EXISTS is_anniversary boolean DEFAULT false;
+ALTER TABLE public.schedule_events ADD COLUMN IF NOT EXISTS anniv_color text;
 ALTER TABLE public.schedule_events ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "public read schedule" ON public.schedule_events;
 DROP POLICY IF EXISTS "auth all schedule" ON public.schedule_events;

@@ -60,6 +60,8 @@
     .adm-cal-ev{font-size:10.5px;font-weight:600;color:#4a3a30;border-radius:5px;padding:1px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;line-height:1.4}
     .adm-cal-ev:hover{filter:brightness(.95)}
     .adm-cal-more{font-size:10px;color:#B89;padding-left:3px}
+    @keyframes adm-anniv-glow{0%,100%{box-shadow:0 0 0 0 rgba(var(--glow-rgb,255,143,176),0);transform:scale(1)}50%{box-shadow:0 0 13px 4px rgba(var(--glow-rgb,255,143,176),.6);transform:scale(1.045)}}
+    .adm-cal-cell.anniv{animation:adm-anniv-glow 1.6s ease-in-out infinite;border-color:rgba(var(--glow-rgb,255,143,176),.9)!important;position:relative;z-index:2}
     .upbo-sub-nav{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
     .upbo-sub-btn{padding:7px 18px;border-radius:100px;border:1.5px solid #ECE1D0;background:#fff;font-size:13px;font-weight:600;color:#8A7565;cursor:pointer;font-family:inherit;transition:all .2s}
     .upbo-sub-btn:hover{border-color:#CF7FA3;color:#B86A8F}
@@ -392,6 +394,11 @@
             <option value="tournament">대회</option>
             <option value="other">기타</option>
           </select>
+          <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;cursor:pointer"><input type="checkbox" id="schAnniv" onchange="onSchAnnivChange()"> <span>🎉 기념일 효과 (바운스 글로우)</span></label>
+          <div id="schAnnivWrap" style="display:none;align-items:center;gap:9px;margin-top:8px">
+            <span style="font-size:13px;color:#4A3A30">효과 색</span>
+            <input type="color" id="schAnnivColor" value="#ff8fb0" style="width:46px;height:30px;border:1.5px solid #ECE1D0;border-radius:8px;cursor:pointer;background:#fff;padding:2px">
+          </div>
           <button onclick="handleAddSchedule()" class="mt-3 px-6 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">+ 일정 추가</button>
           </div>
         </div>
@@ -491,6 +498,11 @@
           <option value="tournament">대회</option>
           <option value="other">기타</option>
         </select>
+        <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;cursor:pointer"><input type="checkbox" id="editSchAnniv" onchange="onEditSchAnnivChange()"> <span>🎉 기념일 효과 (바운스 글로우)</span></label>
+        <div id="editSchAnnivWrap" style="display:none;align-items:center;gap:9px;margin-top:8px">
+          <span style="font-size:13px;color:#4A3A30">효과 색</span>
+          <input type="color" id="editSchAnnivColor" value="#ff8fb0" style="width:46px;height:30px;border:1.5px solid #ECE1D0;border-radius:8px;cursor:pointer;background:#fff;padding:2px">
+        </div>
         <div style="display:flex;gap:8px;margin-top:18px">
           <button onclick="handleEditSchedule()" class="flex-1 px-4 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2">저장</button>
           <button onclick="closeScheduleEditModal()" class="px-5 py-2.5 rounded-xl bg-gray-100 text-gray-600 text-sm font-semibold">취소</button>
@@ -1250,7 +1262,10 @@
     const SCH_TYPE_COLORS = { broadcast:'#ffb3d1', rest:'#d0d0d0', event:'#c5b8e8', collab:'#a8d8d4', tournament:'#aed4f7', other:'#ffd9a0' };
     const SCH_TYPE_LABELS = { broadcast:'방송', rest:'휴방', event:'이벤트', collab:'합방', tournament:'대회', other:'기타' };
     function kstTodayStr(){ const now=new Date(); const utc=now.getTime()+now.getTimezoneOffset()*60000; const k=new Date(utc+9*3600000); return `${k.getFullYear()}-${String(k.getMonth()+1).padStart(2,'0')}-${String(k.getDate()).padStart(2,'0')}`; }
-    function setScheduleDefaults(){ document.getElementById('schType').value='broadcast'; const ti=document.getElementById('schTime'); ti.value='18:00'; ti.disabled=false; const tt=document.getElementById('schTitle'); tt.disabled=false; document.getElementById('schDate').value=kstTodayStr(); }
+    function setScheduleDefaults(){ document.getElementById('schType').value='broadcast'; const ti=document.getElementById('schTime'); ti.value='18:00'; ti.disabled=false; const tt=document.getElementById('schTitle'); tt.disabled=false; document.getElementById('schDate').value=kstTodayStr(); document.getElementById('schAnniv').checked=false; document.getElementById('schAnnivWrap').style.display='none'; }
+    function onSchAnnivChange(){ document.getElementById('schAnnivWrap').style.display = document.getElementById('schAnniv').checked ? 'flex' : 'none'; }
+    function onEditSchAnnivChange(){ document.getElementById('editSchAnnivWrap').style.display = document.getElementById('editSchAnniv').checked ? 'flex' : 'none'; }
+    function annivHexToRgb(hex){ hex=String(hex||'').replace('#',''); if(hex.length===3) hex=hex.split('').map(c=>c+c).join(''); const n=parseInt(hex,16); if(isNaN(n)||hex.length<6) return '255,143,176'; return `${(n>>16)&255},${(n>>8)&255},${n&255}`; }
     // 휴방 선택 → 제목 자동 '휴방' + 시간 없음(입력 비활성)
     function onSchTypeChange(){ const rest=document.getElementById('schType').value==='rest'; const ti=document.getElementById('schTime'), tt=document.getElementById('schTitle'); if(rest){ tt.value='휴방'; tt.disabled=true; ti.value=''; ti.disabled=true; } else { tt.disabled=false; ti.disabled=false; if(tt.value==='휴방') tt.value=''; } }
     function onEditSchTypeChange(){ const rest=document.getElementById('editSchType').value==='rest'; const ti=document.getElementById('editSchTime'), tt=document.getElementById('editSchTitle'); if(rest){ tt.value='휴방'; tt.disabled=true; ti.value=''; ti.disabled=true; } else { tt.disabled=false; ti.disabled=false; } }
@@ -1278,12 +1293,16 @@
       for(let d=1;d<=dim;d++){
         const ds=`${admCalYear}-${pad(admCalMonth+1)}-${pad(d)}`;
         const evs=(byDate[ds]||[]).slice().sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+        const annivEv=evs.find(e=>e.is_anniversary);
         const shown=evs.slice(0,3).map(ev=>{
           const c=SCH_TYPE_COLORS[ev.event_type]||ev.color||'#ffd9e6';
-          return `<div class="adm-cal-ev" style="background:${c}" title="${escA(ev.title)}" onclick="event.stopPropagation();openScheduleEdit(${ev.id})">${escA(ev.title)}</div>`;
+          const star=ev.is_anniversary?'🎉 ':'';
+          return `<div class="adm-cal-ev" style="background:${c}" title="${escA(ev.title)}" onclick="event.stopPropagation();openScheduleEdit(${ev.id})">${star}${escA(ev.title)}</div>`;
         }).join('');
         const more=evs.length>3?`<div class="adm-cal-more">+${evs.length-3}</div>`:'';
-        html+=`<div class="adm-cal-cell${ds===todayStr?' today':''}" onclick="admPickDay('${ds}')"><div class="adm-cal-daynum">${d}</div>${shown}${more}</div>`;
+        const annivCls=annivEv?' anniv':'';
+        const annivStyle=annivEv?` style="--glow-rgb:${annivHexToRgb(annivEv.anniv_color)}"`:'';
+        html+=`<div class="adm-cal-cell${ds===todayStr?' today':''}${annivCls}" onclick="admPickDay('${ds}')"${annivStyle}><div class="adm-cal-daynum">${d}</div>${shown}${more}</div>`;
       }
       grid.innerHTML=html;
     }
@@ -1332,7 +1351,9 @@
       const description = document.getElementById('schDesc').value.trim();
       if (rest) { title = '휴방'; time = ''; }
       if (!date || !title) { showToast('날짜와 제목은 필수예요','error'); return; }
-      const { error } = await sb.from('schedule_events').insert({ date, time:time||null, title, description:description||null, event_type:type, color:SCH_TYPE_COLORS[type]||null });
+      const isAnniv = document.getElementById('schAnniv').checked;
+      const annivColor = isAnniv ? document.getElementById('schAnnivColor').value : null;
+      const { error } = await sb.from('schedule_events').insert({ date, time:time||null, title, description:description||null, event_type:type, color:SCH_TYPE_COLORS[type]||null, is_anniversary:isAnniv, anniv_color:annivColor });
       if (error) { showToast('추가 실패: '+error.message,'error'); return; }
       ['schDate','schTime','schTitle','schDesc'].forEach(id=>document.getElementById(id).value='');
       setScheduleDefaults();
@@ -1348,6 +1369,9 @@
       document.getElementById('editSchDesc').value = ev.description || '';
       document.getElementById('editSchType').value = ev.event_type || 'broadcast';
       onEditSchTypeChange();
+      document.getElementById('editSchAnniv').checked = !!ev.is_anniversary;
+      if (ev.anniv_color) document.getElementById('editSchAnnivColor').value = ev.anniv_color;
+      onEditSchAnnivChange();
       document.getElementById('scheduleEditModal').style.display = 'flex';
     }
     function closeScheduleEditModal() { document.getElementById('scheduleEditModal').style.display = 'none'; }
@@ -1361,7 +1385,9 @@
       const description = document.getElementById('editSchDesc').value.trim();
       if (rest) { title = '휴방'; time = ''; }
       if (!date || !title) { showToast('날짜와 제목은 필수예요','error'); return; }
-      const { error } = await sb.from('schedule_events').update({ date, time:time||null, title, description:description||null, event_type:type, color:SCH_TYPE_COLORS[type]||null }).eq('id', id);
+      const isAnniv = document.getElementById('editSchAnniv').checked;
+      const annivColor = isAnniv ? document.getElementById('editSchAnnivColor').value : null;
+      const { error } = await sb.from('schedule_events').update({ date, time:time||null, title, description:description||null, event_type:type, color:SCH_TYPE_COLORS[type]||null, is_anniversary:isAnniv, anniv_color:annivColor }).eq('id', id);
       if (error) { showToast('수정 실패: '+error.message,'error'); return; }
       closeScheduleEditModal(); showToast('✅ 일정 수정 완료!'); loadScheduleAdmin();
     }

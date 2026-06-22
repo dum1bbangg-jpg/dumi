@@ -68,6 +68,10 @@
   .cal-cell.today .cal-daynum{color:var(--accent-deep);}
   .cal-ev{font-size:0.92rem;background:var(--c-card);border-radius:7px;padding:2px 7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;color:var(--ink);line-height:1.25;}
   .cal-ev.special{background:#efdcff;color:#8a5fb0;}
+  @keyframes anniv-glow{0%,100%{box-shadow:0 0 0 0 rgba(var(--glow-rgb,255,143,176),0);transform:scale(1);}50%{box-shadow:0 0 15px 5px rgba(var(--glow-rgb,255,143,176),.6);transform:scale(1.04);}}
+  .cal-cell.anniv{animation:anniv-glow 1.6s ease-in-out infinite;border-color:rgba(var(--glow-rgb,255,143,176),.9)!important;position:relative;z-index:2;}
+  @keyframes anniv-glow-card{0%,100%{box-shadow:4px 5px 0 rgba(74,58,48,.12),0 0 0 0 rgba(var(--glow-rgb,255,143,176),0);}50%{box-shadow:4px 5px 0 rgba(74,58,48,.12),0 0 17px 5px rgba(var(--glow-rgb,255,143,176),.6);}}
+  .event-card.anniv{animation:anniv-glow-card 1.6s ease-in-out infinite;border-color:rgba(var(--glow-rgb,255,143,176),.9)!important;}
   .cal-more{font-size:0.82rem;color:#4a3a3099;padding-left:5px;font-weight:700;}
   .cal-legend{display:flex;gap:13px;flex-wrap:wrap;justify-content:center;margin-top:11px;font-size:1.02rem;color:#4a3a3099;}
   .cal-legend span{display:flex;align-items:center;gap:5px;}
@@ -176,6 +180,7 @@
   const TYPE_LABELS = { broadcast:'방송', rest:'휴방', event:'이벤트', collab:'합방', tournament:'대회', other:'기타' };
   function eventColor(ev){ return ev.color || TYPE_COLORS[ev.event_type] || '#ffb3d1'; }
   function typeLabel(ev){ return TYPE_LABELS[ev.event_type] || ev.event_type || '방송'; }
+  function hexToRgb(hex){ hex=String(hex||'').replace('#',''); if(hex.length===3) hex=hex.split('').map(c=>c+c).join(''); const n=parseInt(hex,16); if(isNaN(n)||hex.length<6) return '255,143,176'; return `${(n>>16)&255},${(n>>8)&255},${n&255}`; }
 
   async function loadSchedule(){
     try{
@@ -211,16 +216,19 @@
       const evs = evMap[dateStr] || [];
       const dow = (startDow + d - 1) % 7;
       const today = dateStr === todayStr;
+      const annivEv = evs.find(e=>e.is_anniversary);
       const shown = evs.slice(0,3).map(ev => {
         const c = eventColor(ev);
         const t = ev.time ? esc(ev.time.slice(0,5))+' ' : '';
         const memo = (!ev.time && ev.description) ? ' · '+esc(ev.description) : '';
-        return `<div class="cal-ev" style="background:${c};color:#4a3a30">${t}${esc(ev.title)}${memo}</div>`;
+        const star = ev.is_anniversary ? '🎉 ' : '';
+        return `<div class="cal-ev" style="background:${c};color:#4a3a30">${star}${t}${esc(ev.title)}${memo}</div>`;
       }).join('');
       const more = evs.length>3 ? `<div class="cal-more">+${evs.length-3}</div>` : '';
-      const cls = `cal-cell${today?' today':''}${evs.length?' has-ev':''}`;
+      const cls = `cal-cell${today?' today':''}${evs.length?' has-ev':''}${annivEv?' anniv':''}`;
+      const annivStyle = annivEv ? ` style="--glow-rgb:${hexToRgb(annivEv.anniv_color)}"` : '';
       const click = evs.length ? ` onclick="showDay('${dateStr}')"` : '';
-      html += `<div class="${cls}"${click}>
+      html += `<div class="${cls}"${click}${annivStyle}>
         <div class="cal-daynum${dow===0?' sun':''}${dow===6?' sat':''}">${d}</div>
         ${shown}${more}
       </div>`;
@@ -261,14 +269,17 @@
     const todayBadge = today ? `<span class="ev-badge-today">오늘</span>` : '';
     const c = eventColor(ev);
     const typeBadge = `<span class="ev-tag" style="background:${c};border-color:${c};color:#4a3a30">${esc(typeLabel(ev))}</span>`;
-    return `<div class="event-card${today?' is-today':''}" style="border-left:7px solid ${c}">
+    const annivCls = ev.is_anniversary ? ' anniv' : '';
+    const annivStyle = ev.is_anniversary ? ` --glow-rgb:${hexToRgb(ev.anniv_color)};` : '';
+    const star = ev.is_anniversary ? '🎉 ' : '';
+    return `<div class="event-card${today?' is-today':''}${annivCls}" style="border-left:7px solid ${c};${annivStyle}">
       <div class="event-date-block">
         <div class="ev-day-num">${d.getDate()}</div>
         <div class="ev-weekday${today?' wd-today':''}">${today ? '오늘' : MONTHS_EN[d.getMonth()]+' · '+WEEKDAYS[d.getDay()]}</div>
       </div>
       <div class="event-info">
         <div class="ev-cell">${ev.time ? `<span class="ev-time">🕒 ${esc(ev.time.slice(0,5))}</span>` : ''}</div>
-        <div class="ev-cell"><span class="ev-title">${esc(ev.title)}</span></div>
+        <div class="ev-cell"><span class="ev-title">${star}${esc(ev.title)}</span></div>
         <div class="ev-cell"><span class="ev-desc">${ev.description ? esc(ev.description) : ''}</span></div>
         <div class="ev-cell">${typeBadge}</div>
       </div>
