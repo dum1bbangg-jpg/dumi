@@ -30,6 +30,7 @@
   .diary{max-width:940px;margin:0 auto;}
 
   /* 인트로 로딩 오버레이 + 콘텐츠 등장 */
+  html:not(.embed){scrollbar-gutter:stable;}
   html.embed #page-loader{display:none!important;}
   html.embed .diary{opacity:1!important;animation:none!important;}
   #page-loader{position:fixed;inset:0;z-index:9999;background-color:var(--paper);
