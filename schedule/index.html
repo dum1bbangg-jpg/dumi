@@ -82,12 +82,14 @@
   .event-card.is-today .event-date-block{background:#ffd9e6;}
   .ev-day-num{font-size:2.15rem;font-weight:700;line-height:1;color:var(--ink);}
   .ev-weekday{font-size:0.92rem;color:#4a3a3099;font-weight:700;margin-top:3px;letter-spacing:.5px;}
-  .event-info{flex:1;min-width:0;display:flex;align-items:center;gap:13px;padding:9px 18px;}
-  .ev-time{font-size:1.25rem;color:var(--accent-deep);font-weight:700;flex-shrink:0;white-space:nowrap;}
-  .ev-title{font-size:1.72rem;font-weight:700;color:var(--ink);flex-shrink:0;white-space:nowrap;}
-  .ev-desc{font-size:1.34rem;color:#4a3a3099;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .ev-tag{font-size:1.05rem;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:1px 12px;font-weight:700;flex-shrink:0;white-space:nowrap;}
-  .ev-badge-today{font-size:1.05rem;background:var(--accent);color:#fff;border:2px solid var(--ink);border-radius:12px;padding:1px 12px;font-weight:700;flex-shrink:0;}
+  .event-info{flex:1;min-width:0;display:grid;grid-template-columns:repeat(4,1fr);align-items:stretch;}
+  .ev-cell{display:flex;align-items:center;justify-content:center;gap:5px;padding:9px 10px;min-width:0;overflow:hidden;}
+  .ev-cell + .ev-cell{border-left:2px dotted #4a3a3033;}
+  .ev-time{font-size:1.25rem;color:var(--accent-deep);font-weight:700;white-space:nowrap;}
+  .ev-title{font-size:1.55rem;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+  .ev-desc{font-size:1.25rem;color:#4a3a3099;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+  .ev-tag{font-size:1.05rem;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:1px 11px;font-weight:700;flex-shrink:0;white-space:nowrap;}
+  .ev-badge-today{font-size:1rem;background:var(--accent);color:#fff;border:2px solid var(--ink);border-radius:12px;padding:1px 10px;font-weight:700;flex-shrink:0;}
 
   .empty-state{text-align:center;padding:30px;color:#4a3a3077;font-size:1.25rem;}
   .empty-state .emoji{font-size:2.2rem;margin-bottom:6px;}
@@ -263,10 +265,10 @@
         <div class="ev-weekday">${MONTHS_EN[d.getMonth()]} · ${WEEKDAYS[d.getDay()]}</div>
       </div>
       <div class="event-info">
-        ${ev.time ? `<span class="ev-time">🕒 ${esc(ev.time.slice(0,5))}</span>` : ''}
-        <span class="ev-title">${esc(ev.title)}</span>
-        <span class="ev-desc">${ev.description ? esc(ev.description) : ''}</span>
-        ${typeBadge}${todayBadge}
+        <div class="ev-cell">${ev.time ? `<span class="ev-time">🕒 ${esc(ev.time.slice(0,5))}</span>` : ''}</div>
+        <div class="ev-cell"><span class="ev-title">${esc(ev.title)}</span></div>
+        <div class="ev-cell"><span class="ev-desc">${ev.description ? esc(ev.description) : ''}</span></div>
+        <div class="ev-cell">${typeBadge}${todayBadge}</div>
       </div>
     </div>`;
   }
