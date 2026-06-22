@@ -137,6 +137,7 @@
       <div class="flex gap-6 border-b border-point/40 overflow-x-auto">
         <button class="tab-btn active pb-3 text-sm whitespace-nowrap" data-tab="upbo">⚡ 업보 관리</button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="songs">🎵 노래 관리</button>
+        <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="schedule">📅 일정 관리</button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="inquiry">✉️ 문의 <span id="inq-badge" style="display:none;background:#EF4444;color:white;font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:2px">NEW</span></button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="overlay">🎤 오버레이</button>
         <button class="tab-btn pb-3 text-sm whitespace-nowrap" data-tab="profile">✏️ 프로필</button>
@@ -346,6 +347,40 @@
         </div>
       </div>
 
+      <!-- ========== 일정 ========== -->
+      <div id="tab-schedule" class="tab-content">
+        <div class="sc">
+          <div class="sc-title">📅 일정 추가</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+            <div><p class="form-field-label">날짜 *</p><input type="date" id="schDate" class="song-inp"></div>
+            <div><p class="form-field-label">시간</p><input type="time" id="schTime" class="song-inp"></div>
+          </div>
+          <p class="form-field-label">제목 *</p><input id="schTitle" class="song-inp" placeholder="방송 제목">
+          <p class="form-field-label" style="margin-top:10px">설명</p><input id="schDesc" class="song-inp" placeholder="간단한 설명 (선택)">
+          <p class="form-field-label" style="margin-top:10px">태그 <span style="color:#8A7565;font-weight:400">· 쉼표로 구분</span></p>
+          <input id="schTags" class="song-inp" placeholder="예: 노래방송, 합방">
+          <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;cursor:pointer">
+            <input type="checkbox" id="schSpecial"> <span>⭐ 이벤트/특별 방송 (보라 강조)</span>
+          </label>
+          <button onclick="handleAddSchedule()" class="mt-3 px-6 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">+ 일정 추가</button>
+        </div>
+        <div class="sc">
+          <div class="sc-title">📋 일정 목록</div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse">
+              <thead><tr style="border-bottom:2px solid #F1CFDF;text-align:left">
+                <th style="padding:8px;font-size:12px;color:#B86A8F">날짜</th>
+                <th style="padding:8px;font-size:12px;color:#B86A8F">시간</th>
+                <th style="padding:8px;font-size:12px;color:#B86A8F">제목</th>
+                <th style="padding:8px;font-size:12px;color:#B86A8F">태그</th>
+                <th style="padding:8px;font-size:12px;color:#B86A8F">관리</th>
+              </tr></thead>
+              <tbody id="scheduleTableBody"><tr><td colspan="5" style="text-align:center;padding:24px;color:#BBB">불러오는 중...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <!-- ========== 프로필 ========== -->
       <div id="tab-profile" class="tab-content">
         <div class="sc">
@@ -385,10 +420,46 @@
           <div class="sc-title">📮 To 두콩이 메시지 <span style="font-size:11px;color:#8A7565;font-weight:400">· 줄바꿈 반영</span></div>
           <textarea id="to-msg" rows="4" class="input-field" style="resize:vertical;min-height:90px" placeholder="두콩이들에게 전하는 메시지"></textarea>
         </div>
+        <div class="sc">
+          <div class="sc-title">🧭 공개 탭 표시 <span style="font-size:11px;color:#8A7565;font-weight:400">· 끄면 사이트 상단 메뉴에서 숨겨져요 (즉시 적용)</span></div>
+          <label style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F6E5EE">
+            <span style="font-size:14px;font-weight:600">⚡ 업보</span>
+            <input type="checkbox" id="nav-upbo" onchange="toggleNav('nav_upbo', this.checked)" style="width:18px;height:18px;cursor:pointer;accent-color:#EC4899">
+          </label>
+          <label style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid #F6E5EE">
+            <span style="font-size:14px;font-weight:600">🎵 노래책</span>
+            <input type="checkbox" id="nav-song" onchange="toggleNav('nav_song', this.checked)" style="width:18px;height:18px;cursor:pointer;accent-color:#EC4899">
+          </label>
+          <label style="display:flex;align-items:center;justify-content:space-between;padding:9px 0">
+            <span style="font-size:14px;font-weight:600">📅 일정</span>
+            <input type="checkbox" id="nav-schedule" onchange="toggleNav('nav_schedule', this.checked)" style="width:18px;height:18px;cursor:pointer;accent-color:#EC4899">
+          </label>
+          <p style="font-size:11px;color:#8A7565;margin-top:8px">프로필(홈)은 항상 표시돼요.</p>
+        </div>
         <button onclick="saveProfile()" class="px-7 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2 transition-colors">💾 프로필 전체 저장</button>
       </div>
 
     </main>
+
+    <div id="scheduleEditModal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px">
+      <div style="background:#fff;border-radius:18px;padding:24px;width:100%;max-width:440px;max-height:90vh;overflow:auto">
+        <h3 style="font-weight:700;margin-bottom:14px;color:#4A3A30">일정 수정</h3>
+        <input type="hidden" id="editSchId">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div><p class="form-field-label">날짜</p><input type="date" id="editSchDate" class="song-inp"></div>
+          <div><p class="form-field-label">시간</p><input type="time" id="editSchTime" class="song-inp"></div>
+        </div>
+        <p class="form-field-label">제목</p><input id="editSchTitle" class="song-inp">
+        <p class="form-field-label" style="margin-top:10px">설명</p><input id="editSchDesc" class="song-inp">
+        <p class="form-field-label" style="margin-top:10px">태그 <span style="color:#8A7565;font-weight:400">· 쉼표로 구분</span></p>
+        <input id="editSchTags" class="song-inp">
+        <label style="display:flex;align-items:center;gap:8px;margin-top:12px;font-size:13px;cursor:pointer"><input type="checkbox" id="editSchSpecial"> <span>⭐ 이벤트/특별 방송</span></label>
+        <div style="display:flex;gap:8px;margin-top:18px">
+          <button onclick="handleEditSchedule()" class="flex-1 px-4 py-2.5 rounded-xl bg-accent text-white text-sm font-semibold hover:bg-accent2">저장</button>
+          <button onclick="closeScheduleEditModal()" class="px-5 py-2.5 rounded-xl bg-gray-100 text-gray-600 text-sm font-semibold">취소</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- VOD 수정 모달 -->
@@ -475,6 +546,7 @@
           if (btn.dataset.tab === 'overlay') loadOverlayState();
           if (btn.dataset.tab === 'inquiry') loadInquiries();
           if (btn.dataset.tab === 'profile') loadProfileSettings();
+          if (btn.dataset.tab === 'schedule') loadScheduleAdmin();
         });
       });
     });
@@ -1115,6 +1187,14 @@
       for (const [id,key] of Object.entries(PROFILE_FIELDS)) {
         const el = document.getElementById(id); if (el) el.value = s[key] ?? '';
       }
+      document.getElementById('nav-upbo').checked = (s.nav_upbo ?? 'on') !== 'off';
+      document.getElementById('nav-song').checked = (s.nav_song ?? 'on') !== 'off';
+      document.getElementById('nav-schedule').checked = (s.nav_schedule ?? 'on') !== 'off';
+    }
+    async function toggleNav(key, on) {
+      const { error } = await sb.from('site_settings').upsert({ key, value: on?'on':'off' }, { onConflict:'key' });
+      if (error) { showToast('변경 실패: '+error.message,'error'); return; }
+      showToast(on?'✅ 탭 표시':'🙈 탭 숨김');
     }
     async function saveProfile() {
       const rows = Object.entries(PROFILE_FIELDS).map(([id,key]) => {
@@ -1126,6 +1206,91 @@
       if (error) { showToast('저장 실패: '+error.message,'error'); return; }
       showToast('프로필 저장됐어요 ✓ (빈칸은 기본값 적용)');
       await loadProfileSettings();
+    }
+
+    /* ════════════════ 일정 관리 ════════════════ */
+    let allScheduleEvents = [];
+    async function loadScheduleAdmin() {
+      const { data, error } = await sb.from('schedule_events').select('*').order('date',{ascending:false}).order('time',{ascending:true});
+      if (error) { showToast('일정 로드 실패: '+error.message,'error'); return; }
+      allScheduleEvents = data || [];
+      renderScheduleTable();
+    }
+    function renderScheduleTable() {
+      const tb = document.getElementById('scheduleTableBody');
+      if (!allScheduleEvents.length) { tb.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:24px;color:#BBB;font-size:13px">등록된 일정이 없습니다</td></tr>'; return; }
+      const today = new Date().toISOString().slice(0,10);
+      tb.innerHTML = allScheduleEvents.map(ev => {
+        const past = ev.date < today;
+        const tags = (ev.tags||[]).join(', ');
+        const hb = ev.is_hidden ? '<span style="font-size:10px;background:#eee;color:#888;padding:1px 5px;border-radius:6px;margin-left:4px">숨김</span>' : '';
+        const sp = ev.is_special ? '<span style="font-size:10px;background:#efdcff;color:#8a5fb0;padding:1px 5px;border-radius:6px;margin-left:4px">이벤트</span>' : '';
+        return `<tr style="border-bottom:1px solid #F6E5EE;${past?'opacity:.5':''}">
+          <td style="padding:8px;font-size:13px;font-weight:600">${ev.date}</td>
+          <td style="padding:8px;font-size:13px;color:#888">${ev.time?ev.time.slice(0,5):'—'}</td>
+          <td style="padding:8px;font-size:13px">${escA(ev.title)}${hb}${sp}</td>
+          <td style="padding:8px;font-size:12px;color:#888">${escA(tags)}</td>
+          <td style="padding:8px"><div style="display:flex;gap:4px">
+            <button class="btn-edit" onclick="openScheduleEdit(${ev.id})">수정</button>
+            <button class="btn-edit" onclick="toggleScheduleHidden(${ev.id},${!ev.is_hidden})">${ev.is_hidden?'👁':'🙈'}</button>
+            <button class="btn-edit" style="background:#FEE2E2;color:#DC2626" onclick="deleteScheduleEvent(${ev.id})">삭제</button>
+          </div></td>
+        </tr>`;
+      }).join('');
+    }
+    async function handleAddSchedule() {
+      const date = document.getElementById('schDate').value;
+      const time = document.getElementById('schTime').value;
+      const title = document.getElementById('schTitle').value.trim();
+      const description = document.getElementById('schDesc').value.trim();
+      const tagsRaw = document.getElementById('schTags').value.trim();
+      const is_special = document.getElementById('schSpecial').checked;
+      if (!date || !title) { showToast('날짜와 제목은 필수예요','error'); return; }
+      const tags = tagsRaw ? tagsRaw.split(',').map(t=>t.trim()).filter(Boolean) : [];
+      const { error } = await sb.from('schedule_events').insert({ date, time:time||null, title, description:description||null, tags, is_special });
+      if (error) { showToast('추가 실패: '+error.message,'error'); return; }
+      ['schDate','schTime','schTitle','schDesc','schTags'].forEach(id=>document.getElementById(id).value='');
+      document.getElementById('schSpecial').checked = false;
+      showToast('✅ 일정 추가 완료!');
+      loadScheduleAdmin();
+    }
+    function openScheduleEdit(id) {
+      const ev = allScheduleEvents.find(e=>e.id===id); if (!ev) return;
+      document.getElementById('editSchId').value = id;
+      document.getElementById('editSchDate').value = ev.date;
+      document.getElementById('editSchTime').value = ev.time || '';
+      document.getElementById('editSchTitle').value = ev.title;
+      document.getElementById('editSchDesc').value = ev.description || '';
+      document.getElementById('editSchTags').value = (ev.tags||[]).join(', ');
+      document.getElementById('editSchSpecial').checked = ev.is_special || false;
+      document.getElementById('scheduleEditModal').classList.remove('hidden');
+    }
+    function closeScheduleEditModal() { document.getElementById('scheduleEditModal').classList.add('hidden'); }
+    async function handleEditSchedule() {
+      const id = parseInt(document.getElementById('editSchId').value);
+      const date = document.getElementById('editSchDate').value;
+      const time = document.getElementById('editSchTime').value;
+      const title = document.getElementById('editSchTitle').value.trim();
+      const description = document.getElementById('editSchDesc').value.trim();
+      const tagsRaw = document.getElementById('editSchTags').value.trim();
+      const is_special = document.getElementById('editSchSpecial').checked;
+      if (!date || !title) { showToast('날짜와 제목은 필수예요','error'); return; }
+      const tags = tagsRaw ? tagsRaw.split(',').map(t=>t.trim()).filter(Boolean) : [];
+      const { error } = await sb.from('schedule_events').update({ date, time:time||null, title, description:description||null, tags, is_special }).eq('id', id);
+      if (error) { showToast('수정 실패: '+error.message,'error'); return; }
+      closeScheduleEditModal(); showToast('✅ 일정 수정 완료!'); loadScheduleAdmin();
+    }
+    async function toggleScheduleHidden(id, hidden) {
+      const { error } = await sb.from('schedule_events').update({ is_hidden:hidden }).eq('id', id);
+      if (error) { showToast('변경 실패','error'); return; }
+      showToast(hidden?'🙈 숨김 처리':'👁 표시'); loadScheduleAdmin();
+    }
+    async function deleteScheduleEvent(id) {
+      const ev = allScheduleEvents.find(e=>e.id===id);
+      if (!confirm(`"${ev?.title}" 일정을 삭제할까요?`)) return;
+      const { error } = await sb.from('schedule_events').delete().eq('id', id);
+      if (error) { showToast('삭제 실패: '+error.message,'error'); return; }
+      showToast('🗑 삭제 완료'); loadScheduleAdmin();
     }
   </script>
   <div id="toast" class="toast"></div>

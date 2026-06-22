@@ -150,8 +150,30 @@ INSERT INTO public.site_settings (key, value) VALUES
 가끔은 노래도 불러요 🎵 오른쪽 덧니가 트레이드마크
 밝고 귀엽게, 두콩이들이랑 매일 도란도란 떠드는 게 제일 좋아'),
   ('likes', '소통, 롤, 노래'),
-  ('dislikes', '당근')
+  ('dislikes', '당근'),
+  ('nav_upbo', 'on'),
+  ('nav_song', 'on'),
+  ('nav_schedule', 'on')
 ON CONFLICT (key) DO NOTHING;
+
+-- ========== 8-2. 일정 (스케줄) ==========
+CREATE TABLE IF NOT EXISTS public.schedule_events (
+  id bigserial PRIMARY KEY,
+  date date NOT NULL,
+  time time,
+  title text NOT NULL,
+  description text,
+  tags text[] DEFAULT '{}',
+  is_special boolean DEFAULT false,
+  is_hidden boolean DEFAULT false,
+  created_at timestamptz DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS idx_schedule_date ON public.schedule_events(date);
+ALTER TABLE public.schedule_events ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "public read schedule" ON public.schedule_events;
+DROP POLICY IF EXISTS "auth all schedule" ON public.schedule_events;
+CREATE POLICY "public read schedule" ON public.schedule_events FOR SELECT USING (is_hidden = false);
+CREATE POLICY "auth all schedule" ON public.schedule_events FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
 -- ========== 9. 두미 기본 업보 타입 시드 ==========
 INSERT INTO public.upbo_task_types (name, category, sort_order) VALUES

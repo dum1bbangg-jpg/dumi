@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=940" />
+<title>두미 · 일정</title>
+<link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{ --ink:#4a3a30; --paper:#fbf6ee; --grid:#ece1d0; --c-card:#f8d6e6; --t-card:#efb6d2; --accent:#ff8fb0; --accent-deep:#e36f95; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Gaegu',system-ui,sans-serif;color:var(--ink);background-color:var(--paper);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+    background-size:28px 28px;-webkit-font-smoothing:antialiased;padding:0 22px 70px;line-height:1.45;min-height:100vh;}
+  .diary{max-width:940px;margin:0 auto;}
+
+  nav.tabs{display:flex;justify-content:center;gap:8px;padding:20px 0 8px;position:sticky;top:0;z-index:30;background:transparent;}
+  nav.tabs a{font-weight:700;font-size:1.68rem;text-decoration:none;color:var(--ink);padding:6px 26px 8px;border:2.4px solid var(--ink);border-radius:16px;background:#fff;box-shadow:3px 3px 0 rgba(74,58,48,.16);transform:rotate(-1.5deg);transition:transform .15s;}
+  nav.tabs a:nth-child(2){transform:rotate(1deg);} nav.tabs a:nth-child(3){transform:rotate(-.5deg);} nav.tabs a:nth-child(4){transform:rotate(.7deg);}
+  nav.tabs a:hover{transform:translateY(-2px) rotate(0);}
+  nav.tabs a.active{background:var(--t-card);}
+  body.embed nav.tabs{display:none;}
+
+  header.hero{margin:10px 4px 22px;}
+  .hero .title{font-weight:700;font-size:3rem;line-height:1;margin:0;}
+  .hero .sub{font-size:1.3rem;opacity:.6;margin-top:4px;}
+
+  .sch-section{margin-bottom:30px;}
+  .sch-section-title{font-size:1.7rem;font-weight:700;margin:0 4px 14px;display:flex;align-items:center;gap:8px;}
+  .sch-section-title .cnt{font-size:1.1rem;color:var(--accent-deep);background:#fff;border:2.2px solid var(--accent);border-radius:13px;padding:1px 12px;font-weight:700;}
+
+  .event-card{display:flex;background:#fff;border:2.6px solid var(--ink);border-radius:18px;box-shadow:5px 6px 0 rgba(74,58,48,.13);margin-bottom:14px;overflow:hidden;transform:rotate(-0.4deg);}
+  .event-card:nth-child(even){transform:rotate(0.4deg);}
+  .event-card.is-today{border-color:var(--accent);box-shadow:5px 6px 0 rgba(227,111,149,.22);}
+  .event-date-block{flex-shrink:0;width:112px;background:var(--c-card);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 8px;border-right:2.6px dashed var(--ink);}
+  .event-card.is-today .event-date-block{background:#ffd9e6;}
+  .ev-month{font-size:1rem;font-weight:700;color:var(--accent-deep);letter-spacing:1.5px;}
+  .ev-day-num{font-size:2.7rem;font-weight:700;line-height:1;color:var(--ink);}
+  .ev-weekday{font-size:1.05rem;color:#4a3a3099;}
+  .event-info{flex:1;padding:15px 20px;display:flex;flex-direction:column;justify-content:center;gap:3px;}
+  .ev-time{font-size:1.12rem;color:var(--accent-deep);font-weight:700;}
+  .ev-title{font-size:1.55rem;font-weight:700;color:var(--ink);}
+  .ev-desc{font-size:1.18rem;color:#4a3a3099;}
+  .ev-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:5px;}
+  .ev-tag{font-size:0.98rem;background:#fff;border:2px solid var(--ink);border-radius:12px;padding:1px 11px;font-weight:700;}
+  .ev-tag.special{background:#efdcff;border-color:#b98fe0;color:#8a5fb0;}
+  .ev-badge-today{font-size:0.98rem;background:var(--accent);color:#fff;border:2px solid var(--ink);border-radius:12px;padding:1px 11px;font-weight:700;}
+  .past-list .event-card{opacity:.62;}
+
+  .empty-state{text-align:center;padding:34px;color:#4a3a3077;font-size:1.25rem;}
+  .empty-state .emoji{font-size:2.2rem;margin-bottom:6px;}
+
+  footer{margin:44px 4px 0;text-align:center;font-size:1.15rem;opacity:.55;}
+</style>
+</head>
+<body>
+<div class="diary">
+
+  <nav class="tabs">
+    <a href="/">프로필</a>
+    <a href="/upbo/" data-nav="upbo">업보</a>
+    <a href="/song/" data-nav="song">노래책</a>
+    <a href="/schedule/" class="active" data-nav="schedule">일정</a>
+  </nav>
+
+  <header class="hero">
+    <h1 class="title">일정 📅</h1>
+    <div class="sub">두미 방송 일정이에요! 함께해요 ♡</div>
+  </header>
+
+  <section class="sch-section">
+    <div class="sch-section-title">🌸 다가오는 일정 <span class="cnt" id="upcomingCnt"></span></div>
+    <div id="upcomingList">
+      <div class="empty-state"><div class="emoji">⏳</div><p>불러오는 중...</p></div>
+    </div>
+  </section>
+
+  <section class="sch-section">
+    <div class="sch-section-title">🗂️ 지난 일정</div>
+    <div id="pastList" class="past-list"></div>
+  </section>
+
+  <footer>
+    <p>© 2026 두미 · 두콩이들 💗</p>
+  </footer>
+</div>
+
+<script src="../js/supabase-config.js"></script>
+<script src="../js/nav.js"></script>
+<script>
+  const WEEKDAYS = ['일','월','화','수','목','금','토'];
+  const MONTHS_EN = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+
+  function esc(t){ const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
+  function dateBlock(dateStr){ const d=new Date(dateStr+'T00:00:00'); return { month:MONTHS_EN[d.getMonth()], day:d.getDate(), weekday:WEEKDAYS[d.getDay()]+'요일' }; }
+  function isToday(dateStr){ const t=new Date(), d=new Date(dateStr+'T00:00:00'); return t.getFullYear()===d.getFullYear()&&t.getMonth()===d.getMonth()&&t.getDate()===d.getDate(); }
+
+  function eventCard(ev){
+    const { month, day, weekday } = dateBlock(ev.date);
+    const today = isToday(ev.date);
+    const tags = (ev.tags||[]).map((tag,i) => `<span class="ev-tag${i===0&&ev.is_special?' special':''}">${esc(tag)}</span>`).join('');
+    const todayBadge = today ? `<span class="ev-badge-today">오늘</span>` : '';
+    return `<div class="event-card${today?' is-today':''}">
+      <div class="event-date-block">
+        <div class="ev-month">${month}</div>
+        <div class="ev-day-num">${day}</div>
+        <div class="ev-weekday">${weekday}</div>
+      </div>
+      <div class="event-info">
+        ${ev.time ? `<div class="ev-time">🕒 ${ev.time.slice(0,5)}</div>` : ''}
+        <div class="ev-title">${esc(ev.title)}</div>
+        ${ev.description ? `<div class="ev-desc">${esc(ev.description)}</div>` : ''}
+        ${(tags||todayBadge) ? `<div class="ev-tags">${tags}${todayBadge}</div>` : ''}
+      </div>
+    </div>`;
+  }
+
+  async function loadSchedule(){
+    const upEl = document.getElementById('upcomingList');
+    const pastEl = document.getElementById('pastList');
+    try{
+      const sb = initSupabase();
+      const today = new Date().toISOString().slice(0,10);
+      const { data: upcoming, error: e1 } = await sb.from('schedule_events').select('*')
+        .gte('date', today).eq('is_hidden', false)
+        .order('date', { ascending:true }).order('time', { ascending:true });
+      if(e1) throw e1;
+      const { data: past, error: e2 } = await sb.from('schedule_events').select('*')
+        .lt('date', today).eq('is_hidden', false)
+        .order('date', { ascending:false }).order('time', { ascending:false }).limit(10);
+      if(e2) throw e2;
+
+      document.getElementById('upcomingCnt').textContent = (upcoming&&upcoming.length) ? upcoming.length+'개' : '';
+      upEl.innerHTML = (upcoming&&upcoming.length)
+        ? upcoming.map(eventCard).join('')
+        : `<div class="empty-state"><div class="emoji">📭</div><p>아직 등록된 일정이 없어요</p></div>`;
+      pastEl.innerHTML = (past&&past.length)
+        ? past.map(eventCard).join('')
+        : `<div class="empty-state"><div class="emoji">🗂️</div><p>지난 일정이 없어요</p></div>`;
+    }catch(err){
+      console.error(err);
+      upEl.innerHTML = `<div class="empty-state"><p>일정을 불러오지 못했어요</p></div>`;
+      pastEl.innerHTML = '';
+    }
+  }
+
+  if(new URLSearchParams(location.search).has('embed')) document.body.classList.add('embed');
+  loadSchedule();
+</script>
+</body>
+</html>

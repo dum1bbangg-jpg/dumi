@@ -27,7 +27,7 @@
 
   nav.tabs{display:flex;justify-content:center;gap:8px;padding:20px 0 8px;position:sticky;top:0;z-index:30;background:transparent;}
   nav.tabs a{font-weight:700;font-size:1.68rem;text-decoration:none;color:var(--ink);padding:6px 26px 8px;border:2.4px solid var(--ink);border-radius:16px;background:#fff;box-shadow:3px 3px 0 rgba(74,58,48,.16);transform:rotate(-1.5deg);transition:transform .15s;}
-  nav.tabs a:nth-child(2){transform:rotate(1deg);} nav.tabs a:nth-child(3){transform:rotate(-.5deg);}
+  nav.tabs a:nth-child(2){transform:rotate(1deg);} nav.tabs a:nth-child(3){transform:rotate(-.5deg);} nav.tabs a:nth-child(4){transform:rotate(.7deg);}
   nav.tabs a:hover{transform:translateY(-2px) rotate(0);}
   nav.tabs a.active{background:var(--accent);color:#fff;}
 
@@ -120,8 +120,9 @@
 <main class="diary">
   <nav class="tabs">
     <a href="/">프로필</a>
-    <a href="/upbo/" class="active">업보</a>
-    <a href="/song/">노래책</a>
+    <a href="/upbo/" class="active" data-nav="upbo">업보</a>
+    <a href="/song/" data-nav="song">노래책</a>
+    <a href="/schedule/" data-nav="schedule">일정</a>
   </nav>
 
   <header class="hero">
@@ -207,6 +208,7 @@
 </footer>
 
 <script src="../js/supabase-config.js"></script>
+<script src="../js/nav.js"></script>
 <script>
 const sb = initSupabase();
 let allMembers = [], memberTasks = {};
