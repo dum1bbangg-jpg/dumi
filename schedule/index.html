@@ -71,8 +71,8 @@
   @keyframes anniv-glow{0%,100%{box-shadow:0 0 0 0 rgba(var(--glow-rgb,255,143,176),0);transform:scale(1);}50%{box-shadow:0 0 11px 4px rgba(var(--glow-rgb,255,143,176),.85);transform:scale(1.05);}}
   .cal-cell.anniv{overflow:visible;z-index:2;}
   .cal-ev.anniv{animation:anniv-glow 1.6s ease-in-out infinite;position:relative;}
-  .event-card.anniv{overflow:visible;}
-  .ev-tag.anniv{animation:anniv-glow 1.6s ease-in-out infinite;position:relative;}
+  @keyframes anniv-glow-card{0%,100%{box-shadow:4px 5px 0 rgba(74,58,48,.12),0 0 0 0 rgba(var(--glow-rgb,255,143,176),0);}50%{box-shadow:4px 5px 0 rgba(74,58,48,.12),0 0 18px 5px rgba(var(--glow-rgb,255,143,176),.65);}}
+  .event-card.anniv{animation:anniv-glow-card 1.6s ease-in-out infinite;border-color:rgba(var(--glow-rgb,255,143,176),.9)!important;}
   .cal-more{font-size:0.82rem;color:#4a3a3099;padding-left:5px;font-weight:700;}
   .cal-legend{display:flex;gap:13px;flex-wrap:wrap;justify-content:center;margin-top:11px;font-size:1.02rem;color:#4a3a3099;}
   .cal-legend span{display:flex;align-items:center;gap:5px;}
@@ -269,7 +269,7 @@
     const today = isToday(ev.date);
     const todayBadge = today ? `<span class="ev-badge-today">오늘</span>` : '';
     const c = eventColor(ev);
-    const typeBadge = `<span class="ev-tag${ev.is_anniversary?' anniv':''}" style="background:${c};border-color:${c};color:#4a3a30">${esc(typeLabel(ev))}</span>`;
+    const typeBadge = `<span class="ev-tag" style="background:${c};border-color:${c};color:#4a3a30">${esc(typeLabel(ev))}</span>`;
     const annivCls = ev.is_anniversary ? ' anniv' : '';
     const annivStyle = ev.is_anniversary ? ` --glow-rgb:${hexToRgb(ev.anniv_color)};` : '';
     const star = ev.is_anniversary ? '🎉 ' : '';
