@@ -441,7 +441,7 @@
 
     </main>
 
-    <div id="scheduleEditModal" class="hidden" style="position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div id="scheduleEditModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;align-items:center;justify-content:center;padding:20px">
       <div style="background:#fff;border-radius:18px;padding:24px;width:100%;max-width:440px;max-height:90vh;overflow:auto">
         <h3 style="font-weight:700;margin-bottom:14px;color:#4A3A30">일정 수정</h3>
         <input type="hidden" id="editSchId">
@@ -1263,9 +1263,9 @@
       document.getElementById('editSchDesc').value = ev.description || '';
       document.getElementById('editSchTags').value = (ev.tags||[]).join(', ');
       document.getElementById('editSchSpecial').checked = ev.is_special || false;
-      document.getElementById('scheduleEditModal').classList.remove('hidden');
+      document.getElementById('scheduleEditModal').style.display = 'flex';
     }
-    function closeScheduleEditModal() { document.getElementById('scheduleEditModal').classList.add('hidden'); }
+    function closeScheduleEditModal() { document.getElementById('scheduleEditModal').style.display = 'none'; }
     async function handleEditSchedule() {
       const id = parseInt(document.getElementById('editSchId').value);
       const date = document.getElementById('editSchDate').value;
