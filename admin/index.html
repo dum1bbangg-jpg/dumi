@@ -60,8 +60,9 @@
     .adm-cal-ev{font-size:10.5px;font-weight:600;color:#4a3a30;border-radius:5px;padding:1px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;line-height:1.4}
     .adm-cal-ev:hover{filter:brightness(.95)}
     .adm-cal-more{font-size:10px;color:#B89;padding-left:3px}
-    @keyframes adm-anniv-glow{0%,100%{box-shadow:0 0 0 0 rgba(var(--glow-rgb,255,143,176),0);transform:scale(1)}50%{box-shadow:0 0 13px 4px rgba(var(--glow-rgb,255,143,176),.6);transform:scale(1.045)}}
-    .adm-cal-cell.anniv{animation:adm-anniv-glow 1.6s ease-in-out infinite;border-color:rgba(var(--glow-rgb,255,143,176),.9)!important;position:relative;z-index:2}
+    @keyframes adm-anniv-glow{0%,100%{box-shadow:0 0 0 0 rgba(var(--glow-rgb,255,143,176),0);transform:scale(1)}50%{box-shadow:0 0 9px 3px rgba(var(--glow-rgb,255,143,176),.85);transform:scale(1.06)}}
+    .adm-cal-cell.anniv{overflow:visible;z-index:2}
+    .adm-cal-ev.anniv{animation:adm-anniv-glow 1.6s ease-in-out infinite;position:relative}
     .upbo-sub-nav{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
     .upbo-sub-btn{padding:7px 18px;border-radius:100px;border:1.5px solid #ECE1D0;background:#fff;font-size:13px;font-weight:600;color:#8A7565;cursor:pointer;font-family:inherit;transition:all .2s}
     .upbo-sub-btn:hover{border-color:#CF7FA3;color:#B86A8F}
@@ -1297,7 +1298,7 @@
         const shown=evs.slice(0,3).map(ev=>{
           const c=SCH_TYPE_COLORS[ev.event_type]||ev.color||'#ffd9e6';
           const star=ev.is_anniversary?'🎉 ':'';
-          return `<div class="adm-cal-ev" style="background:${c}" title="${escA(ev.title)}" onclick="event.stopPropagation();openScheduleEdit(${ev.id})">${star}${escA(ev.title)}</div>`;
+          return `<div class="adm-cal-ev${ev.is_anniversary?' anniv':''}" style="background:${c}" title="${escA(ev.title)}" onclick="event.stopPropagation();openScheduleEdit(${ev.id})">${star}${escA(ev.title)}</div>`;
         }).join('');
         const more=evs.length>3?`<div class="adm-cal-more">+${evs.length-3}</div>`:'';
         const annivCls=annivEv?' anniv':'';
