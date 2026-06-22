@@ -57,7 +57,7 @@
   .cal-wd{text-align:center;font-size:1.15rem;font-weight:700;color:#4a3a3088;padding:3px 0;}
   .cal-wd.sun{color:var(--accent-deep);} .cal-wd.sat{color:#5f8fd6;}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;}
-  .cal-cell{min-height:78px;border:2px solid #ece1d0;border-radius:13px;padding:6px;background:#fdfaf5;display:flex;flex-direction:column;gap:3px;overflow:hidden;transition:transform .12s,border-color .12s;}
+  .cal-cell{min-height:102px;border:2px solid #ece1d0;border-radius:13px;padding:6px;background:#fdfaf5;display:flex;flex-direction:column;gap:3px;overflow:hidden;transition:transform .12s,border-color .12s;}
   .cal-cell.empty{border:none;background:transparent;}
   .cal-cell.has-ev{cursor:pointer;border-color:var(--t-card);background:#fff;}
   .cal-cell.has-ev:hover{border-color:var(--accent);transform:translateY(-2px);}
@@ -65,7 +65,7 @@
   .cal-daynum{font-size:1.18rem;font-weight:700;line-height:1;}
   .cal-daynum.sun{color:var(--accent-deep);} .cal-daynum.sat{color:#5f8fd6;}
   .cal-cell.today .cal-daynum{color:var(--accent-deep);}
-  .cal-ev{font-size:0.86rem;background:var(--c-card);border-radius:7px;padding:2px 6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;color:var(--ink);line-height:1.25;}
+  .cal-ev{font-size:0.92rem;background:var(--c-card);border-radius:7px;padding:2px 7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700;color:var(--ink);line-height:1.25;}
   .cal-ev.special{background:#efdcff;color:#8a5fb0;}
   .cal-more{font-size:0.82rem;color:#4a3a3099;padding-left:5px;font-weight:700;}
   .cal-legend{display:flex;gap:13px;flex-wrap:wrap;justify-content:center;margin-top:11px;font-size:1.02rem;color:#4a3a3099;}
@@ -210,13 +210,13 @@
       const evs = evMap[dateStr] || [];
       const dow = (startDow + d - 1) % 7;
       const today = dateStr === todayStr;
-      const shown = evs.slice(0,2).map(ev => {
+      const shown = evs.slice(0,3).map(ev => {
         const c = eventColor(ev);
         const t = ev.time ? esc(ev.time.slice(0,5))+' ' : '';
         const memo = (!ev.time && ev.description) ? ' · '+esc(ev.description) : '';
         return `<div class="cal-ev" style="background:${c};color:#4a3a30">${t}${esc(ev.title)}${memo}</div>`;
       }).join('');
-      const more = evs.length>2 ? `<div class="cal-more">+${evs.length-2}</div>` : '';
+      const more = evs.length>3 ? `<div class="cal-more">+${evs.length-3}</div>` : '';
       const cls = `cal-cell${today?' today':''}${evs.length?' has-ev':''}`;
       const click = evs.length ? ` onclick="showDay('${dateStr}')"` : '';
       html += `<div class="${cls}"${click}>
