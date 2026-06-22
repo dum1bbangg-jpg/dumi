@@ -24,7 +24,7 @@ window.__navReady = (async function applyNavVisibility(){
   }
   // 임베드(SOOP 게시판)는 인트로 없이 즉시 노출
   if (document.documentElement.classList.contains('embed')) { reveal(); return; }
-  const minWait = new Promise(r => setTimeout(r, 1000));                 // 최소 1초
+  const minWait = new Promise(r => setTimeout(r, 500));                  // 최소 0.5초
   const navWait = Promise.race([                                        // nav 숨김 완료(최대 2.2초 캡)
     window.__navReady || Promise.resolve(),
     new Promise(r => setTimeout(r, 2200))
