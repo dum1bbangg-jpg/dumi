@@ -16,3 +16,36 @@ html{scrollbar-gutter:auto!important}body{min-height:0!important;margin:0!import
 #view-schedule .cal-grid,#view-schedule .cal-weekdays{grid-template-columns:repeat(7,minmax(0,1fr))}#view-schedule .cal-cell{min-width:0;height:76px;min-height:76px}#view-schedule .cal-ev{max-width:100%;min-width:0}#view-schedule .event-card{height:59px}
 .profile-panel .bio{overflow:visible}.profile-panel .bio .v{min-width:0;max-height:29px;overflow:auto}.profile-panel .bio .row{font-size:19px;padding:4px 0}
 #view-home .hero-note{overflow:visible}#view-home .hero-note p{max-height:100px;overflow:auto}
+
+/* Upbo navigation follows the main page's quiet text-and-underline style. */
+#view-upbo nav.tabs {
+  align-items: center;
+  justify-content: flex-start;
+  gap: 30px;
+  height: 78px;
+  padding: 0 26px;
+  background: transparent;
+}
+#view-upbo nav.tabs a,
+#view-upbo nav.tabs a:nth-child(n) {
+  font-family: Arial, "Malgun Gothic", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  transform: none;
+  color: #24232a;
+  transition: color .18s, border-color .18s;
+}
+#view-upbo nav.tabs a.active {
+  color: #cc8074;
+  border-bottom-color: #cc8074;
+}
+#view-upbo nav.tabs a:hover { color: #cc8074; }
+@media (prefers-reduced-motion: reduce) {
+  #view-upbo nav.tabs a { transition: none; }
+}
