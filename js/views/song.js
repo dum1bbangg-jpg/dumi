@@ -46,11 +46,11 @@ DumiMounts.song = function(root) {
     renderPagination(totalPages);
     tbody.innerHTML = paged.map(s => `
       <tr>
-        <td class="artist-cell">${esc(s.artist)||'—'}</td>
-        <td class="title-cell">${esc(s.title)||'—'}</td>
+        <td class="artist-cell" title="${esc(s.artist).replace(/"/g,'&quot;')}">${esc(s.artist)||'—'}</td>
+        <td class="title-cell" title="${esc(s.title).replace(/"/g,'&quot;')}">${esc(s.title)||'—'}</td>
         <td class="center"><span class="genre-badge ${genreClass(s.genre)}">${GENRE_LABELS[s.genre]||s.genre||'기타'}</span></td>
         <td class="center">${starsHTML(s.level)}</td>
-        <td class="memo-cell">${esc(s.memo)||''}</td>
+        <td class="memo-cell" title="${esc(s.memo).replace(/"/g,'&quot;')}">${esc(s.memo)||''}</td>
         <td class="center"><button class="copy-btn" onclick="DumiViews.song.copyTitle(this, '${(s.artist||'').replace(/'/g,"\\'")} - ${(s.title||'').replace(/'/g,"\\'")}')">복사</button></td>
       </tr>`).join('');
   }

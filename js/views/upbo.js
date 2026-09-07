@@ -66,7 +66,7 @@ function renderPage(){
     const url = avatarUrl(m.user_id);
     const imgHtml = url ? `<img src="${url}" alt="${esc(m.nickname)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : '';
     const fallback = `<span style="${url?'display:none':''}">🐱</span>`;
-    return `<div class="member-card" onclick="DumiViews.upbo.openUpboModal('${m.id}', event)">
+    return `<div class="member-card" role="button" tabindex="0" onclick="DumiViews.upbo.openUpboModal('${m.id}', event)">
       <div class="member-avatar">${imgHtml}${fallback}</div>
       <div class="member-nick">${esc(dispNick(m))}</div>
       ${m.user_id ? `<div class="member-id">(${esc(m.user_id)})</div>` : ''}

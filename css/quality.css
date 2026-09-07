@@ -1,0 +1,110 @@
+/* Readability pass: expressive headings, clear body copy, deliberate focus states. */
+:root{--readable-font:Arial,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;--text-strong:#332d32;--text-muted:#75665f;--focus-ring:#a66d5d}
+:is(#view-home,#view-profile,#view-upbo,#view-song,#view-schedule) nav.tabs{gap:28px;height:84px;min-height:84px}
+:is(#view-home,#view-profile,#view-upbo,#view-song,#view-schedule) nav.tabs a:nth-child(n){font-size:22px;line-height:1.35;padding:11px 0;font-weight:600;letter-spacing:-.5px}
+:is(#view-home,#view-profile) nav.tabs .intro-link{font-size:30px;margin-right:15px}
+:is(#view-home,#view-profile,#view-upbo,#view-song,#view-schedule) nav.tabs a.active{color:#a26656;border-bottom-width:2px}
+.app-view :is(button,a,[role=button],input,textarea):focus-visible{outline:3px solid var(--focus-ring)!important;outline-offset:3px}
+.app-view button{touch-action:manipulation}
+.app-view :is(.page-btn,.filter-tab,.copy-btn,.modal-input,.media-pager,.profile-tabs button){font-family:var(--readable-font)}
+.app-view .page-btn{height:44px;min-width:44px;font-size:21px}
+.app-view footer{font-family:var(--readable-font);font-size:15px!important;opacity:1;color:#82756e}
+:is(#view-upbo,#view-song,#view-schedule) .hero .sub{font-family:var(--readable-font);font-size:21px;line-height:1.45;color:var(--text-muted)}
+:is(#view-upbo,#view-song) .hero .title{font-size:46px}
+:is(#view-upbo,#view-song) :is(.updated-badge,.song-count-badge){font-family:var(--readable-font);font-size:17px;padding:7px 12px;color:#77645b}
+:is(#view-upbo,#view-song) :is(.search-input,.song-search-input){font-family:var(--readable-font);font-size:22px;height:56px;color:var(--text-strong)}
+:is(#view-upbo,#view-song) input::placeholder{color:#897870;opacity:1}
+:is(#view-upbo,#view-song) :is(.inquiry-btn,.coin-guide-btn,.rand-btn){font-family:var(--readable-font);font-size:19px;padding:8px 14px}
+/* Intro's small labels and entry action must survive whole-canvas scaling. */
+#view-intro .intro-title small{font-size:18px;letter-spacing:0}
+#view-intro .intro-brand p{font-size:14px;line-height:1.6;max-width:235px}
+#view-intro .intro-brand h1{font-size:34px;line-height:.97}
+#view-intro .intro-brand h1 span{font-size:29px}
+#view-intro .brand-spark{left:181px}
+#view-intro .enter{font-size:20px;gap:20px;left:615px;top:997px;padding:14px 0}
+#view-intro .edition{font-size:13px}
+#view-intro .side-caption{font-size:13px;letter-spacing:.7px}
+#view-intro footer{font-size:12px!important;letter-spacing:.4px}
+/* Main: larger quick actions, quieter ornaments, clearer labels. */
+#view-home .showcase{height:1250px}
+#view-home .hero-note>span{font-size:14px;letter-spacing:1.2px;color:#83635a}
+#view-home .hero-note p{font-family:var(--readable-font);font-size:23px;line-height:1.55;margin-top:13px;color:#58473e}
+#view-home .nameplate .eyebrow{font-size:12px;letter-spacing:1.5px}
+#view-home .nameplate .roman{font-size:17px;letter-spacing:5px}
+#view-home .showcase-links a{font-size:20px;padding:12px 0;font-weight:600;color:#76584e}
+#view-home .showcase-links{top:950px;gap:30px}
+#view-home .quick-dock a{height:108px;width:100px;color:#ba7b6d}
+#view-home .quick-dock a svg{width:49px;height:49px;stroke-width:1.8}
+#view-home .quick-dock a span{font-size:18px;letter-spacing:0;font-weight:600;color:#806359}
+#view-home .showcase-caption{font-size:12px;letter-spacing:2px;color:#8a746b}
+#view-home .debut-orbit small{font-size:14px}#view-home .debut-orbit span{font-size:13px}
+/* Profile: keep the handwritten card labels, improve all reading text. */
+#view-profile .profile-heading>div>span{font-size:13px;letter-spacing:1.8px;color:#8d6558}
+#view-profile .profile-heading h1{font-size:46px}
+#view-profile .profile-tabs button{font-size:20px;min-height:48px}
+#view-profile .profile-panel .tab{font-size:26px;line-height:1.1;top:-17px;padding:3px 16px 5px}
+#view-profile .profile-panel .bio .row{font-family:var(--readable-font);font-size:21px;line-height:1.45;padding:5px 0;border-bottom:1px solid #e4d8d1}
+#view-profile .profile-panel .bio .k{color:#856c60;min-width:76px;font-size:19px;font-weight:500}
+#view-profile .profile-panel .bio .v{max-height:33px;color:var(--text-strong);opacity:1;font-weight:500}
+#view-profile .profile-panel .top{height:350px}
+#view-profile .profile-panel .photo{height:340px}
+#view-profile .profile-panel .bio{padding:21px 24px}
+#view-profile .profile-panel :is(.about p,.goal p){font-family:var(--readable-font);font-size:24px;line-height:1.6;color:#55463e}
+#view-profile .profile-panel .about p{max-height:160px}
+#view-profile .profile-panel .goal p{max-height:137px}
+#view-profile .profile-panel .chips{font-family:var(--readable-font);font-size:21px;line-height:1.5}
+#view-profile .profile-panel .chip{border:1px solid #d7bfb2;padding:5px 14px;background:#fbf3ed;color:#755748}
+#view-profile .vod-filter button{font-family:var(--readable-font);font-size:19px;padding:7px 18px;border-width:1px}
+#view-profile .vod-filter button.on{background:#efd0c8;color:#65483f}
+#view-profile .vod-thumb{border:1px solid #d6bdb0}
+#view-profile .vod-thumb.active{border-color:#bd8773;box-shadow:0 0 0 2px #bd8773}
+#view-profile .vod-thumb-title{font-family:var(--readable-font);font-size:17px;padding:14px 10px 9px}
+#view-profile .vod-kind{font-family:var(--readable-font);font-size:13px;top:8px;left:8px;padding:3px 8px}
+#view-profile .vod-player{border:1px solid #d8bfb2;box-shadow:none}
+#view-profile .media-pager{font-size:20px}.app-view .media-pager button{min-height:46px}
+/* Upbo: spend the empty card space on readable names and quantities. */
+#view-upbo .legend{font-family:var(--readable-font);font-size:16px;color:#7d6d64;gap:12px;margin-bottom:12px}
+#view-upbo .member-card{display:flex;flex-direction:column;align-items:center;padding:16px 12px}
+#view-upbo .member-avatar{flex-shrink:0;width:78px;height:78px;margin:0 auto 12px}
+#view-upbo .member-nick{font-family:var(--readable-font);font-size:23px;font-weight:600;line-height:1.35;max-width:100%;margin-bottom:4px}
+#view-upbo .member-id{font-family:var(--readable-font);font-size:16px;line-height:1.3;color:#8a7467;max-width:100%;overflow:hidden;text-overflow:ellipsis;margin-bottom:7px;white-space:nowrap}
+#view-upbo .count-row{margin-top:auto;display:flex;justify-content:center;gap:6px;max-width:100%}
+#view-upbo .member-count,#view-upbo .member-card .coin-count{font-family:var(--readable-font);font-size:18px;font-weight:500;line-height:1.3;padding:5px 8px;white-space:nowrap}
+#view-upbo .upbo-modal-nick{font-family:var(--readable-font);font-size:29px}
+#view-upbo :is(.task-name,.task-memo-txt,.citem,.modal-input){font-family:var(--readable-font)}
+#view-upbo .task-name{font-size:24px}#view-upbo .task-memo-txt{font-size:20px;line-height:1.5;color:#7c695d}
+#view-upbo .citem{font-size:18px;line-height:1.55}
+/* Songbook: maintain 17 rows, but make the actual song data lead. */
+#view-song :is(table,.filter-tab,.genre-badge,.copy-btn,.stars){font-family:var(--readable-font)}
+#view-song .filter-tab{font-size:18px;min-height:44px;padding:5px 13px}
+#view-song .toolbar{gap:12px}
+#view-song thead th{font-size:18px;font-weight:500;color:#74584c;height:46px}
+#view-song tbody td{font-size:20px;padding:7px 10px;line-height:1.4}
+#view-song .artist-cell{font-size:19px;font-weight:500;color:#7b6659}
+#view-song .title-cell{font-weight:600;color:#3d322c}
+#view-song .memo-cell{font-size:17px;color:#806e61}
+#view-song .genre-badge{font-size:15px;padding:3px 8px}
+#view-song .copy-btn{font-size:17px;padding:6px 10px;min-height:35px}
+#view-song .stars{gap:1px}#view-song .star{font-size:17px}
+#view-song .star-on{color:#af7958}#view-song .star-off{color:#d2c2b6}
+/* Calendar: keep semantic colors and the same seven-card budget. */
+#view-schedule :is(.cal-label,.cal-wd,.cal-daynum,.cal-ev,.cal-more,.cal-legend,.ev-weekday,.ev-tag,.ev-title,.ev-time,.ev-desc){font-family:var(--readable-font)}
+#view-schedule .cal-label{font-size:28px;line-height:1.3;letter-spacing:-.6px}
+#view-schedule .cal-nav{height:38px;min-width:42px;font-size:25px}
+#view-schedule .cal-cell{height:82px;min-height:82px;gap:1px;padding:4px;position:relative}
+#view-schedule .cal-daynum{font-size:17px;line-height:19px;font-weight:600}
+#view-schedule .cal-wd{font-size:17px;color:#8b7668}
+#view-schedule .cal-ev{font-size:13px;line-height:16px;padding:1px 3px;font-weight:500;border-radius:5px}
+#view-schedule .cal-more{position:absolute;right:5px;top:3px;font-size:12px;line-height:17px;background:#fff9;border-radius:6px;padding:0 3px}
+#view-schedule .cal-legend{font-size:15px;line-height:1.4;color:#7b695e;gap:13px}
+#view-schedule .cal-wrap{margin-bottom:12px}
+#view-schedule .event-card{height:57px;margin-bottom:6px}
+#view-schedule .ev-title{font-size:20px;font-weight:600;line-height:1.35}
+#view-schedule .ev-time{font-size:19px;font-weight:500;color:#a36756}
+#view-schedule .ev-desc{font-size:18px;line-height:1.4;color:#7c685b}
+#view-schedule .ev-tag{font-size:15px;font-weight:500;padding:4px 8px}
+#view-schedule .ev-weekday{font-size:12px;letter-spacing:0}
+#view-schedule .sch-section-title{font-size:28px;line-height:1.3;margin-bottom:10px}
+#view-schedule .day-modal{font-family:var(--readable-font);font-size:20px;line-height:1.6}
+#view-schedule .day-modal h3{font-family:'Gaegu',sans-serif;font-size:30px}
+@media(prefers-reduced-motion:reduce){.app-view :is(.cal-ev,.event-card){animation:none!important}}

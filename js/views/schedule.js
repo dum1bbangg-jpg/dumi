@@ -61,7 +61,7 @@ DumiMounts.schedule = function(root) {
       const more = evs.length>3 ? `<div class="cal-more">+${evs.length-3}</div>` : '';
       const cls = `cal-cell${today?' today':''}${evs.length?' has-ev':''}${annivEv?' anniv':''}`;
       const annivStyle = annivEv ? ` style="--glow-rgb:${hexToRgb(annivEv.anniv_color)}"` : '';
-      const click = evs.length ? ` onclick="DumiViews.schedule.showDay('${dateStr}')"` : '';
+      const click = evs.length ? ` role="button" tabindex="0" onclick="DumiViews.schedule.showDay('${dateStr}')"` : '';
       html += `<div class="${cls}"${click}${annivStyle}>
         <div class="cal-daynum${dow===0?' sun':''}${dow===6?' sat':''}">${d}</div>
         ${shown}${more}

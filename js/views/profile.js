@@ -41,7 +41,7 @@ DumiMounts.profile = function(root) {
     }
     playerEl.innerHTML = `<iframe src="${embedUrl(vodView[vodPage * VOD_PAGE_SIZE].vod_id)}" allowfullscreen allow="clipboard-write; web-share;"></iframe>`;
     listEl.innerHTML = vodView.slice(vodPage * VOD_PAGE_SIZE, (vodPage + 1) * VOD_PAGE_SIZE).map((v, localIndex) => { const i = vodPage * VOD_PAGE_SIZE + localIndex; return `
-      <div class="vod-thumb${i===vodPage * VOD_PAGE_SIZE?' active':''}" onclick="DumiViews.profile.switchVod(${i})" data-idx="${i}">
+      <div class="vod-thumb${i===vodPage * VOD_PAGE_SIZE?' active':''}" role="button" tabindex="0" onclick="DumiViews.profile.switchVod(${i})" data-idx="${i}">
         ${thumbHtml(v)}
         <span class="vod-kind">${(v.kind||'vod')==='clip'?'클립':'VOD'}</span>
         <div class="vod-thumb-title">${v.title}</div>
