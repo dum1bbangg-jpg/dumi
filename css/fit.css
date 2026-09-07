@@ -1,0 +1,8 @@
+/* Automatic iframe whole-canvas fit; keeps navigation and route layout intact. */
+html.fit{width:100%;height:var(--fit-height,100%);overflow:hidden!important;scrollbar-gutter:auto!important}
+html.fit body{position:relative;width:940px!important;min-width:940px!important;height:1400px!important;min-height:1400px!important;margin:0!important;left:var(--fit-left,0px);transform:scale(var(--fit-scale,1));transform-origin:top left;overflow:hidden!important}
+html.fit .app-view{margin:0!important}
+html.fit .modal-backdrop,html.fit .day-modal-bg,html.fit #randModal{width:940px;height:1400px;inset:0!important}
+html.fit .modal-box{top:160px!important;left:470px!important;transform:translateX(-50%)!important;max-height:1080px!important;overflow-y:auto;animation:none!important}
+html.fit .day-modal{max-height:1080px!important}
+html.fit #randModal>div{max-height:1080px!important;overflow-y:auto}
