@@ -1,7 +1,7 @@
 // Persistent same-document views, following Hira's hash routing / lazy-init pattern.
 window.DumiViews = {};
-const routes = ['intro', 'home', 'schedule', 'song', 'upbo'];
-const names = { intro:'인트로', home:'메인', schedule:'일정', song:'노래책', upbo:'업보' };
+const routes = ['intro', 'home', 'profile', 'schedule', 'song', 'upbo'];
+const names = { intro:'인트로', home:'메인', profile:'프로필', schedule:'일정', song:'노래책', upbo:'업보' };
 let current = null;
 let settings = {};
 const embedded = new URLSearchParams(location.search).has('embed');
@@ -10,8 +10,7 @@ function closeTransientUI(root) {
   root.querySelectorAll('.modal-backdrop, .day-modal-bg').forEach(el => el.classList.remove('open','show'));
   root.querySelector('#randModal')?.remove();
   root.querySelectorAll('iframe').forEach(frame => {
-    frame.dataset.resumeSrc = frame.src;
-    frame.removeAttribute('src');
+    if(frame.hasAttribute('src')) { frame.dataset.resumeSrc = frame.src; frame.removeAttribute('src'); }
   });
 }
 function applyTabs() {
@@ -21,7 +20,8 @@ function applyTabs() {
   });
 }
 function route() {
-  const [requested, anchor] = location.hash.slice(1).split('/');
+  let [requested, anchor] = location.hash.slice(1).split('/');
+  if(requested === 'home' && anchor) { requested = 'profile'; anchor = anchor.replace('home-', ''); history.replaceState(null,'',location.pathname + location.search + '#profile' + (anchor === 'message' ? '/message' : '')); }
   const name = routes.includes(requested) ? requested : (embedded ? 'home' : 'intro');
   if (!routes.includes(requested)) history.replaceState(null, '', location.pathname + location.search + '#' + name);
   const next = document.getElementById('view-' + name);
@@ -41,7 +41,7 @@ function route() {
       DumiViews[name] = DumiMounts[name](next);
       DumiViews[name].start();
     } else {
-      next.querySelectorAll('iframe[data-resume-src]').forEach(frame => { frame.src = frame.dataset.resumeSrc; delete frame.dataset.resumeSrc; });
+      next.querySelectorAll('iframe[data-resume-src]').forEach(frame => { if(!frame.closest('[hidden]')) {frame.src = frame.dataset.resumeSrc; delete frame.dataset.resumeSrc;} });
     }
     next.classList.add('is-entering');
     next.addEventListener('animationend', () => next.classList.remove('is-entering'), { once:true });
@@ -49,9 +49,8 @@ function route() {
     window.scrollTo({ top:0, behavior:'instant' });
     next.focus({ preventScroll:true });
   }
-  if (anchor && name === 'home') {
-    requestAnimationFrame(() => document.getElementById('home-' + anchor)?.scrollIntoView({ behavior:matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }));
-  }
+  if(name === 'profile' && anchor) DumiViews.profile.setTab(anchor === 'media' ? 'media' : 'about');
+  if(name === 'song' && anchor === 'search') document.getElementById('song-search-input').focus({preventScroll:true});
   applyTabs();
 }
 window.addEventListener('hashchange', route);

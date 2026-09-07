@@ -4,7 +4,7 @@ DumiMounts.song = function(root) {
   const sb = initSupabase();
   const GENRE_LABELS = { kpop:'Kpop', jpop:'Jpop', pop:'Pop', etc:'기타' };
   let allSongs = [], currentGenre = 'all', currentSearch = '';
-  const PAGE_SIZE = 22;
+  const PAGE_SIZE = 17; // 940 × 1400 canvas budget
   let currentPage = 1;
 
   function esc(t){ const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }

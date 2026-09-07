@@ -3,12 +3,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/views/intro.css" data-view-style="intro" disabled>
 <link rel="stylesheet" href="/css/views/home.css" data-view-style="home" disabled>
+<link rel="stylesheet" href="/css/views/profile.css" data-view-style="profile" disabled>
 <link rel="stylesheet" href="/css/views/schedule.css" data-view-style="schedule" disabled>
 <link rel="stylesheet" href="/css/views/song.css" data-view-style="song" disabled>
 <link rel="stylesheet" href="/css/views/upbo.css" data-view-style="upbo" disabled>
 <style>
 html{scrollbar-gutter:stable}html.embed{scrollbar-gutter:auto}body{margin:0;min-width:940px;padding:0!important}.app-view[data-view=schedule],.app-view[data-view=song],.app-view[data-view=upbo]{padding:0 22px 40px;box-sizing:border-box}.app-view[hidden]{display:none!important}.app-view{outline:none;display:flow-root;width:940px;margin:0 auto}.app-view.is-entering{animation:view-enter .32s ease both}.app-view nav.tabs a:focus-visible{outline:3px solid #d75c82;outline-offset:4px}html.embed .app-view nav.tabs{display:none!important}html.embed .app-view{padding-top:0}.app-view footer{position:relative}.app-view[data-view=intro] footer{position:absolute}@keyframes view-enter{from{opacity:0;translate:0 9px}to{opacity:1;translate:0 0}}@media(prefers-reduced-motion:reduce){.app-view.is-entering{animation:none}}
-</style></head><body><section id="view-intro" class="app-view" data-view="intro" hidden tabindex="-1">
+</style><link rel="stylesheet" href="/css/canvas.css"></head><body><section id="view-intro" class="app-view" data-view="intro" hidden tabindex="-1">
 
 <main class="intro" aria-label="두미 인트로">
   <div class="top-rule" aria-hidden="true"></div><span class="edition">DOOMI / 01</span>
@@ -38,7 +39,7 @@ html{scrollbar-gutter:stable}html.embed{scrollbar-gutter:auto}body{margin:0;min-
 
 <main class="diary">
   <nav class="tabs" aria-label="주 메뉴"><a href="#intro" class="intro-link" aria-label="인트로">D.</a>
-    <a href="#home" class="active">프로필</a>
+    <a href="#home" class="active">메인</a><a href="#profile">프로필</a>
     <a href="#upbo" data-nav="upbo">업보</a>
     <a href="#song" data-nav="song">노래책</a>
     <a href="#schedule" data-nav="schedule">일정</a>
@@ -49,64 +50,13 @@ html{scrollbar-gutter:stable}html.embed{scrollbar-gutter:auto}body{margin:0;min-
     <div class="debut-orbit"><small>SINCE</small><strong>07.17</strong><span>2025 · DEBUT</span></div>
     <div class="hero-note"><span>HELLO, 두콩이들</span><p id="home-tagline">오늘도 두미랑 도란도란.</p></div>
     <img class="main-character" src="/assets/main/character.png" alt="노란 후드를 입은 두미" />
-    <a class="heart-orbit" href="#home/home-message" aria-label="두콩이들에게 보내는 메시지">♡</a>
+    <a class="heart-orbit" href="#profile/message" aria-label="두콩이들에게 보내는 메시지">♡</a>
     <a class="clock-orbit" href="#schedule" data-nav="schedule" aria-label="두미 방송 일정"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="39"/><path d="M50 25V52H70"/></svg></a>
     <header class="hero nameplate"><span class="eyebrow">YOUR LITTLE MOMENT</span><h1 class="name" id="home-heroName">두미</h1><span class="roman">DOOMI</span></header>
-    <div class="showcase-links"><a id="home-channelBtn" href="https://www.sooplive.com/station/hika12" target="_blank" rel="noopener">방송국 ↗</a><a href="#home/home-profile">프로필 ↓</a></div>
-    <a class="scroll-orbit" href="#home/home-profile" aria-label="프로필 더 보기">＋</a>
+    <div class="showcase-links"><a id="home-channelBtn" href="https://www.sooplive.com/station/hika12" target="_blank" rel="noopener">방송국 ↗</a><a href="#profile">프로필 ↓</a></div>
+    <a class="scroll-orbit" href="#profile" aria-label="프로필 더 보기">＋</a>
+    <nav class="quick-dock" aria-label="빠른 메뉴"><a href="#home" aria-label="홈"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 3l9 8M5 10v11h5v-7h4v7h5V10"/></svg><span>홈</span></a><a href="#song/search" aria-label="검색"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg><span>검색</span></a><a href="#profile/media" aria-label="갤러리"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><path d="m3 17 6-6 4 4 3-3 5 5"/></svg><span>갤러리</span></a><a href="#profile/about" aria-label="프로필"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>프로필</span></a></nav>
     <span class="showcase-caption">A LITTLE CLOSER, EVERY DAY.</span>
-  </section>
-
-  <section class="top" id="home-profile">
-    <div class="photo sketch">
-      <span class="tape tl"></span><span class="tape br"></span>
-      <div class="frame">
-        <img id="home-profileImg" src="https://home-profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg" alt="두미 프로필"
-          onerror="this.onerror=null;this.src='/assets/intro/doomi-portrait.png'">
-      </div>
-    </div>
-    <div class="card bio sketch w2">
-      <span class="tab">My Bio</span>
-      <div class="row"><span class="k">이름</span><span class="v" id="home-bv-name">두미</span></div>
-      <div class="row"><span class="k">데뷔</span><span class="v" id="home-bv-debut">2025.07.17</span></div>
-      <div class="row"><span class="k">생일</span><span class="v" id="home-bv-birthday">11월 25일</span></div>
-      <div class="row"><span class="k">소속</span><span class="v" id="home-bv-agency">개인</span></div>
-      <div class="row"><span class="k">머리</span><span class="v" id="home-bv-hair">연갈색 + 핑크브릿지</span></div>
-      <div class="row"><span class="k">눈</span><span class="v" id="home-bv-eye">핑크</span></div>
-      <div class="row"><span class="k">팬네임</span><span class="v" id="home-bv-fanname">두콩이들</span></div>
-    </div>
-  </section>
-
-  <section class="card about sketch w3">
-    <span class="tab">About Me</span>
-    <span class="doodle" style="top:-24px;right:26px;font-size:1.7rem;transform:rotate(12deg)">♡</span>
-    <p id="home-aboutText">저녁 6시에 찾아오는 소통 버튜버 두미예요! 화요일은 쉬어가구요,<br>가끔은 노래도 불러요 🎵 오른쪽 덧니가 트레이드마크<br>밝고 귀엽게, 두콩이들이랑 매일 도란도란 떠드는 게 제일 좋아</p>
-  </section>
-
-  <section class="row2">
-    <div class="card like sketch"><span class="tab">Likes</span>
-      <div class="chips" id="home-likesChips"><span class="chip">소통</span><span class="chip">롤</span><span class="chip">노래</span></div>
-    </div>
-    <div class="card dis sketch w2"><span class="tab">Dislikes</span>
-      <div class="chips" id="home-dislikesChips"><span class="chip">당근</span></div>
-    </div>
-  </section>
-
-  <section class="card goal sketch w3" id="home-message">
-    <span class="tab">To 두콩이</span>
-    <span class="doodle" style="bottom:14px;right:20px;font-size:1.8rem;transform:rotate(-10deg)">★</span>
-    <p id="home-toMsg">두콩이들이랑 도란도란 오래오래 ♡ 첫 1주년도 같이 맞이하기!</p>
-  </section>
-
-  <section class="card vod sketch w2">
-    <span class="tab">명장면캐치</span>
-    <div class="vod-filter" id="home-vodFilter">
-      <button class="on" data-kind="all" onclick="DumiViews.home.setVodKind('all',this)">전체</button>
-      <button data-kind="vod" onclick="DumiViews.home.setVodKind('vod',this)">VOD</button>
-      <button data-kind="clip" onclick="DumiViews.home.setVodKind('clip',this)">클립</button>
-    </div>
-    <div id="home-vodPlayer" class="vod-player"><div class="vod-empty" id="home-vodEmpty">등록된 영상이 없어요</div></div>
-    <div class="vod-list" id="home-vodList"></div>
   </section>
 
   <footer>
@@ -119,13 +69,73 @@ html{scrollbar-gutter:stable}html.embed{scrollbar-gutter:auto}body{margin:0;min-
 
 
 </section>
+<section id="view-profile" class="app-view" data-view="profile" hidden tabindex="-1"><main class="diary"><nav class="tabs" aria-label="주 메뉴"><a href="#intro" class="intro-link" aria-label="인트로">D.</a>
+    <a href="#home">메인</a><a href="#profile" class="active">프로필</a>
+    <a href="#upbo" data-nav="upbo">업보</a>
+    <a href="#song" data-nav="song">노래책</a>
+    <a href="#schedule" data-nav="schedule">일정</a>
+  </nav><header class="profile-heading"><div><span>ABOUT DOOMI</span><h1>프로필</h1></div><div class="profile-tabs" role="tablist" aria-label="프로필 구성"><button id="profile-tab-about" role="tab" aria-controls="profile-about-panel" aria-selected="true" onclick="DumiViews.profile.setTab('about')">두미 소개</button><button id="profile-tab-media" role="tab" aria-controls="profile-media-panel" aria-selected="false" onclick="DumiViews.profile.setTab('media')">VOD · 클립</button></div></header><div id="profile-about-panel" class="profile-panel" role="tabpanel" aria-labelledby="profile-tab-about">  <section class="top" id="profile-profile">
+    <div class="photo sketch">
+      <span class="tape tl"></span><span class="tape br"></span>
+      <div class="frame">
+        <img id="profile-profileImg" src="https://profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg" alt="두미 프로필"
+          onerror="this.onerror=null;this.src='/assets/intro/doomi-portrait.png'">
+      </div>
+    </div>
+    <div class="card bio sketch w2">
+      <span class="tab">My Bio</span>
+      <div class="row"><span class="k">이름</span><span class="v" id="profile-bv-name">두미</span></div>
+      <div class="row"><span class="k">데뷔</span><span class="v" id="profile-bv-debut">2025.07.17</span></div>
+      <div class="row"><span class="k">생일</span><span class="v" id="profile-bv-birthday">11월 25일</span></div>
+      <div class="row"><span class="k">소속</span><span class="v" id="profile-bv-agency">개인</span></div>
+      <div class="row"><span class="k">머리</span><span class="v" id="profile-bv-hair">연갈색 + 핑크브릿지</span></div>
+      <div class="row"><span class="k">눈</span><span class="v" id="profile-bv-eye">핑크</span></div>
+      <div class="row"><span class="k">팬네임</span><span class="v" id="profile-bv-fanname">두콩이들</span></div>
+    </div>
+  </section>
+
+  <section class="card about sketch w3">
+    <span class="tab">About Me</span>
+    <span class="doodle" style="top:-24px;right:26px;font-size:1.7rem;transform:rotate(12deg)">♡</span>
+    <p id="profile-aboutText">저녁 6시에 찾아오는 소통 버튜버 두미예요! 화요일은 쉬어가구요,<br>가끔은 노래도 불러요 🎵 오른쪽 덧니가 트레이드마크<br>밝고 귀엽게, 두콩이들이랑 매일 도란도란 떠드는 게 제일 좋아</p>
+  </section>
+
+  <section class="row2">
+    <div class="card like sketch"><span class="tab">Likes</span>
+      <div class="chips" id="profile-likesChips"><span class="chip">소통</span><span class="chip">롤</span><span class="chip">노래</span></div>
+    </div>
+    <div class="card dis sketch w2"><span class="tab">Dislikes</span>
+      <div class="chips" id="profile-dislikesChips"><span class="chip">당근</span></div>
+    </div>
+  </section>
+
+  <section class="card goal sketch w3" id="profile-message">
+    <span class="tab">To 두콩이</span>
+    <span class="doodle" style="bottom:14px;right:20px;font-size:1.8rem;transform:rotate(-10deg)">★</span>
+    <p id="profile-toMsg">두콩이들이랑 도란도란 오래오래 ♡ 첫 1주년도 같이 맞이하기!</p>
+  </section>
+
+</div><div id="profile-media-panel" class="profile-panel" role="tabpanel" aria-labelledby="profile-tab-media" hidden>  <section class="card vod sketch w2">
+    <span class="tab">명장면캐치</span>
+    <div class="vod-filter" id="profile-vodFilter">
+      <button class="on" data-kind="all" onclick="DumiViews.profile.setVodKind('all',this)">전체</button>
+      <button data-kind="vod" onclick="DumiViews.profile.setVodKind('vod',this)">VOD</button>
+      <button data-kind="clip" onclick="DumiViews.profile.setVodKind('clip',this)">클립</button>
+    </div>
+    <div id="profile-vodPlayer" class="vod-player"><div class="vod-empty" id="profile-vodEmpty">등록된 영상이 없어요</div></div>
+    <div class="vod-list" id="profile-vodList"></div>
+  </section>
+
+<div class="media-pager"><button onclick="DumiViews.profile.vodNav(-1)" id="profile-vod-prev">← 이전</button><span id="profile-vod-page">1 / 1</span><button onclick="DumiViews.profile.vodNav(1)" id="profile-vod-next">다음 →</button></div></div><footer>
+    <p>© 2026 두미 · 두콩이들 💗</p>
+  </footer></main></section>
 <section id="view-schedule" class="app-view" data-view="schedule" hidden tabindex="-1">
 
 
 <div class="diary">
 
   <nav class="tabs">
-    <a href="#home">프로필</a>
+    <a href="#home">메인</a><a href="#profile">프로필</a>
     <a href="#upbo" data-nav="upbo">업보</a>
     <a href="#song" data-nav="song">노래책</a>
     <a href="#schedule" class="active" data-nav="schedule">일정</a>
@@ -187,7 +197,7 @@ html{scrollbar-gutter:stable}html.embed{scrollbar-gutter:auto}body{margin:0;min-
 
 <main class="diary">
   <nav class="tabs">
-    <a href="#home">프로필</a>
+    <a href="#home">메인</a><a href="#profile">프로필</a>
     <a href="#upbo" data-nav="upbo">업보</a>
     <a href="#song" class="active" data-nav="song">노래책</a>
     <a href="#schedule" data-nav="schedule">일정</a>
@@ -251,7 +261,7 @@ html{scrollbar-gutter:stable}html.embed{scrollbar-gutter:auto}body{margin:0;min-
 
 <main class="diary">
   <nav class="tabs">
-    <a href="#home">프로필</a>
+    <a href="#home">메인</a><a href="#profile">프로필</a>
     <a href="#upbo" class="active" data-nav="upbo">업보</a>
     <a href="#song" data-nav="song">노래책</a>
     <a href="#schedule" data-nav="schedule">일정</a>
@@ -347,6 +357,7 @@ html{scrollbar-gutter:stable}html.embed{scrollbar-gutter:auto}body{margin:0;min-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/js/supabase-config.js"></script>
 <script src="/js/views/intro.js"></script>
 <script src="/js/views/home.js"></script>
+<script src="/js/views/profile.js"></script>
 <script src="/js/views/schedule.js"></script>
 <script src="/js/views/song.js"></script>
 <script src="/js/views/upbo.js"></script>

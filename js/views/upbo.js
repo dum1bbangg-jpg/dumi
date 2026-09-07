@@ -4,7 +4,7 @@ DumiMounts.upbo = function(root) {
 const sb = initSupabase();
 let allMembers = [], memberTasks = {};
 let currentPage = 1, _renderList = [];
-const PAGE_SIZE = 20; // 4열 × 5행
+const PAGE_SIZE = 16; // 940 × 1400 canvas budget
 
 function esc(t){ const d=document.createElement('div'); d.textContent=t||''; return d.innerHTML; }
 function avatarUrl(uid){ if(!uid) return null; const pre=uid.substring(0,2); return `https://profile.img.sooplive.com/LOGO/${pre}/${uid}/${uid}.jpg`; }
