@@ -1,6 +1,8 @@
-# Peach wallpaper
+# Peach wallpaper — archived concept
 
-Generated using the built-in image_gen tool on 2026-09-07. The WebP delivery copy (same dimensions, encoded at quality 0.9) is used by css/views/home.css; original output copied into this repository without overwriting the character artwork.
+User rejected the glossy background. It is not used by the site.
+
+Generated using the built-in image_gen tool on 2026-09-07. The WebP copy has the same dimensions, encoded at quality 0.9; original output copied into this repository without overwriting the character artwork.
 
 ## Final prompt
 
