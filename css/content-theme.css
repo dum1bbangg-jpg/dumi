@@ -1,0 +1,62 @@
+/* Shared cream/peach theme for the functional pages. Geometry stays in canvas.css. */
+body:is([data-view="upbo"],[data-view="song"],[data-view="schedule"]){
+  --ink:#383039;--paper:#fcfbfa;--c-card:#f5e5df;--t-card:#efd0c8;
+  --accent:#e9aaa0;--accent-deep:#ac695d;--pink-soft:#f9eeea;
+  --theme-line:#dacbc5;--theme-muted:#998881;
+  background-color:#fcfbfa;
+  background-image:radial-gradient(ellipse at 0 20%,#eae7e470,transparent 36%),radial-gradient(ellipse at 100% 62%,#eee9e580,transparent 30%);
+  background-size:auto;
+}
+:is(#view-upbo,#view-song,#view-schedule) nav.tabs{align-items:center;justify-content:flex-start;gap:30px;height:78px;padding:0 26px;background:transparent}
+:is(#view-upbo,#view-song,#view-schedule) nav.tabs a,
+:is(#view-upbo,#view-song,#view-schedule) nav.tabs a:nth-child(n){font-family:Arial,"Malgun Gothic",sans-serif;font-size:16px;font-weight:700;padding:8px 0;border:0;border-bottom:1px solid transparent;border-radius:0;background:transparent;box-shadow:none;transform:none;color:#24232a;transition:color .18s,border-color .18s}
+:is(#view-upbo,#view-song,#view-schedule) nav.tabs a.active{color:#cc8074;border-bottom-color:#cc8074}
+:is(#view-upbo,#view-song,#view-schedule) nav.tabs a:hover{color:#cc8074}
+:is(#view-upbo,#view-song,#view-schedule) .hero .title{color:#383039}
+:is(#view-upbo,#view-song,#view-schedule) .hero .sub{color:#998881;opacity:1}
+:is(#view-upbo,#view-song,#view-schedule) :is(.search-input,.song-search-input,.modal-input){background:#fff;border:1px solid var(--theme-line);box-shadow:none;border-radius:16px;color:var(--ink)}
+:is(#view-upbo,#view-song,#view-schedule) :is(.search-input,.song-search-input,.modal-input):focus{outline:2px solid #efd0c8;outline-offset:2px}
+:is(#view-upbo,#view-song,#view-schedule) :is(.page-btn,.filter-tab,.copy-btn,.cal-nav,.rand-btn,.inquiry-btn,.coin-guide-btn,.modal-close,.modal-submit,.day-modal-close){border:1px solid var(--theme-line);box-shadow:none;background:#fff;color:var(--ink);border-radius:12px;transition:background .18s,color .18s,border-color .18s}
+:is(#view-upbo,#view-song,#view-schedule) :is(.page-btn.active,.filter-tab.active,.rand-btn,.inquiry-btn,.modal-submit){background:#efd0c8;color:#65483f;border-color:#ddbbb0}
+:is(#view-upbo,#view-song,#view-schedule) :is(.page-btn,.filter-tab,.copy-btn,.cal-nav,.rand-btn,.inquiry-btn,.coin-guide-btn,.modal-close,.modal-submit):hover{background:#f8e8e2;border-color:#cfa296;transform:none}
+:is(#view-upbo,#view-song,#view-schedule) :is(.updated-badge,.song-count-badge){background:#fff9;border:1px solid var(--theme-line);box-shadow:none;color:#8e746b}
+:is(#view-upbo,#view-song,#view-schedule) :is(.member-card,.table-box,.cal-wrap){background:#ffffffb8;border:1px solid var(--theme-line);border-radius:22px;box-shadow:0 6px 20px #5f433908}
+#view-upbo .member-card:nth-child(n){transform:none}
+#view-upbo .member-card:hover{transform:translateY(-3px)!important;box-shadow:0 10px 22px #5f433912;border-color:#cfa296}
+#view-upbo :is(.member-avatar,.upbo-modal-avatar){border:1px solid #d8bbb1;background:linear-gradient(135deg,#f8eae4,#efd0c8)}
+#view-upbo .member-count{background:#f8e9e3;border:1px solid #dec0b4;color:#a96b5b}
+#view-upbo .coin-count,#view-upbo .cbadge{background:#f8f0e1;border:1px solid #e3d3b8;color:#9a7b45}
+#view-upbo .member-id{color:var(--theme-muted)}
+#view-upbo .task-row{border:1px solid var(--theme-line);background:#fff}
+#view-upbo .task-row.evt{border-color:var(--event)}
+#view-upbo .task-row.prep{border-color:var(--prep)}
+#view-upbo .task-qty{border-width:1px;background:#f8e9e3}
+#view-song .table-box::before{border:0}
+#view-song thead{background:#f3e0d9}
+#view-song tbody tr{border-top:1px solid #eee4df}
+#view-song tbody tr:hover{background:#fbf2ee}
+#view-song :is(.artist-cell,.memo-cell){color:#8e7c73}
+#view-song .genre-badge{border:1px solid #dfc7bd;background:#f8eee9;color:#9a7060}
+#view-song .copy-btn.copied{background:#efd0c8;color:#65483f}
+#view-song .star-on{color:#c99280}
+#view-song .star-off{color:#e8ddd6}
+#view-schedule .cal-cell{border:1px solid #e7dbd5;background:#fcf9f7;border-radius:13px}
+#view-schedule .cal-cell.empty{border:0;background:transparent}
+#view-schedule .cal-cell.has-ev{background:#fff;border-color:#e2c4b9}
+#view-schedule .cal-cell.today{background:#fbede6;border-color:#d8a697}
+#view-schedule .cal-cell:hover{transform:none}
+#view-schedule .event-card{background:#fff;border:1px solid #d6c3ba;box-shadow:0 4px 12px #5f433908}
+#view-schedule .event-date-block{background:#f2ded6;border-right:1px solid #dfc6bb}
+#view-schedule .event-card.is-today{border-color:#c58d7b;box-shadow:0 4px 12px #5f433912}
+#view-schedule .event-card.is-today .event-date-block{background:#efd0c8}
+#view-schedule .ev-cell+.ev-cell{border-left:1px solid #eee4df}
+#view-schedule .ev-tag{border-width:1px}
+#view-schedule .ev-desc{color:#9a867e}
+#view-schedule .cal-daynum.sun{color:#b77767}
+/* Event type colors, preparation markers and anniversary effects stay semantic. */
+:is(#view-upbo,#view-schedule) :is(.modal-box,.day-modal){background:#fcfbfa;border:1px solid #d6c3ba;box-shadow:0 22px 70px #48342e28;border-radius:22px}
+:is(#view-upbo,#view-schedule) :is(.modal-backdrop,.day-modal-bg){background:#4b3c3540;backdrop-filter:blur(4px)}
+#view-song #randModal{background:#4b3c3540!important;backdrop-filter:blur(4px)}
+#view-song #randModal>div{background:#fcfbfa!important;border:1px solid #d6c3ba!important;box-shadow:0 22px 70px #48342e28!important}
+#view-song #randModal button{border:1px solid #ddbbb0!important;background:#f3ded6!important;color:#65483f!important;box-shadow:none!important}
+@media(prefers-reduced-motion:reduce){:is(#view-upbo,#view-song,#view-schedule) :is(nav.tabs a,button,.member-card){transition:none!important}#view-upbo .member-card:hover{transform:none!important}}
