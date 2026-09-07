@@ -25,19 +25,6 @@
 #view-intro .edition{font-size:13px}
 #view-intro .side-caption{font-size:13px;letter-spacing:.7px}
 #view-intro footer{font-size:12px!important;letter-spacing:.4px}
-/* Main: larger quick actions, quieter ornaments, clearer labels. */
-#view-home .showcase{height:1250px}
-#view-home .hero-note>span{font-size:14px;letter-spacing:1.2px;color:#83635a}
-#view-home .hero-note p{font-family:var(--readable-font);font-size:23px;line-height:1.55;margin-top:13px;color:#58473e}
-#view-home .nameplate .eyebrow{font-size:12px;letter-spacing:1.5px}
-#view-home .nameplate .roman{font-size:17px;letter-spacing:5px}
-#view-home .showcase-links a{font-size:20px;padding:12px 0;font-weight:600;color:#76584e}
-#view-home .showcase-links{top:950px;gap:30px}
-#view-home .quick-dock a{height:108px;width:100px;color:#ba7b6d}
-#view-home .quick-dock a svg{width:49px;height:49px;stroke-width:1.8}
-#view-home .quick-dock a span{font-size:18px;letter-spacing:0;font-weight:600;color:#806359}
-#view-home .showcase-caption{font-size:12px;letter-spacing:2px;color:#8a746b}
-#view-home .debut-orbit small{font-size:14px}#view-home .debut-orbit span{font-size:13px}
 /* Profile: keep the handwritten card labels, improve all reading text. */
 #view-profile .profile-heading>div>span{font-size:13px;letter-spacing:1.8px;color:#8d6558}
 #view-profile .profile-heading h1{font-size:46px}

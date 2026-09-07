@@ -55,17 +55,22 @@ html{scrollbar-gutter:stable}html.embed{scrollbar-gutter:auto}body{margin:0;min-
   </nav>
 
   <section class="showcase" aria-label="두미 메인">
-    <div class="peach-rail rail-left" aria-hidden="true"></div><div class="peach-rail rail-right" aria-hidden="true"></div>
-    <div class="debut-orbit"><small>SINCE</small><strong>07.17</strong><span>2025 · DEBUT</span></div>
-    <div class="hero-note"><span>HELLO, 두콩이들</span><p id="home-tagline">오늘도 두미랑 도란도란.</p></div>
-    <img class="main-character" src="/assets/main/character.png" alt="노란 후드를 입은 두미" />
-    <a class="heart-orbit" href="#profile/message" aria-label="두콩이들에게 보내는 메시지">♡</a>
-    <a class="clock-orbit" href="#schedule" data-nav="schedule" aria-label="두미 방송 일정"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="39"/><path d="M50 25V52H70"/></svg></a>
-    <header class="hero nameplate"><span class="eyebrow">YOUR LITTLE MOMENT</span><h1 class="name" id="home-heroName">두미</h1><span class="roman">DOOMI</span></header>
-    <div class="showcase-links"><a id="home-channelBtn" href="https://www.sooplive.com/station/hika12" target="_blank" rel="noopener">방송국 ↗</a><a href="#profile">프로필 ↓</a></div>
-    <a class="scroll-orbit" href="#profile" aria-label="프로필 더 보기">＋</a>
-    <nav class="quick-dock" aria-label="빠른 메뉴"><a href="#home" aria-label="홈"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 3l9 8M5 10v11h5v-7h4v7h5V10"/></svg><span>홈</span></a><a href="#song/search" aria-label="검색"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg><span>검색</span></a><a href="#profile/media" aria-label="갤러리"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><path d="m3 17 6-6 4 4 3-3 5 5"/></svg><span>갤러리</span></a><a href="#profile/about" aria-label="프로필"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>프로필</span></a></nav>
-    <span class="showcase-caption">A LITTLE CLOSER, EVERY DAY.</span>
+    <div class="home-wallpaper" aria-hidden="true"><span class="wallpaper-word">DOOMI</span><span class="wallpaper-arc"></span><span class="wallpaper-spark spark-one">✦</span><span class="wallpaper-spark spark-two">✧</span></div>
+    <div class="screen-heading"><span class="room-label"><i aria-hidden="true"></i> DOOMI’S ROOM</span><span class="debut-label">SINCE <strong>2025.07.17</strong></span></div>
+    <header class="hero nameplate"><h1 class="name" id="home-heroName">두미</h1><span class="roman">A LITTLE MOMENT<br>WITH YOU.</span></header>
+    <div class="hero-note"><p id="home-tagline">오늘도 두미랑 도란도란.</p></div>
+    <div class="character-stage"><img class="main-character" src="/assets/main/character.png" alt="노란 후드를 입은 두미" draggable="false" /></div>
+    <a class="heart-orbit" href="#profile/message" aria-label="두콩이들에게 보내는 메시지"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg><span>두콩이에게</span></a>
+    <a class="clock-orbit" href="#schedule" data-nav="schedule" aria-label="두미 방송 일정"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="39"/><path d="M50 25V52H70"/></svg><span>방송 일정 <b aria-hidden="true">↗</b></span></a>
+    <div class="showcase-links"><a id="home-channelBtn" href="https://www.sooplive.com/station/hika12" target="_blank" rel="noopener"><span><small>우리 만나는 곳</small>방송국 놀러가기</span><span class="channel-arrow" aria-hidden="true">↗</span></a></div>
+    <nav class="quick-dock" aria-label="빠른 메뉴">
+      <a href="#home" aria-label="홈" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11 12 3l9 8M5 10v11h5v-7h4v7h5V10"/></svg><span>홈</span></a>
+      <a href="#song/search" aria-label="검색"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg><span>검색</span></a>
+      <a class="dock-more" href="#profile" aria-label="프로필 더 보기"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>더 보기</span></a>
+      <a href="#profile/media" aria-label="갤러리"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1"/><path d="m3 17 6-6 4 4 3-3 5 5"/></svg><span>갤러리</span></a>
+      <a href="#profile/about" aria-label="프로필"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span>프로필</span></a>
+    </nav>
+    <span class="home-indicator" aria-hidden="true"></span>
   </section>
 
   <footer>
