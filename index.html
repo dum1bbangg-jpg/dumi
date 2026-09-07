@@ -1,216 +1,112 @@
-<!doctype html>
-<html lang="ko">
-<head>
-<script>if(location.search.indexOf('embed')>-1)document.documentElement.classList.add('embed');</script>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=940" />
-<title>두미 · 프로필</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=940"><title>두미 · DOOMI</title><link rel="icon" href="/favicon.svg">
+<script>if(new URLSearchParams(location.search).has('embed'))document.documentElement.classList.add('embed');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@300;400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/views/intro.css" data-view-style="intro" disabled>
+<link rel="stylesheet" href="/css/views/home.css" data-view-style="home" disabled>
+<link rel="stylesheet" href="/css/views/schedule.css" data-view-style="schedule" disabled>
+<link rel="stylesheet" href="/css/views/song.css" data-view-style="song" disabled>
+<link rel="stylesheet" href="/css/views/upbo.css" data-view-style="upbo" disabled>
 <style>
-  :root{
-    --ink:#4a3a30; --paper:#fbf6ee; --grid:#ece1d0;
-    --c-bio:#f6ead0;   --t-bio:#ecd6a4;
-    --c-about:#eddcc2; --t-about:#dcc296;
-    --c-like:#f8d6e6;  --t-like:#efb6d2;
-    --c-dis:#f4d2d4;   --t-dis:#e6a8ad;
-    --c-goal:#f7ddc4;  --t-goal:#ebc09a;
-    --c-vod:#fbe0ec;   --t-vod:#f3bcd6;
-    --c-photo:#ffffff; --accent:#ff8fb0; --soop:#00b4d8;
-  }
-  *{box-sizing:border-box;}
-  html,body{margin:0;}
-  body{font-family:'Gaegu',system-ui,sans-serif;color:var(--ink);background-color:var(--paper);
-    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
-    background-size:28px 28px;-webkit-font-smoothing:antialiased;padding:0 22px 70px;line-height:1.45;}
-  /* 1:2 세로형 — 폭 940px 통일 */
-  .diary{max-width:940px;margin:0 auto;}
+html{scrollbar-gutter:stable}html.embed{scrollbar-gutter:auto}body{margin:0;min-width:940px;padding:0!important}.app-view[data-view=schedule],.app-view[data-view=song],.app-view[data-view=upbo]{padding:0 22px 40px;box-sizing:border-box}.app-view[hidden]{display:none!important}.app-view{outline:none;display:flow-root;width:940px;margin:0 auto}.app-view.is-entering{animation:view-enter .32s ease both}.app-view nav.tabs a:focus-visible{outline:3px solid #d75c82;outline-offset:4px}html.embed .app-view nav.tabs{display:none!important}html.embed .app-view{padding-top:0}.app-view footer{position:relative}.app-view[data-view=intro] footer{position:absolute}@keyframes view-enter{from{opacity:0;translate:0 9px}to{opacity:1;translate:0 0}}@media(prefers-reduced-motion:reduce){.app-view.is-entering{animation:none}}
+</style></head><body><section id="view-intro" class="app-view" data-view="intro" hidden tabindex="-1">
 
-  /* 인트로 로딩 오버레이 + 콘텐츠 등장 */
-  html:not(.embed){scrollbar-gutter:stable;}
-  html.embed #page-loader{display:none!important;}
-  html.embed .diary{opacity:1!important;animation:none!important;}
-  #page-loader{position:fixed;inset:0;z-index:9999;background-color:var(--paper);
-    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:28px 28px;
-    display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:400px;gap:18px;transition:opacity .5s ease;}
-  #page-loader.hide{opacity:0;pointer-events:none;}
-  .pl-img{height:210px;width:auto;animation:plPop 1s ease-in-out infinite;filter:drop-shadow(0 5px 7px rgba(74,58,48,.16));}
-  .pl-dots{display:flex;gap:9px;}
-  .pl-dots span{width:11px;height:11px;border-radius:50%;background:var(--accent);display:block;animation:plDot .85s ease-in-out infinite;}
-  .pl-dots span:nth-child(2){animation-delay:.14s;} .pl-dots span:nth-child(3){animation-delay:.28s;}
-  @keyframes plPop{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-13px) scale(1.08);}}
-  @keyframes plDot{0%,100%{opacity:.35;transform:translateY(0);}50%{opacity:1;transform:translateY(-7px);}}
-  .diary{opacity:0;}
-  body.ready .diary{opacity:1;animation:pageReveal .72s cubic-bezier(.18,.72,.28,1);}
-  @keyframes pageReveal{from{opacity:0;transform:translateY(30px) scale(.978);}to{opacity:1;transform:translateY(0) scale(1);}}
+<main class="intro" aria-label="두미 인트로">
+  <div class="top-rule" aria-hidden="true"></div><span class="edition">DOOMI / 01</span>
+  <span class="tiny-square" aria-hidden="true"></span>
+  <header class="intro-title"><span>두미</span><small>안녕, 두콩이들.</small></header>
+  <a class="artwork" id="intro-introArtwork" href="#home" aria-label="두미 메인 페이지로 입장">
+    <div class="panel panel-one"><img data-intro-image alt="" draggable="false"></div>
+    <div class="panel panel-two"><img data-intro-image alt="" draggable="false"></div>
+    <div class="panel panel-three"><img data-intro-image alt="" draggable="false"></div>
+    <span class="image-shine" aria-hidden="true"></span>
+    <span class="paper-strip strip-top" aria-hidden="true"></span><span class="paper-strip strip-bottom" aria-hidden="true"></span>
+  </a>
+  <div class="side-caption" aria-hidden="true">A LITTLE MOMENT WITH YOU</div>
+  <div class="intro-brand"><span class="brand-spark" aria-hidden="true">✦</span><h1>DOOMI<br><span>FOR YOU.</span></h1><p>두미와 두콩이들의 작은 순간들</p></div>
+  <div class="bottom-rule" aria-hidden="true"></div>
+  <a class="enter" href="#home"><span>두미 만나러 가기</span><span aria-hidden="true">↗</span></a>
+  <footer><span>SINCE 17 JUL 2025</span><span>© 2026 두미 · 두콩이들</span></footer>
+</main>
 
-  nav.tabs{display:flex;justify-content:center;gap:8px;padding:20px 0 8px;position:sticky;top:0;z-index:30;background:transparent;}
-  nav.tabs a{font-weight:700;font-size:1.68rem;text-decoration:none;color:var(--ink);padding:6px 26px 8px;border:2.4px solid var(--ink);border-radius:16px;background:#fff;box-shadow:3px 3px 0 rgba(74,58,48,.16);transform:rotate(-1.5deg);transition:transform .15s;}
-  nav.tabs a:nth-child(2){transform:rotate(1deg);} nav.tabs a:nth-child(3){transform:rotate(-.5deg);} nav.tabs a:nth-child(4){transform:rotate(.7deg);}
-  nav.tabs a:hover{transform:translateY(-2px) rotate(0);}
-  nav.tabs a.active{background:var(--t-like);}
 
-  .sketch{position:relative;}
-  .sketch::before{content:'';position:absolute;inset:0;border:2.6px solid var(--ink);border-radius:20px;transform:rotate(-0.5deg);pointer-events:none;z-index:3;}
-  .sketch.w2::before{transform:rotate(0.5deg);} .sketch.w3::before{transform:rotate(-0.65deg);}
-  .card{position:relative;border-radius:20px;padding:24px 28px;box-shadow:6px 7px 0 rgba(74,58,48,.13);transition:transform .18s ease;}
-  .card:hover{transform:translateY(-3px);}
-  .card > *{position:relative;z-index:2;}
-  .tab{position:absolute;top:-19px;left:22px;padding:2px 18px 4px;border-radius:14px;font-weight:700;font-size:1.3rem;box-shadow:3px 3px 0 rgba(74,58,48,.13);transform:rotate(-2deg);z-index:5;}
+</section>
+<section id="view-home" class="app-view" data-view="home" hidden tabindex="-1">
 
-  header.hero{margin:10px 4px 34px;}
-  .hero .name{font-weight:700;font-size:3.6rem;line-height:1;margin:0;letter-spacing:-1px;}
-  .hero-top{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;}
-  .hero .tagline{font-size:1.55rem;margin-top:12px;}
-  .hero .deco{display:inline-block;transform:rotate(-6deg);color:var(--accent);}
 
-  /* 상단 2단: 사진 + 정보 */
-  .top{display:grid;grid-template-columns:320px 1fr;gap:34px;align-items:start;margin-bottom:32px;}
-  .photo{position:relative;width:100%;aspect-ratio:1/1.05;border-radius:20px;background:var(--c-photo);padding:11px;transform:rotate(-1.6deg);}
-  .photo .frame{width:100%;height:100%;border-radius:14px;overflow:hidden;background:linear-gradient(150deg,#e2c2a0,#f0c2d6);
-    display:flex;align-items:center;justify-content:center;color:#ffffffd0;font-size:1.5rem;font-weight:700;text-shadow:0 1px 2px #0002;}
-  .photo .frame img{width:100%;height:100%;object-fit:cover;display:block;}
-  .tape{position:absolute;width:100px;height:30px;background:#fceec0cc;box-shadow:1px 1px 0 rgba(74,58,48,.08);opacity:.85;}
-  .tape.tl{top:-13px;left:-8px;transform:rotate(-24deg);} .tape.br{bottom:-11px;right:-6px;transform:rotate(-22deg);background:#f4c9e3cc;}
 
-  .bio{background:var(--c-bio);transform:rotate(.6deg);height:100%;}
-  .bio .tab{background:var(--t-bio);}
-  .bio .row{display:flex;gap:10px;padding:7px 2px;border-bottom:2px dashed #4a3a3040;font-size:1.3rem;}
-  .bio .row:last-child{border-bottom:none;}
-  .bio .k{font-weight:700;min-width:74px;} .bio .v{opacity:.85;}
 
-  .about{background:var(--c-about);margin-bottom:32px;}
-  .about .tab{background:var(--t-about);}
-  .about p{font-size:1.5rem;margin:8px 0 0;white-space:pre-line;}
-
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:32px;align-items:start;}
-  .like{background:var(--c-like);transform:rotate(-1deg);}
-  .like .tab{background:var(--t-like);}
-  .dis{background:var(--c-dis);transform:rotate(1deg);}
-  .dis .tab{background:var(--t-dis);}
-  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px;font-size:1.28rem;}
-  .chip{padding:2px 14px 4px;border:2px solid var(--ink);border-radius:22px;background:#ffffff88;}
-
-  .goal{background:var(--c-goal);margin-bottom:32px;}
-  .goal .tab{background:var(--t-goal);}
-  .goal p{font-size:1.5rem;margin:10px 0 0;white-space:pre-line;}
-
-  .links{display:flex;flex-wrap:wrap;gap:12px;margin:0 2px 36px;justify-content:center;}
-  .link-btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:700;font-size:1.25rem;color:#fff;padding:9px 24px;border-radius:16px;border:2.4px solid var(--ink);box-shadow:3px 3px 0 rgba(74,58,48,.18);transition:transform .15s;}
-  .link-btn:hover{transform:translateY(-2px);}
-  .link-btn.soop{background:var(--soop);}
-
-  /* VOD / 클립 */
-  .vod{background:var(--c-vod);margin-bottom:12px;}
-  .vod .tab{background:var(--t-vod);}
-  .vod-filter{display:flex;gap:8px;margin:8px 0 16px;}
-  .vod-filter button{font-family:inherit;font-weight:700;font-size:1.1rem;cursor:pointer;padding:3px 16px 5px;border:2.4px solid var(--ink);border-radius:15px;background:#ffffff88;color:var(--ink);transition:transform .12s;}
-  .vod-filter button:hover{transform:translateY(-1px);}
-  .vod-filter button.on{background:var(--accent);color:#fff;}
-  .vod-player{border-radius:16px;overflow:hidden;background:#000;aspect-ratio:16/9;margin:0 auto 14px;max-width:660px;border:2.6px solid var(--ink);box-shadow:3px 4px 0 rgba(74,58,48,.16);}
-  .vod-player iframe{width:100%;height:100%;border:none;display:block;}
-  .vod-empty{display:flex;align-items:center;justify-content:center;height:230px;max-width:660px;margin:0 auto;background:#fff8;border-radius:16px;color:#4a3a3099;font-size:1.2rem;}
-  .vod-list{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:10px;}
-  .vod-thumb{position:relative;border-radius:12px;overflow:hidden;cursor:pointer;border:2.4px solid var(--ink);transition:transform .18s;background:#000;aspect-ratio:16/9;}
-  .vod-thumb:hover{transform:translateY(-2px);}
-  .vod-thumb.active{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent);}
-  .vod-thumb-bg{width:100%;height:100%;background:linear-gradient(135deg,#fbe0ec,#f3bcd6);display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;}
-  .vod-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
-  .vod-thumb-title{position:absolute;bottom:0;left:0;right:0;padding:6px 9px;background:linear-gradient(transparent,rgba(0,0,0,.7));color:#fff;font-size:.78rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .vod-kind{position:absolute;top:5px;left:5px;font-size:.66rem;font-weight:700;padding:1px 7px;border-radius:9px;background:rgba(255,255,255,.9);color:#4a3a30;}
-
-  .doodle{position:absolute;color:var(--accent);z-index:6;pointer-events:none;}
-  footer{margin:48px 4px 0;text-align:center;font-size:1.15rem;opacity:.55;}
-
-  @media (max-width:720px){
-    .top{grid-template-columns:1fr;gap:24px;}
-    .photo{max-width:300px;margin:0 auto;}
-    .row2{grid-template-columns:1fr;}
-    .vod-list{grid-template-columns:repeat(2,1fr);}
-    .hero .name{font-size:2.6rem;}
-  }
-  body.embed nav.tabs{display:none;}
-  @media (prefers-reduced-motion:reduce){.card{transition:none;}.card:hover{transform:none;}}
-</style>
-</head>
-<body>
-<div id="page-loader"><img class="pl-img" src="/assets/loader.png" alt="두미" /><div class="pl-dots"><span></span><span></span><span></span></div></div>
-
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <filter id="wob"><feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="1" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3" xChannelSelector="R" yChannelSelector="G"/></filter>
-  <filter id="wob2"><feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="1" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.8" xChannelSelector="R" yChannelSelector="G"/></filter>
-  <filter id="wob3"><feTurbulence type="fractalNoise" baseFrequency="0.007" numOctaves="1" seed="27" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/></filter>
-</svg>
 
 <main class="diary">
-  <nav class="tabs">
-    <a href="/" class="active">프로필</a>
-    <a href="/upbo/" data-nav="upbo">업보</a>
-    <a href="/song/" data-nav="song">노래책</a>
-    <a href="/schedule/" data-nav="schedule">일정</a>
+  <nav class="tabs" aria-label="주 메뉴"><a href="#intro" class="intro-link" aria-label="인트로">D.</a>
+    <a href="#home" class="active">프로필</a>
+    <a href="#upbo" data-nav="upbo">업보</a>
+    <a href="#song" data-nav="song">노래책</a>
+    <a href="#schedule" data-nav="schedule">일정</a>
   </nav>
 
-  <header class="hero">
-    <div class="hero-top">
-      <h1 class="name"><span id="heroName">두미</span> <span class="deco">✿</span></h1>
-      <a id="channelBtn" class="link-btn soop" href="https://www.sooplive.com/station/hika12" target="_blank" rel="noopener">🎬 방송국 바로가기</a>
-    </div>
-    <div class="tagline" id="tagline">“6시에 와요, 화요일은 쉬어요 (｡•ᴗ•｡)♡”</div>
-  </header>
+  <section class="showcase" aria-label="두미 메인">
+    <div class="peach-rail rail-left" aria-hidden="true"></div><div class="peach-rail rail-right" aria-hidden="true"></div>
+    <div class="debut-orbit"><small>SINCE</small><strong>07.17</strong><span>2025 · DEBUT</span></div>
+    <div class="hero-note"><span>HELLO, 두콩이들</span><p id="home-tagline">오늘도 두미랑 도란도란.</p></div>
+    <img class="main-character" src="/assets/main/character.png" alt="노란 후드를 입은 두미" />
+    <a class="heart-orbit" href="#home/home-message" aria-label="두콩이들에게 보내는 메시지">♡</a>
+    <a class="clock-orbit" href="#schedule" data-nav="schedule" aria-label="두미 방송 일정"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="39"/><path d="M50 25V52H70"/></svg></a>
+    <header class="hero nameplate"><span class="eyebrow">YOUR LITTLE MOMENT</span><h1 class="name" id="home-heroName">두미</h1><span class="roman">DOOMI</span></header>
+    <div class="showcase-links"><a id="home-channelBtn" href="https://www.sooplive.com/station/hika12" target="_blank" rel="noopener">방송국 ↗</a><a href="#home/home-profile">프로필 ↓</a></div>
+    <a class="scroll-orbit" href="#home/home-profile" aria-label="프로필 더 보기">＋</a>
+    <span class="showcase-caption">A LITTLE CLOSER, EVERY DAY.</span>
+  </section>
 
-  <section class="top">
+  <section class="top" id="home-profile">
     <div class="photo sketch">
       <span class="tape tl"></span><span class="tape br"></span>
       <div class="frame">
-        <img id="profileImg" src="https://profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg" alt="두미 프로필"
-          onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'두미'}))">
+        <img id="home-profileImg" src="https://home-profile.img.sooplive.com/LOGO/hi/hika12/hika12.jpg" alt="두미 프로필"
+          onerror="this.onerror=null;this.src='/assets/intro/doomi-portrait.png'">
       </div>
     </div>
     <div class="card bio sketch w2">
       <span class="tab">My Bio</span>
-      <div class="row"><span class="k">이름</span><span class="v" id="bv-name">두미</span></div>
-      <div class="row"><span class="k">데뷔</span><span class="v" id="bv-debut">2025.07.17</span></div>
-      <div class="row"><span class="k">생일</span><span class="v" id="bv-birthday">11월 25일</span></div>
-      <div class="row"><span class="k">소속</span><span class="v" id="bv-agency">개인</span></div>
-      <div class="row"><span class="k">머리</span><span class="v" id="bv-hair">연갈색 + 핑크브릿지</span></div>
-      <div class="row"><span class="k">눈</span><span class="v" id="bv-eye">핑크</span></div>
-      <div class="row"><span class="k">팬네임</span><span class="v" id="bv-fanname">두콩이들</span></div>
+      <div class="row"><span class="k">이름</span><span class="v" id="home-bv-name">두미</span></div>
+      <div class="row"><span class="k">데뷔</span><span class="v" id="home-bv-debut">2025.07.17</span></div>
+      <div class="row"><span class="k">생일</span><span class="v" id="home-bv-birthday">11월 25일</span></div>
+      <div class="row"><span class="k">소속</span><span class="v" id="home-bv-agency">개인</span></div>
+      <div class="row"><span class="k">머리</span><span class="v" id="home-bv-hair">연갈색 + 핑크브릿지</span></div>
+      <div class="row"><span class="k">눈</span><span class="v" id="home-bv-eye">핑크</span></div>
+      <div class="row"><span class="k">팬네임</span><span class="v" id="home-bv-fanname">두콩이들</span></div>
     </div>
   </section>
 
   <section class="card about sketch w3">
     <span class="tab">About Me</span>
     <span class="doodle" style="top:-24px;right:26px;font-size:1.7rem;transform:rotate(12deg)">♡</span>
-    <p id="aboutText">저녁 6시에 찾아오는 소통 버튜버 두미예요! 화요일은 쉬어가구요,<br>가끔은 노래도 불러요 🎵 오른쪽 덧니가 트레이드마크<br>밝고 귀엽게, 두콩이들이랑 매일 도란도란 떠드는 게 제일 좋아</p>
+    <p id="home-aboutText">저녁 6시에 찾아오는 소통 버튜버 두미예요! 화요일은 쉬어가구요,<br>가끔은 노래도 불러요 🎵 오른쪽 덧니가 트레이드마크<br>밝고 귀엽게, 두콩이들이랑 매일 도란도란 떠드는 게 제일 좋아</p>
   </section>
 
   <section class="row2">
     <div class="card like sketch"><span class="tab">Likes</span>
-      <div class="chips" id="likesChips"><span class="chip">소통</span><span class="chip">롤</span><span class="chip">노래</span></div>
+      <div class="chips" id="home-likesChips"><span class="chip">소통</span><span class="chip">롤</span><span class="chip">노래</span></div>
     </div>
     <div class="card dis sketch w2"><span class="tab">Dislikes</span>
-      <div class="chips" id="dislikesChips"><span class="chip">당근</span></div>
+      <div class="chips" id="home-dislikesChips"><span class="chip">당근</span></div>
     </div>
   </section>
 
-  <section class="card goal sketch w3">
+  <section class="card goal sketch w3" id="home-message">
     <span class="tab">To 두콩이</span>
     <span class="doodle" style="bottom:14px;right:20px;font-size:1.8rem;transform:rotate(-10deg)">★</span>
-    <p id="toMsg">두콩이들이랑 도란도란 오래오래 ♡ 첫 1주년도 같이 맞이하기!</p>
+    <p id="home-toMsg">두콩이들이랑 도란도란 오래오래 ♡ 첫 1주년도 같이 맞이하기!</p>
   </section>
 
   <section class="card vod sketch w2">
     <span class="tab">명장면캐치</span>
-    <div class="vod-filter" id="vodFilter">
-      <button class="on" data-kind="all" onclick="setVodKind('all',this)">전체</button>
-      <button data-kind="vod" onclick="setVodKind('vod',this)">VOD</button>
-      <button data-kind="clip" onclick="setVodKind('clip',this)">클립</button>
+    <div class="vod-filter" id="home-vodFilter">
+      <button class="on" data-kind="all" onclick="DumiViews.home.setVodKind('all',this)">전체</button>
+      <button data-kind="vod" onclick="DumiViews.home.setVodKind('vod',this)">VOD</button>
+      <button data-kind="clip" onclick="DumiViews.home.setVodKind('clip',this)">클립</button>
     </div>
-    <div id="vodPlayer" class="vod-player"><div class="vod-empty" id="vodEmpty">등록된 영상이 없어요</div></div>
-    <div class="vod-list" id="vodList"></div>
+    <div id="home-vodPlayer" class="vod-player"><div class="vod-empty" id="home-vodEmpty">등록된 영상이 없어요</div></div>
+    <div class="vod-list" id="home-vodList"></div>
   </section>
 
   <footer>
@@ -218,82 +114,240 @@
   </footer>
 </main>
 
-<script src="js/supabase-config.js"></script>
-<script src="js/nav.js"></script>
-<script>
-  if (new URLSearchParams(location.search).has('embed')) document.body.classList.add('embed');
-  const sb = initSupabase();
-  let vodAll = [], vodKind = 'all', vodView = [];
 
-  async function loadVod() {
-    const { data } = await sb.from('vod_clips').select('*').order('sort_order').order('created_at');
-    vodAll = data || [];
-    applyVodFilter();
-  }
-  function setVodKind(kind, btn) {
-    vodKind = kind;
-    document.querySelectorAll('#vodFilter button').forEach(b => b.classList.remove('on'));
-    btn.classList.add('on');
-    applyVodFilter();
-  }
-  function applyVodFilter() {
-    vodView = vodKind === 'all' ? vodAll : vodAll.filter(v => (v.kind || 'vod') === vodKind);
-    renderVod();
-  }
-  function thumbHtml(v) {
-    if (v.thumb_url) return `<img src="${v.thumb_url}" alt="${v.title}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'vod-thumb-bg',textContent:'▶'}))">`;
-    return `<div class="vod-thumb-bg">▶</div>`;
-  }
-  function embedUrl(id){ return `https://vod.sooplive.com/player/${id}/embed?showChat=false&autoPlay=false&mutePlay=false`; }
-  function renderVod() {
-    const playerEl = document.getElementById('vodPlayer');
-    const listEl = document.getElementById('vodList');
-    if (!vodView.length) {
-      playerEl.innerHTML = '<div class="vod-empty">등록된 영상이 없어요</div>';
-      listEl.innerHTML = '';
-      return;
-    }
-    playerEl.innerHTML = `<iframe src="${embedUrl(vodView[0].vod_id)}" allowfullscreen allow="clipboard-write; web-share;"></iframe>`;
-    listEl.innerHTML = vodView.map((v, i) => `
-      <div class="vod-thumb${i===0?' active':''}" onclick="switchVod(${i})" data-idx="${i}">
-        ${thumbHtml(v)}
-        <span class="vod-kind">${(v.kind||'vod')==='clip'?'클립':'VOD'}</span>
-        <div class="vod-thumb-title">${v.title}</div>
-      </div>`).join('');
-  }
-  function switchVod(idx) {
-    const v = vodView[idx];
-    if (!v) return;
-    document.getElementById('vodPlayer').innerHTML = `<iframe src="${embedUrl(v.vod_id)}" allowfullscreen allow="clipboard-write; web-share;"></iframe>`;
-    document.querySelectorAll('.vod-thumb').forEach(t => t.classList.remove('active'));
-    const el = document.querySelector(`.vod-thumb[data-idx="${idx}"]`);
-    if (el) el.classList.add('active');
-  }
-  loadVod();
 
-  function _renderChips(id, csv){
-    const el = document.getElementById(id); if(!el) return;
-    const items = (csv||'').split(',').map(x=>x.trim()).filter(Boolean);
-    if(items.length) el.innerHTML = items.map(x=>`<span class="chip">${x.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</span>`).join('');
-  }
-  async function loadProfile(){
-    try{
-      const { data } = await sb.from('site_settings').select('key,value');
-      const s = {}; (data||[]).forEach(r => s[r.key] = r.value);
-      const setTxt = (id,v) => { if(v!=null && v!==''){ const el=document.getElementById(id); if(el) el.textContent = v; } };
-      if(s.profile_image){ const img=document.getElementById('profileImg'); if(img) img.src=s.profile_image; }
-      if(s.channel_url){ const b=document.getElementById('channelBtn'); if(b) b.href=s.channel_url; }
-      setTxt('heroName', s.hero_name);
-      setTxt('tagline', s.tagline);
-      setTxt('bv-name', s.bio_name); setTxt('bv-debut', s.bio_debut); setTxt('bv-birthday', s.bio_birthday);
-      setTxt('bv-agency', s.bio_agency); setTxt('bv-hair', s.bio_hair); setTxt('bv-eye', s.bio_eye); setTxt('bv-fanname', s.bio_fanname);
-      setTxt('aboutText', s.about);
-      setTxt('toMsg', s.to_doukong);
-      _renderChips('likesChips', s.likes);
-      _renderChips('dislikesChips', s.dislikes);
-    }catch(e){}
-  }
-  loadProfile();
-</script>
-</body>
-</html>
+
+
+</section>
+<section id="view-schedule" class="app-view" data-view="schedule" hidden tabindex="-1">
+
+
+<div class="diary">
+
+  <nav class="tabs">
+    <a href="#home">프로필</a>
+    <a href="#upbo" data-nav="upbo">업보</a>
+    <a href="#song" data-nav="song">노래책</a>
+    <a href="#schedule" class="active" data-nav="schedule">일정</a>
+  </nav>
+
+  <header class="hero">
+    <h1 class="title">일정 📅</h1>
+    <div class="sub">두미 방송 일정이에요! 함께해요</div>
+  </header>
+
+  <div class="cal-wrap">
+    <div class="cal-head">
+      <button class="cal-nav" onclick="DumiViews.schedule.calNav(-1)">‹</button>
+      <div class="cal-label" id="schedule-calLabel">—</div>
+      <button class="cal-nav" onclick="DumiViews.schedule.calNav(1)">›</button>
+    </div>
+    <div class="cal-weekdays">
+      <div class="cal-wd sun">일</div><div class="cal-wd">월</div><div class="cal-wd">화</div><div class="cal-wd">수</div><div class="cal-wd">목</div><div class="cal-wd">금</div><div class="cal-wd sat">토</div>
+    </div>
+    <div class="cal-grid" id="schedule-calGrid"></div>
+    <div class="cal-legend">
+      <span><i style="background:#ffb3d1"></i>방송</span>
+      <span><i style="background:#c5b8e8"></i>이벤트</span>
+      <span><i style="background:#a8d8d4"></i>합방</span>
+      <span><i style="background:#aed4f7"></i>대회</span>
+      <span><i style="background:#ffd9a0"></i>기타</span>
+      <span><i style="background:#d0d0d0"></i>휴방</span>
+    </div>
+  </div>
+
+  <section class="sch-section">
+    <div class="sch-section-title">🌸 다가오는 일정 <span class="cnt" id="schedule-upcomingCnt"></span></div>
+    <div id="schedule-upcomingList"><div class="empty-state"><div class="emoji">⏳</div><p>불러오는 중...</p></div></div>
+  </section>
+
+  <footer>
+    <p>© 2026 두미 · 두콩이들 💗</p>
+  </footer>
+</div>
+
+<div class="day-modal-bg" id="schedule-dayModal">
+  <div class="day-modal">
+    <button class="day-modal-close" onclick="DumiViews.schedule.closeDayModal()">×</button>
+    <h3 id="schedule-dayModalTitle"></h3>
+    <div id="schedule-dayModalBody"></div>
+  </div>
+</div>
+
+
+
+
+
+</section>
+<section id="view-song" class="app-view" data-view="song" hidden tabindex="-1">
+
+
+
+
+
+<main class="diary">
+  <nav class="tabs">
+    <a href="#home">프로필</a>
+    <a href="#upbo" data-nav="upbo">업보</a>
+    <a href="#song" class="active" data-nav="song">노래책</a>
+    <a href="#schedule" data-nav="schedule">일정</a>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <h1 class="title">노래책 🎵</h1>
+      <div class="sub">신청하고 싶은 노래를 찾아보세요</div>
+    </div>
+    <div class="hero-right">
+      <button class="rand-btn" onclick="DumiViews.song.songbookRandom()">🎲 랜덤</button>
+      <span class="song-count-badge" id="song-count-badge">— 곡</span>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="song-search-input" id="song-search-input" placeholder="가수 또는 제목 검색...">
+    </div>
+    <div class="song-filter-tabs" id="song-filter-tabs">
+      <button class="filter-tab active" data-genre="all">전체</button>
+      <button class="filter-tab" data-genre="kpop">Kpop</button>
+      <button class="filter-tab" data-genre="jpop">Jpop</button>
+      <button class="filter-tab" data-genre="pop">Pop</button>
+      <button class="filter-tab" data-genre="etc">기타</button>
+    </div>
+  </div>
+
+  <div class="table-box">
+    <table>
+      <thead><tr>
+        <th style="width:20%">가수</th><th style="width:30%">제목</th>
+        <th style="width:11%" class="center">장르</th><th style="width:13%" class="center">숙련도</th>
+        <th style="width:15%">메모</th><th style="width:11%" class="center">복사</th>
+      </tr></thead>
+      <tbody id="song-song-tbody"></tbody>
+    </table>
+    <div id="song-loading-state" class="state-box"><div class="spinner"></div><p class="state-text">불러오는 중...</p></div>
+    <div id="song-empty-state" class="state-box" style="display:none"><div class="state-emoji">🎵</div><p class="state-text">등록된 노래가 없어요</p></div>
+    <div id="song-no-result-state" class="state-box" style="display:none"><div class="state-emoji">🔍</div><p class="state-text">검색 결과가 없어요</p></div>
+  </div>
+  <div class="song-pagination" id="song-pagination"></div>
+
+  <footer>
+    <p>© 2026 두미 · 두콩이들 💗</p>
+  </footer>
+</main>
+
+
+
+
+
+</section>
+<section id="view-upbo" class="app-view" data-view="upbo" hidden tabindex="-1">
+
+
+
+
+
+<main class="diary">
+  <nav class="tabs">
+    <a href="#home">프로필</a>
+    <a href="#upbo" class="active" data-nav="upbo">업보</a>
+    <a href="#song" data-nav="song">노래책</a>
+    <a href="#schedule" data-nav="schedule">일정</a>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <h1 class="title">업보 현황 📖</h1>
+      <div class="sub">두콩이들의 업보 모음</div>
+    </div>
+    <div class="hero-right">
+      <span class="updated-badge" id="upbo-updatedLabel">갱신일: —</span>
+      <button class="coin-guide-btn" onclick="DumiViews.upbo.openCoinGuide()">🪙 코인 교환</button>
+      <button class="inquiry-btn" onclick="DumiViews.upbo.openInquiry()">업보 문의</button>
+    </div>
+  </header>
+
+  <div class="legend">
+    <span><span class="dot evt"></span>이벤트 업보</span>
+    <span><span class="dot prep"></span>준비완료</span>
+    <span style="opacity:.7">· 카드를 누르면 상세 업보가 보여요</span>
+  </div>
+
+  <input class="search-input" id="upbo-searchInput" type="text" placeholder="🔍 닉네임 또는 아이디 검색...">
+
+  <div id="upbo-loadingState" class="state-box"><div class="spinner"></div>불러오는 중...</div>
+  <div id="upbo-emptyState" class="state-box" style="display:none">아직 업보가 없어요 ✨</div>
+  <div class="member-grid" id="upbo-memberGrid"></div>
+  <div class="upbo-pagination" id="upbo-pagination"></div>
+</main>
+
+<div class="modal-backdrop" id="upbo-upboModal" onclick="DumiViews.upbo.closeUpboModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div class="upbo-modal-avatar" id="upbo-modal-avatar"><span>🐱</span></div>
+      <div><div class="upbo-modal-nick" id="upbo-modal-nick"></div><div class="upbo-modal-uid" id="upbo-modal-uid"></div><div id="upbo-modal-coin" style="margin-top:4px"></div></div>
+    </div>
+    <div class="task-list" id="upbo-modal-task-list"></div>
+    <button class="modal-close" onclick="DumiViews.upbo.getElementById('upbo-upboModal').classList.remove('open'); DumiViews.upbo.querySelector('#upbo-upboModal .modal-box').style.top = ''">닫기</button>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="upbo-inquiryModal" onclick="DumiViews.upbo.closeInquiry(event)">
+  <div class="modal-box" onclick="event.stopPropagation()" style="top:50%;transform:translate(-50%,-50%)">
+    <div style="font-size:1.45rem;font-weight:700;margin-bottom:16px">업보 문의 ✏️</div>
+    <div id="upbo-inquiryForm">
+      <input class="modal-input" id="upbo-iNick" type="text" placeholder="닉네임">
+      <textarea class="modal-input" id="upbo-iContent" placeholder="문의 내용을 입력해주세요"></textarea>
+      <button class="modal-submit" onclick="DumiViews.upbo.submitInquiry()">문의 접수</button>
+    </div>
+    <div id="upbo-inquirySuccess" style="display:none;text-align:center;padding:20px">
+      <div style="font-size:2.8rem;margin-bottom:10px">✅</div>
+      <div style="font-weight:700;color:var(--ink)">문의가 접수됐어요!</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="upbo-coinGuideModal" onclick="DumiViews.upbo.closeCoinGuide(event)">
+  <div class="modal-box" onclick="event.stopPropagation()" style="top:50%;transform:translate(-50%,-50%);max-width:480px">
+    <div style="font-size:1.5rem;font-weight:700;margin-bottom:4px">🪙 코인 교환 안내</div>
+    <div style="font-size:1.05rem;color:#4a3a3088;margin-bottom:14px">모은 코인으로 아래 항목과 교환할 수 있어요</div>
+
+    <div style="font-weight:700;font-size:1.22rem;margin:8px 0 6px;color:var(--accent-deep)">코인 교환 가능 업보</div>
+    <div class="ctier"><span class="cbadge">🪙 1개</span><span class="citem">단컷방셀 · 움짤방셀 · 배너 or 움짤프사</span></div>
+    <div class="ctier"><span class="cbadge">🪙 5개</span><span class="citem">손편지</span></div>
+    <div class="ctier"><span class="cbadge">🪙 10개</span><span class="citem">원하는 게임 or 공포게임 · 15시간 노방종 · 음성메세지</span></div>
+    <div class="ctier"><span class="cbadge">🪙 15개</span><span class="citem">괴식핀볼</span></div>
+    <div style="font-size:1rem;color:#4a3a3088;margin:10px 0 4px;text-align:center">— 나머지 업보는 교환 불가합니다 —</div>
+
+    <div style="font-weight:700;font-size:1.22rem;margin:16px 0 6px;color:var(--accent-deep)">▼ 아래 항목으로 교환 가능 (택1) ▼</div>
+    <div class="ctier"><span class="cbadge">🪙 1개</span><span class="citem">두미 발도장 5개</span></div>
+    <div class="ctier"><span class="cbadge">🪙 5개</span><span class="citem">배너(상단·하단·플로팅 택1) · 단컷방셀</span></div>
+    <div class="ctier"><span class="cbadge">🪙 10개</span><span class="citem">히든 단컷방셀 · 손편지</span></div>
+    <div class="ctier"><span class="cbadge">🪙 20개</span><span class="citem">히든 움짤방셀</span></div>
+    <div class="ctier"><span class="cbadge">🪙 30개</span><span class="citem">원하는 게임 or 공포게임</span></div>
+    <div class="ctier"><span class="cbadge">🪙 70개</span><span class="citem">괴식핀볼 · 24시간 노방종</span></div>
+    <div class="ctier"><span class="cbadge">🪙 100개</span><span class="citem">사랑이 가득 담긴 팬심배송</span></div>
+    <div class="ctier" style="border-bottom:none"><span class="cbadge">🪙 150개</span><span class="citem">수제향수 · 장패드 · 키캡</span></div>
+
+    <button class="modal-close" onclick="DumiViews.upbo.getElementById('upbo-coinGuideModal').classList.remove('open')">닫기</button>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 두미 · 두콩이들 💗</p>
+</footer>
+
+
+
+
+
+</section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/js/supabase-config.js"></script>
+<script src="/js/views/intro.js"></script>
+<script src="/js/views/home.js"></script>
+<script src="/js/views/schedule.js"></script>
+<script src="/js/views/song.js"></script>
+<script src="/js/views/upbo.js"></script>
+<script src="/js/router.js"></script></body></html>
